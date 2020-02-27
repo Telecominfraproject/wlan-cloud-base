@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.telecominfraproject.wlan</groupId>
+		<artifactId>tip-wlan-cloud-root-pom</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>base-models</artifactId>
+	<name>base-models</name>
+	<description>Common classes for models (data structures), including support for JSON serialization.</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.telecominfraproject.wlan</groupId>
+			<artifactId>base-exceptions</artifactId>
+			<version>${tip-wlan-cloud.release.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.telecominfraproject.wlan</groupId>
+			<artifactId>json-patch-tip</artifactId>
+			<version>${tip-wlan-cloud.release.version}</version>
+		</dependency>
+
+		<!-- this is used to register all subclasses of BaseJsonModel for deserialization -->
+		<dependency>
+			<groupId>com.telecominfraproject.wlan</groupId>
+			<artifactId>reflections-tip</artifactId>
+			<version>${tip-wlan-cloud.release.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<version>${apache.commons.math3.version}</version>
+		</dependency>
+
+		<!-- https://github.com/seruco/base62 -->
+		<dependency>
+			<groupId>io.seruco.encoding</groupId>
+			<artifactId>base62</artifactId>
+			<version>${seruco.base62.version}</version>
+		</dependency>
+
+	</dependencies>
+
+</project>

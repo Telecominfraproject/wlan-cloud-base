@@ -1,0 +1,73 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.telecominfraproject.wlan</groupId>
+		<artifactId>tip-wlan-cloud-root-pom</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>cloud-metrics</artifactId>
+	<name>cloud-metrics</name>
+	<description>Classes responsible for configuring cloud metrics collection for monitoring health of the cloud components.</description>
+	<dependencies>
+		<dependency>
+			<groupId>com.telecominfraproject.wlan</groupId>
+			<artifactId>base-exceptions</artifactId>
+			<version>${tip-wlan-cloud.release.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.telecominfraproject.wlan</groupId>
+			<artifactId>base-models</artifactId>
+			<version>${tip-wlan-cloud.release.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.telecominfraproject.wlan</groupId>
+			<artifactId>base-elasticsearch</artifactId>
+			<version>${tip-wlan-cloud.release.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.netflix.servo</groupId>
+			<artifactId>servo-core</artifactId>
+			<version>${netflix.servo.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.netflix.servo</groupId>
+			<artifactId>servo-aws</artifactId>
+			<version>${netflix.servo.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.amazonaws</groupId>
+					<artifactId>aws-java-sdk-cloudwatch</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.amazonaws</groupId>
+					<artifactId>aws-java-sdk-autoscaling</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.amazonaws</groupId>
+					<artifactId>aws-java-sdk-ec2</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-cloudwatch</artifactId>
+			<version>${aws.sdk.version}</version>
+		</dependency>
+
+		<!-- needed by CloudwatchTags -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-autoscaling</artifactId>
+			<version>${aws.sdk.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+		</dependency>
+	</dependencies>
+</project>

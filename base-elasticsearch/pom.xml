@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.telecominfraproject.wlan</groupId>
+		<artifactId>tip-wlan-cloud-root-pom</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>base-elasticsearch</artifactId>
+	<name>base-elasticsearch</name>
+	<description>Common classes used by elastic search data sources.</description>
+	
+	<dependencies>
+		<dependency>
+			<groupId>com.telecominfraproject.wlan</groupId>
+			<artifactId>base-exceptions</artifactId>
+			<version>${tip-wlan-cloud.release.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.telecominfraproject.wlan</groupId>
+			<artifactId>base-models</artifactId>
+			<version>${tip-wlan-cloud.release.version}</version>
+		</dependency>
+		<!-- ElasticSearch dependencies -->
+		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch</artifactId>
+		</dependency>
+		<!-- Need for configure by EC2 -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-ec2</artifactId>
+			<version>${aws.sdk.version}</version>
+		</dependency>
+	</dependencies>
+</project>

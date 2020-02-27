@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.telecominfraproject.wlan</groupId>
+    <artifactId>tip-wlan-cloud-root-pom</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>reflections-tip</artifactId>
+  <name>reflections-tip</name>
+  <description>Reflections - library for Java runtime metadata analysis. Cloned reflections package to remove dependency on findbugs library. Original location - http://github.com/ronmamo/reflections. Original license - WTFPL http://www.wtfpl.net </description>
+  
+  <properties>
+      <guava.version>15.0</guava.version>
+      <javassist.version>3.18.2-GA</javassist.version>
+  </properties>
+  
+    <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>${javassist.version}</version>
+            <optional>false</optional> <!-- case: when not actually scanning with javassist or if using {@link Reflections.collect()} -->
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-vfs2</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
+            <optional>true</optional> <!-- case: -->
+        </dependency>
+                
+    </dependencies>  
+</project>

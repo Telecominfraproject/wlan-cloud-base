@@ -1,0 +1,113 @@
+https://www.elastic.co/guide/en/elasticsearch/reference/current/_installation.html
+=============================
+
+
+wget https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.2.zip
+
+wget https://download.elastic.co/kibana/kibana/kibana-4.1.2-linux-x64.tar.gz
+
+To configure kibana to use all nodes in the elastic search cluster:
+https://www.elastic.co/guide/en/kibana/current/production.html#load-balancing
+
+=============================
+After creating ElasticSearch cluster - provision template_cm via curl API:
+curl -XPUT localhost:9200/_template/template_cm -d @template_cm.json
+
+where file template_cm.json has this:
+----
+
+{
+        "template" : "cm-*",
+        "settings" : {
+            "index.number_of_shards" : 5
+        },
+        "mappings" : {
+			    "_default_" : {
+			        "_timestamp" : {
+			            "enabled" : true,
+			            "path" : "mTs",
+			            "default" : "now"
+			        },
+			        "_ttl" : { 
+			            "enabled" : true, 
+			            "default" : "5d" 
+			        },
+			        "properties" : {
+			            "mTs" : {
+			                "type" : "date"
+			            },
+			            "mVf" : {
+			                "type" : "float"
+			            },
+			            "mVi" : {
+			                "type" : "long"
+			            },
+			            "role"   : { "type" : "string", "index" : "not_analyzed" },
+			            "stack"  : { "type" : "string", "index" : "not_analyzed" },
+			            "deployment"  : { "type" : "string", "index" : "not_analyzed" },
+			            "instanceId"  : { "type" : "string", "index" : "not_analyzed" },
+			            "metricClass" : { "type" : "string", "index" : "not_analyzed" },
+			            "metricId"  : { "type" : "string", "index" : "not_analyzed" },
+			            "a2wTag"    : { "type" : "string", "index" : "not_analyzed" },
+			            "mHost"     : { "type" : "string", "index" : "not_analyzed" },
+			            "mApp"      : { "type" : "string", "index" : "not_analyzed" },
+			            "mAppHost"  : { "type" : "string", "index" : "not_analyzed" }
+			        }
+			},
+            "type1" : {
+                "_all" : {
+                    "enabled" : false
+                }
+            }
+        }
+    }
+}
+
+
+----
+
+
+Then add the following properties to the java processes (be careful with spring.profiles.active - if it exists, then add to it):
+
+OPTIONS="$OPTIONS -Dspring.profiles.active=cloud-metrics-elastic-search"
+OPTIONS="$OPTIONS -Dwhizcontrol.metricsElasticSearch.hostName=elasticsearch03.useast.123wlan.com”
+
+----
+Then restart java processes and they will publish their metrics into ES every minute.
+
+=================
+Cluster health:
+curl -XGET 'http://localhost:9200/_cluster/health?pretty=true'
+curl -XGET 'http://localhost:9200/_nodes?pretty=true'
+
+List indexes 
+curl 'localhost:9200/_cat/indices?v’
+
+Delete index
+curl -XDELETE 'http://localhost:9200/test/'
+
+=================
+After installing Kibana, wait a couple of minutes for the data to appear in the ES cluster, then configure an index pattern for "cm-*" indexes:
+http://localhost:5601/#/settings/indices/?_g=()
+
+If this page is empty (says no default index configured) or if it takes too long to load the index, then the following APIs can be used instead:
+
+Get index pattern from kibana index
+curl -XGET 'http://localhost:9200/.kibana/index-pattern/cm-*/?pretty=true'
+
+Import index pattern into a new kibana instance:
+curl -s -XPOST 'http://localhost:9200/.kibana/index-pattern/cm-*' -d'{
+    "title" : "cm-*",
+    "timeFieldName" : "mTs",
+    "fields" : "[{\"name\":\"_source\",\"type\":\"_source\",\"count\":0,\"scripted\":false,\"indexed\":false,\"analyzed\":false,\"doc_values\":false},{\"name\":\"metricClass\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"indexed\":true,\"analyzed\":false,\"doc_values\":true},{\"name\":\"instanceId\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"indexed\":true,\"analyzed\":false,\"doc_values\":true},{\"name\":\"_index\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"indexed\":false,\"analyzed\":false,\"doc_values\":false},{\"name\":\"mTs\",\"type\":\"date\",\"count\":0,\"scripted\":false,\"indexed\":true,\"analyzed\":false,\"doc_values\":true},{\"name\":\"mApp\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"indexed\":true,\"analyzed\":false,\"doc_values\":true},{\"name\":\"metricId\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"indexed\":true,\"analyzed\":false,\"doc_values\":true},{\"name\":\"mVi\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"indexed\":true,\"analyzed\":false,\"doc_values\":true},{\"name\":\"a2wTag\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"indexed\":true,\"analyzed\":false,\"doc_values\":true},{\"name\":\"role\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"indexed\":true,\"analyzed\":false,\"doc_values\":true},{\"name\":\"deployment\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"indexed\":true,\"analyzed\":false,\"doc_values\":true},{\"name\":\"stack\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"indexed\":true,\"analyzed\":false,\"doc_values\":true},{\"name\":\"mHost\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"indexed\":true,\"analyzed\":false,\"doc_values\":true},{\"name\":\"mAppHost\",\"type\":\"string\",\"count\":2,\"scripted\":false,\"indexed\":true,\"analyzed\":false,\"doc_values\":true},{\"name\":\"mVf\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"indexed\":true,\"analyzed\":false,\"doc_values\":true},{\"name\":\"_id\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"indexed\":false,\"analyzed\":false,\"doc_values\":false},{\"name\":\"_type\",\"type\":\"string\",\"count\":2,\"scripted\":false,\"indexed\":false,\"analyzed\":false,\"doc_values\":false},{\"name\":\"_score\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"indexed\":false,\"analyzed\":false,\"doc_values\":false}]"
+ }'
+ 
+Then go to Objects menu in kibana
+http://localhost:5601/#/settings/objects?_g=()&_a=(tab:dashboards)
+
+and import visualizations and dashboards from /cloud-metrics/src/main/resources/kibana_graphs_and_dashboards.json
+=================
+
+Kibana searches and filters are done according to this syntax:
+https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html
+

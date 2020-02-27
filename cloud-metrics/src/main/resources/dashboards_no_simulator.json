@@ -1,0 +1,257 @@
+[
+  {
+    "_id": "AP-Simulator-Header-Starting-point-for-new-dashboards",
+    "_type": "dashboard",
+    "_source": {
+      "title": "AP Simulator Header - Starting point for new dashboards",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"id\":\"AP-Simulator-#-of-Connections\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":2,\"col\":1,\"row\":1},{\"id\":\"AP-Simulator-Messages-Sent-slash-Received\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":2,\"col\":4,\"row\":1},{\"id\":\"AP-Simulator-Bytes-Sent-slash-Received\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":2,\"col\":7,\"row\":1},{\"id\":\"CEGW-Number-of-Equipment-Connections\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":2,\"col\":10,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "CEGW-Message-Types",
+    "_type": "dashboard",
+    "_source": {
+      "title": "CEGW Message Types",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"id\":\"CEGW-Number-of-Equipment-Connections\",\"type\":\"visualization\",\"panelIndex\":1,\"size_x\":4,\"size_y\":3,\"col\":1,\"row\":1},{\"id\":\"CEGW-Messages-Sent-slash-Received\",\"type\":\"visualization\",\"panelIndex\":2,\"size_x\":4,\"size_y\":3,\"col\":5,\"row\":1},{\"id\":\"CEGW-MessageTypes-Counts\",\"type\":\"visualization\",\"panelIndex\":3,\"size_x\":4,\"size_y\":3,\"col\":9,\"row\":1},{\"id\":\"CEGW-Messages-Received-Per-Type-Lines\",\"type\":\"visualization\",\"panelIndex\":4,\"size_x\":12,\"size_y\":8,\"col\":1,\"row\":4}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "PerfTest",
+    "_type": "dashboard",
+    "_source": {
+      "title": "PerfTest",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":7,\"id\":\"JDBC-Queries-and-Updates-TotalTime,-ms-top-10\",\"row\":1,\"size_x\":6,\"size_y\":3,\"type\":\"visualization\",\"panelIndex\":1},{\"col\":1,\"id\":\"JDBC-Connections-single-datasource\",\"row\":1,\"size_x\":3,\"size_y\":3,\"type\":\"visualization\",\"panelIndex\":2},{\"col\":1,\"id\":\"JVM-Memory\",\"row\":4,\"size_x\":3,\"size_y\":6,\"type\":\"visualization\",\"panelIndex\":3},{\"col\":4,\"id\":\"JVM-GC-Stats\",\"row\":4,\"size_x\":2,\"size_y\":6,\"type\":\"visualization\",\"panelIndex\":4},{\"col\":9,\"id\":\"JVM-load-average\",\"row\":7,\"size_x\":4,\"size_y\":3,\"type\":\"visualization\",\"panelIndex\":5},{\"col\":9,\"id\":\"JVM-thread-count\",\"row\":4,\"size_x\":4,\"size_y\":3,\"type\":\"visualization\",\"panelIndex\":6},{\"col\":4,\"id\":\"REST-Count-of-requests-top-15\",\"row\":10,\"size_x\":2,\"size_y\":3,\"type\":\"visualization\",\"panelIndex\":7},{\"col\":6,\"id\":\"REST-Queries-and-Updates-TotalTime,-ms-top-10\",\"row\":10,\"size_x\":4,\"size_y\":3,\"type\":\"visualization\",\"panelIndex\":8},{\"col\":1,\"id\":\"HTTP-Connections-Count-Total\",\"row\":10,\"size_x\":3,\"size_y\":7,\"type\":\"visualization\",\"panelIndex\":9},{\"col\":4,\"id\":\"JDBC-Count-of-operations\",\"row\":1,\"size_x\":3,\"size_y\":3,\"type\":\"visualization\",\"panelIndex\":10},{\"col\":10,\"id\":\"Async-Tasks-Counters\",\"row\":10,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\",\"panelIndex\":11},{\"col\":6,\"id\":\"CPU-Utilization-%\",\"row\":4,\"size_x\":3,\"size_y\":6,\"type\":\"visualization\",\"panelIndex\":12}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "Cloud-Requests-At-A-Glance",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Cloud Requests At A Glance",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":1,\"id\":\"CEGW-Messages-Received-Per-Type-Lines\",\"panelIndex\":2,\"row\":5,\"size_x\":4,\"size_y\":2,\"type\":\"visualization\"},{\"col\":9,\"id\":\"CPU-Utilization-%\",\"panelIndex\":3,\"row\":1,\"size_x\":4,\"size_y\":6,\"type\":\"visualization\"},{\"col\":1,\"id\":\"Dynamo-Counts-of-Operations-by-Response-Code\",\"panelIndex\":4,\"row\":7,\"size_x\":4,\"size_y\":3,\"type\":\"visualization\"},{\"col\":1,\"id\":\"JDBC-Count-of-operations\",\"panelIndex\":5,\"row\":13,\"size_x\":4,\"size_y\":3,\"type\":\"visualization\"},{\"col\":5,\"id\":\"JVM-GC-Stats\",\"panelIndex\":6,\"row\":5,\"size_x\":4,\"size_y\":6,\"type\":\"visualization\"},{\"col\":5,\"id\":\"JVM-Memory\",\"panelIndex\":7,\"row\":13,\"size_x\":4,\"size_y\":6,\"type\":\"visualization\"},{\"col\":9,\"id\":\"REST-Count-of-operations-top-10\",\"panelIndex\":8,\"row\":7,\"size_x\":4,\"size_y\":4,\"type\":\"visualization\"},{\"col\":9,\"id\":\"REST-Operations-Top-Errors\",\"panelIndex\":9,\"row\":11,\"size_x\":4,\"size_y\":2,\"type\":\"visualization\"},{\"col\":5,\"id\":\"RuleEngine-Event-Counts\",\"panelIndex\":10,\"row\":11,\"size_x\":4,\"size_y\":2,\"type\":\"visualization\"},{\"col\":1,\"id\":\"CEGW-Messages-Sent-slash-Received\",\"panelIndex\":12,\"row\":3,\"size_x\":4,\"size_y\":2,\"type\":\"visualization\"},{\"id\":\"CEGW-Number-of-Equipment-Connections\",\"type\":\"visualization\",\"panelIndex\":13,\"size_x\":4,\"size_y\":2,\"col\":5,\"row\":3},{\"id\":\"Kinesis-PutRecord-Count\",\"type\":\"visualization\",\"panelIndex\":14,\"size_x\":4,\"size_y\":3,\"col\":1,\"row\":10}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "HTTP-Connections-And-Threads",
+    "_type": "dashboard",
+    "_source": {
+      "title": "HTTP Connections And Threads",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":10,\"id\":\"CEGW-Number-of-Equipment-Connections\",\"row\":1,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\",\"panelIndex\":4},{\"col\":4,\"id\":\"Threads-By-Application\",\"row\":1,\"size_x\":3,\"size_y\":11,\"type\":\"visualization\",\"panelIndex\":5},{\"col\":7,\"id\":\"Async-Tasks-Counters\",\"row\":1,\"size_x\":3,\"size_y\":11,\"type\":\"visualization\",\"panelIndex\":6},{\"col\":10,\"id\":\"HTTP-Tomcat-Connections-and-Threads\",\"row\":3,\"size_x\":3,\"size_y\":10,\"type\":\"visualization\",\"panelIndex\":7},{\"id\":\"HTTP-REST-Client-Connections-Count-Total\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":11,\"col\":1,\"row\":1,\"panelIndex\":8}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "RuleEngine-Top-level",
+    "_type": "dashboard",
+    "_source": {
+      "title": "RuleEngine - Top level",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"id\":\"CEGW-Number-of-Equipment-Connections\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":2,\"col\":10,\"row\":1,\"panelIndex\":4},{\"id\":\"RuleEngine-Event-Counts-per-Host\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":3,\"col\":4,\"row\":3,\"panelIndex\":5},{\"id\":\"RuleEngine-Event-TotalTime-per-Host\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":3,\"col\":7,\"row\":3,\"panelIndex\":6},{\"id\":\"RuleEngine-Exceptions-in-Agents-per-Host\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":3,\"col\":10,\"row\":3,\"panelIndex\":7},{\"id\":\"RuleEngine-NumberOfAgents-per-Host\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":3,\"col\":1,\"row\":5,\"panelIndex\":8},{\"id\":\"JVM-Memory-RuleEngineService\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":6,\"col\":1,\"row\":8,\"panelIndex\":9},{\"id\":\"JVM-GC-Stats-RuleEngine-Per-Host\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":6,\"col\":4,\"row\":6,\"panelIndex\":10},{\"id\":\"CPU-Utilization-%-RuleEngine\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":6,\"col\":7,\"row\":6,\"panelIndex\":11},{\"id\":\"REST-Count-of-operations-top-10-in-RuleEngine\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":3,\"col\":10,\"row\":6,\"panelIndex\":12},{\"id\":\"REST-TotalTime-of-operations-top-10-in-RuleEngine\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":3,\"col\":10,\"row\":9,\"panelIndex\":13},{\"id\":\"CEGW-Bytes-Sent-slash-Received\",\"type\":\"visualization\",\"panelIndex\":14,\"size_x\":3,\"size_y\":2,\"col\":7,\"row\":1},{\"id\":\"CEGW-Messages-Received-Per-Type-Lines\",\"type\":\"visualization\",\"panelIndex\":15,\"size_x\":3,\"size_y\":2,\"col\":4,\"row\":1},{\"id\":\"CEGW-Messages-Sent-slash-Received\",\"type\":\"visualization\",\"panelIndex\":16,\"size_x\":3,\"size_y\":2,\"col\":1,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "PROV-Top-Level",
+    "_type": "dashboard",
+    "_source": {
+      "title": "PROV - Top Level",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":10,\"id\":\"CEGW-Number-of-Equipment-Connections\",\"row\":1,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\",\"panelIndex\":4},{\"id\":\"JVM-Memory-PROV\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":4,\"col\":1,\"row\":3,\"panelIndex\":5},{\"id\":\"CPU-Utilization-%-PROV\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":4,\"col\":4,\"row\":3,\"panelIndex\":6},{\"id\":\"JDBC-Connections-single-datasource\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":4,\"col\":1,\"row\":7,\"panelIndex\":7},{\"id\":\"JDBC-Queries-TotalTime,-ms\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":4,\"col\":7,\"row\":3,\"panelIndex\":8},{\"id\":\"JDBC-Updates-TotalTime,-ms\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":4,\"col\":10,\"row\":3,\"panelIndex\":9},{\"id\":\"JDBC-Operations-TotalTime-per-Operation\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":4,\"col\":4,\"row\":7,\"panelIndex\":10},{\"id\":\"JDBC-Count-of-operations\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":4,\"col\":7,\"row\":7,\"panelIndex\":11},{\"id\":\"JDBC-Count-of-Errors\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":4,\"col\":10,\"row\":7,\"panelIndex\":12},{\"id\":\"CEGW-Messages-Sent-slash-Received\",\"type\":\"visualization\",\"panelIndex\":13,\"size_x\":3,\"size_y\":2,\"col\":1,\"row\":1},{\"id\":\"CEGW-Bytes-Sent-slash-Received\",\"type\":\"visualization\",\"panelIndex\":14,\"size_x\":3,\"size_y\":2,\"col\":7,\"row\":1},{\"id\":\"CEGW-Messages-Received-Per-Type-Lines\",\"type\":\"visualization\",\"panelIndex\":15,\"size_x\":3,\"size_y\":2,\"col\":4,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "S3-Top-Level",
+    "_type": "dashboard",
+    "_source": {
+      "title": "S3 Top Level",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":10,\"id\":\"CEGW-Number-of-Equipment-Connections\",\"panelIndex\":4,\"row\":1,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\"},{\"col\":7,\"id\":\"S3-Request-Bytes-Per-Service\",\"panelIndex\":5,\"row\":3,\"size_x\":3,\"size_y\":4,\"type\":\"visualization\"},{\"col\":1,\"id\":\"S3-Requests-Count-Per-Service\",\"panelIndex\":6,\"row\":3,\"size_x\":3,\"size_y\":4,\"type\":\"visualization\"},{\"col\":10,\"id\":\"S3-Response-Bytes-Per-Service\",\"panelIndex\":7,\"row\":3,\"size_x\":3,\"size_y\":4,\"type\":\"visualization\"},{\"col\":4,\"id\":\"S3-Response-Times-per-Operation-Per-Service\",\"panelIndex\":8,\"row\":3,\"size_x\":3,\"size_y\":4,\"type\":\"visualization\"},{\"col\":1,\"id\":\"S3DS-Requests-Count-Per-Table-Per-Service\",\"panelIndex\":9,\"row\":7,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\"},{\"col\":4,\"id\":\"S3DS-Response-Times-Per-Operation-Per-Table-Per-Service\",\"panelIndex\":10,\"row\":7,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\"},{\"col\":7,\"id\":\"S3DS-Queued-Tasks-Per-Table-Per-Service\",\"panelIndex\":11,\"row\":7,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\"},{\"col\":10,\"id\":\"S3DS-Queue-Reader-Stats-Per-Service\",\"panelIndex\":12,\"row\":7,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\"},{\"id\":\"CEGW-Bytes-Sent-slash-Received\",\"type\":\"visualization\",\"panelIndex\":13,\"size_x\":3,\"size_y\":2,\"col\":7,\"row\":1},{\"id\":\"CEGW-Messages-Received-Per-Type-Lines\",\"type\":\"visualization\",\"panelIndex\":14,\"size_x\":3,\"size_y\":2,\"col\":4,\"row\":1},{\"id\":\"CEGW-Messages-Sent-slash-Received\",\"type\":\"visualization\",\"panelIndex\":15,\"size_x\":3,\"size_y\":2,\"col\":1,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "REST-Operations-Top-Level",
+    "_type": "dashboard",
+    "_source": {
+      "title": "REST Operations - Top Level",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"id\":\"CEGW-Number-of-Equipment-Connections\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":2,\"col\":10,\"row\":1,\"panelIndex\":4},{\"id\":\"HTTP-REST-Client-Connections-Count-Total\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":10,\"col\":1,\"row\":3,\"panelIndex\":5},{\"id\":\"REST-Count-of-operations-top-10\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":6,\"col\":4,\"row\":3,\"panelIndex\":6},{\"id\":\"REST-Queries-and-Updates-TotalTime,-ms-top-10\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":6,\"col\":10,\"row\":3,\"panelIndex\":7},{\"id\":\"REST-Operations-Top-Errors\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":6,\"col\":7,\"row\":3,\"panelIndex\":8},{\"id\":\"REST-Http-Client-Pending-Connection-Count-Per-Host-(more-requests-than-available-connections)\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":4,\"col\":4,\"row\":9,\"panelIndex\":9},{\"id\":\"CEGW-Bytes-Sent-slash-Received\",\"type\":\"visualization\",\"panelIndex\":10,\"size_x\":3,\"size_y\":2,\"col\":7,\"row\":1},{\"id\":\"CEGW-Messages-Sent-slash-Received\",\"type\":\"visualization\",\"panelIndex\":11,\"size_x\":3,\"size_y\":2,\"col\":1,\"row\":1},{\"id\":\"CEGW-Messages-Received-Per-Type-Lines\",\"type\":\"visualization\",\"panelIndex\":12,\"size_x\":3,\"size_y\":2,\"col\":4,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "Hazelcast-Top-Level",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Hazelcast - Top Level",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"id\":\"CEGW-Number-of-Equipment-Connections\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":2,\"col\":10,\"row\":1,\"panelIndex\":4},{\"id\":\"CPU-Utilization-%-HazelcastNode\",\"type\":\"visualization\",\"panelIndex\":5,\"size_x\":4,\"size_y\":5,\"col\":9,\"row\":3},{\"id\":\"JVM-GC-Stats-HazelcastNode-Per-Host\",\"type\":\"visualization\",\"panelIndex\":6,\"size_x\":4,\"size_y\":5,\"col\":5,\"row\":3},{\"id\":\"JVM-Memory-HazelcastNode\",\"type\":\"visualization\",\"panelIndex\":7,\"size_x\":4,\"size_y\":5,\"col\":1,\"row\":3},{\"id\":\"Hazelcast-Entry-Counts-per-Host\",\"type\":\"visualization\",\"panelIndex\":8,\"size_x\":3,\"size_y\":5,\"col\":1,\"row\":8},{\"id\":\"Hazelcast-Entry-Bytes-per-Host\",\"type\":\"visualization\",\"panelIndex\":9,\"size_x\":3,\"size_y\":5,\"col\":4,\"row\":8},{\"id\":\"Hazelcast-Operation-Counts-per-Host\",\"type\":\"visualization\",\"panelIndex\":10,\"size_x\":3,\"size_y\":5,\"col\":7,\"row\":8},{\"id\":\"Hazelcast-Operation-Latency-per-Host\",\"type\":\"visualization\",\"panelIndex\":11,\"size_x\":3,\"size_y\":5,\"col\":10,\"row\":8},{\"id\":\"CEGW-Bytes-Sent-slash-Received\",\"type\":\"visualization\",\"panelIndex\":12,\"size_x\":3,\"size_y\":2,\"col\":7,\"row\":1},{\"id\":\"CEGW-Messages-Sent-slash-Received\",\"type\":\"visualization\",\"panelIndex\":13,\"size_x\":3,\"size_y\":2,\"col\":1,\"row\":1},{\"id\":\"CEGW-Messages-Received-Per-Type-Lines\",\"type\":\"visualization\",\"panelIndex\":14,\"size_x\":3,\"size_y\":2,\"col\":4,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "CEGW-Top-Level",
+    "_type": "dashboard",
+    "_source": {
+      "title": "CEGW Top Level",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":10,\"id\":\"CEGW-Number-of-Equipment-Connections\",\"row\":1,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\",\"panelIndex\":4},{\"col\":4,\"id\":\"JVM-Memory-CEGW\",\"row\":3,\"size_x\":3,\"size_y\":10,\"type\":\"visualization\",\"panelIndex\":5},{\"col\":1,\"id\":\"CPU-Utilization-%\",\"row\":3,\"size_x\":3,\"size_y\":10,\"type\":\"visualization\",\"panelIndex\":6},{\"col\":10,\"id\":\"CEGW-Errors-Per-Host\",\"row\":3,\"size_x\":3,\"size_y\":3,\"type\":\"visualization\",\"panelIndex\":7},{\"col\":7,\"id\":\"JVM-GC-Stats\",\"row\":3,\"size_x\":3,\"size_y\":10,\"type\":\"visualization\",\"panelIndex\":8},{\"col\":10,\"id\":\"CEGW-Processing-Times-per-Host\",\"row\":6,\"size_x\":3,\"size_y\":3,\"type\":\"visualization\",\"panelIndex\":9},{\"col\":10,\"id\":\"REST-Operations-Top-Errors\",\"row\":9,\"size_x\":3,\"size_y\":4,\"type\":\"visualization\",\"panelIndex\":10},{\"id\":\"CEGW-Bytes-Sent-slash-Received\",\"type\":\"visualization\",\"panelIndex\":11,\"size_x\":3,\"size_y\":2,\"col\":7,\"row\":1},{\"id\":\"CEGW-Messages-Received-Per-Type-Lines\",\"type\":\"visualization\",\"panelIndex\":12,\"size_x\":3,\"size_y\":2,\"col\":4,\"row\":1},{\"id\":\"CEGW-Messages-Sent-slash-Received\",\"type\":\"visualization\",\"panelIndex\":13,\"size_x\":3,\"size_y\":2,\"col\":1,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "JVM-Memory",
+    "_type": "dashboard",
+    "_source": {
+      "title": "JVM Memory",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":1,\"id\":\"JVM-Memory-PROV\",\"panelIndex\":1,\"row\":1,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\"},{\"col\":10,\"id\":\"JVM-Memory-CEGW\",\"panelIndex\":2,\"row\":3,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\"},{\"col\":7,\"id\":\"JVM-Memory-RuleEngineService\",\"panelIndex\":3,\"row\":1,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\"},{\"col\":4,\"id\":\"JVM-Memory-SMECService\",\"panelIndex\":4,\"row\":1,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\"},{\"col\":7,\"id\":\"JVM-Memory-TechnicalSupportPortal\",\"panelIndex\":5,\"row\":6,\"size_x\":3,\"size_y\":6,\"type\":\"visualization\"},{\"col\":10,\"id\":\"JVM-Memory-TieredTablesAggregator\",\"panelIndex\":6,\"row\":8,\"size_x\":3,\"size_y\":4,\"type\":\"visualization\"},{\"col\":10,\"id\":\"CEGW-Number-of-Equipment-Connections\",\"panelIndex\":11,\"row\":1,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\"},{\"id\":\"JVM-Memory-HazelcastNode\",\"type\":\"visualization\",\"panelIndex\":12,\"size_x\":3,\"size_y\":6,\"col\":4,\"row\":6},{\"id\":\"JVM-Memory-K2S3Connector\",\"type\":\"visualization\",\"panelIndex\":13,\"size_x\":3,\"size_y\":6,\"col\":1,\"row\":6}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "JVM-And-OS-Stats",
+    "_type": "dashboard",
+    "_source": {
+      "title": "JVM And OS Stats",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":1,\"id\":\"JVM-GC-Stats\",\"row\":1,\"size_x\":4,\"size_y\":11,\"type\":\"visualization\",\"panelIndex\":1},{\"col\":9,\"id\":\"JVM-load-average\",\"row\":5,\"size_x\":4,\"size_y\":4,\"type\":\"visualization\",\"panelIndex\":2},{\"col\":9,\"id\":\"JVM-thread-count\",\"row\":9,\"size_x\":4,\"size_y\":3,\"type\":\"visualization\",\"panelIndex\":3},{\"col\":5,\"id\":\"CPU-Utilization-%\",\"row\":1,\"size_x\":4,\"size_y\":11,\"type\":\"visualization\",\"panelIndex\":4},{\"col\":9,\"id\":\"JVM-Memory-PROV\",\"row\":1,\"size_x\":4,\"size_y\":4,\"type\":\"visualization\",\"panelIndex\":5}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "CEGW-Header-Starting-Point-For-New-Dashboards",
+    "_type": "dashboard",
+    "_source": {
+      "title": "CEGW Header - Starting Point For New Dashboards",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":10,\"id\":\"CEGW-Number-of-Equipment-Connections\",\"row\":1,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\",\"panelIndex\":4},{\"id\":\"CEGW-Bytes-Sent-slash-Received\",\"type\":\"visualization\",\"panelIndex\":11,\"size_x\":3,\"size_y\":2,\"col\":7,\"row\":1},{\"id\":\"CEGW-Messages-Received-Per-Type-Lines\",\"type\":\"visualization\",\"panelIndex\":12,\"size_x\":3,\"size_y\":2,\"col\":4,\"row\":1},{\"id\":\"CEGW-Messages-Sent-slash-Received\",\"type\":\"visualization\",\"panelIndex\":13,\"size_x\":3,\"size_y\":2,\"col\":1,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "Databases-Top-Level",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Databases - Top Level",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":10,\"id\":\"CEGW-Number-of-Equipment-Connections\",\"row\":1,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\",\"panelIndex\":4},{\"col\":1,\"id\":\"Dynamo-Requests-Count\",\"row\":3,\"size_x\":6,\"size_y\":4,\"type\":\"visualization\",\"panelIndex\":5},{\"col\":1,\"id\":\"Dynamo-Request-Bytes\",\"row\":7,\"size_x\":3,\"size_y\":3,\"type\":\"visualization\",\"panelIndex\":6},{\"col\":4,\"id\":\"Dynamo-Response-Bytes\",\"row\":7,\"size_x\":3,\"size_y\":3,\"type\":\"visualization\",\"panelIndex\":7},{\"col\":10,\"id\":\"JDBC-Connections-single-datasource\",\"row\":3,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\",\"panelIndex\":8},{\"col\":10,\"id\":\"JDBC-Count-of-operations\",\"row\":5,\"size_x\":3,\"size_y\":3,\"type\":\"visualization\",\"panelIndex\":9},{\"col\":10,\"id\":\"JDBC-Operations-TotalTime-per-Application\",\"row\":8,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\",\"panelIndex\":10},{\"col\":7,\"id\":\"Kinesis-PutRecord-Count\",\"row\":3,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\",\"panelIndex\":11},{\"col\":7,\"id\":\"Kinesis-PutRecord-Bytes\",\"row\":5,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\",\"panelIndex\":12},{\"col\":7,\"id\":\"Kinesis-PutRecord-Total-Time\",\"row\":7,\"size_x\":3,\"size_y\":3,\"type\":\"visualization\",\"panelIndex\":13},{\"col\":7,\"id\":\"JDBC-Operations-TotalTime-per-Operation\",\"row\":10,\"size_x\":3,\"size_y\":3,\"type\":\"visualization\",\"panelIndex\":14},{\"col\":10,\"id\":\"JDBC-Count-of-Errors\",\"row\":10,\"size_x\":3,\"size_y\":3,\"type\":\"visualization\",\"panelIndex\":15},{\"col\":1,\"id\":\"Dynamo-Counts-of-Operations-by-Response-Code\",\"row\":10,\"size_x\":3,\"size_y\":3,\"type\":\"visualization\",\"panelIndex\":16},{\"id\":\"Dynamo-Response-Times-per-Operation\",\"type\":\"visualization\",\"size_x\":3,\"size_y\":3,\"col\":4,\"row\":10,\"panelIndex\":17},{\"id\":\"CEGW-Bytes-Sent-slash-Received\",\"type\":\"visualization\",\"panelIndex\":18,\"size_x\":3,\"size_y\":2,\"col\":7,\"row\":1},{\"id\":\"CEGW-Messages-Sent-slash-Received\",\"type\":\"visualization\",\"panelIndex\":19,\"size_x\":3,\"size_y\":2,\"col\":1,\"row\":1},{\"id\":\"CEGW-Messages-Received-Per-Type-Lines\",\"type\":\"visualization\",\"panelIndex\":20,\"size_x\":3,\"size_y\":2,\"col\":4,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+      }
+    }
+  }
+]
