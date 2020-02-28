@@ -24,3 +24,6 @@ build.log
 
 *.pydevproject
 
+# maven repository credentials
+settings.xml
+
