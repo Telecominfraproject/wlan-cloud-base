@@ -41,6 +41,7 @@
                                 <module>../base-elasticsearch</module>
                                 <module>../cloud-metrics</module>
                                 <module>../base-container</module>
+                                <module>../base-client</module>
                         </modules>
                 </profile>
         </profiles>

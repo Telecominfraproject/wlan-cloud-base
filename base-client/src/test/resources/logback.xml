@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- For assistance related to logback-translator or configuration -->
+<!-- files in general, please contact the logback user mailing list -->
+<!-- at http://www.qos.ch/mailman/listinfo/logback-user -->
+<!-- -->
+<!-- For professional support please see -->
+<!-- http://www.qos.ch/shop/products/professionalSupport -->
+<!-- -->
+<configuration>
+	<appender name="stdout"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-DD HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- <appender name="FILE" class="ch.qos.logback.core.FileAppender"> <file>myApp.log</file> 
+		<encoder> <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern> 
+		</encoder> </appender> -->
+
+
+	<!-- details: http://logback.qos.ch/manual/configuration.html#auto_configuration 
+		runtime configuration, if need to override the defaults: -Dlogback.configurationFile=/path/to/logback.xml 
+		for log configuration debugging - use -Dlogback.statusListenerClass=ch.qos.logback.core.status.OnConsoleStatusListener 
+		log levels: OFF ERROR WARN INFO DEBUG TRACE -->
+	<logger name="org.springframework" level="WARN" />
+	<logger name="org.reflections" level="WARN" />
+	<logger name="org.apache.catalina.startup.DigesterFactory"
+		level="ERROR" />
+	<logger
+		name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"
+		level="${art2waveLogLevel:-INFO}" />
+	<logger
+		name="org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer"
+		level="${art2waveLogLevel:-INFO}" />
+
+	<logger name="com.whizcontrol" level="${art2waveLogLevel:-DEBUG}" />
+	<logger name="com.whizcontrol.core.server" level="${art2waveLogLevel:-WARN}" />
+	<logger name="com.netflix.servo.tag.aws.AwsInjectableTag"
+		level="OFF" />
+
+	<!-- <logger name="org.springframework.security.web.authentication.preauth" 
+		level="DEBUG"/> -->
+
+	<root level="WARN">
+		<appender-ref ref="stdout" />
+	</root>
+
+</configuration>

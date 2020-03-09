@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+    <parent>
+      <groupId>com.telecominfraproject.wlan</groupId>
+      <artifactId>tip-wlan-cloud-root-pom</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <relativePath>../../tip-wlan-cloud-root</relativePath>
+    </parent>
+	<artifactId>base-client</artifactId>
+	<name>base-client</name>
+	<description>Http client for use in service-to-service communication.</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.telecominfraproject.wlan</groupId>
+			<artifactId>base-models</artifactId>
+			<version>${tip-wlan-cloud.release.version}</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.telecominfraproject.wlan</groupId>
+			<artifactId>base-exceptions</artifactId>
+			<version>${tip-wlan-cloud.release.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.telecominfraproject.wlan</groupId>
+			<artifactId>cloud-metrics</artifactId>
+			<version>${tip-wlan-cloud.release.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>

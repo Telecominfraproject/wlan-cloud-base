@@ -1,0 +1,13 @@
+{
+  "maxConnectionsTotal": 100,
+  "maxConnectionsPerRoute": 10,
+  "truststoreType": "",
+  "truststoreProvider": "",
+  "truststoreFile": "file:${CONF_FOLDER_CA:-${user.dir}/src/test/resources}/cafile.txt",
+  "truststorePass": "",
+  "keystoreType": "",
+  "keystoreProvider": "",
+  "keystoreFile": "file:${CONF_FOLDER_KEY:-no_such_folder}/keyfile.txt",
+  "keystorePass": "",
+  "keyAlias": ""
+}
