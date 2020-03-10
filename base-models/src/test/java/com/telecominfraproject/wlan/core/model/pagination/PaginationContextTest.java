@@ -20,27 +20,27 @@ public class PaginationContextTest {
         psl.setStartAfterItem(new PairStringLong("str1", 42L));
         pll.getChildren().put("psl", psl);
         
-        assertEquals("{\"_type\":\"PaginationContext\","
+        assertEquals("{\"model_type\":\"PaginationContext\","
         		+ "\"children\":{},"
         		+ "\"lastPage\":false,"
         		+ "\"lastReturnedPageNumber\":0,"
         		+ "\"maxItemsPerPage\":10,"
-        		+ "\"startAfterItem\":{\"_type\":\"PairStringLong\",\"value1\":\"str1\",\"value2\":42},"
+        		+ "\"startAfterItem\":{\"model_type\":\"PairStringLong\",\"value1\":\"str1\",\"value2\":42},"
         		+ "\"totalItemsReturned\":0}", psl.toString());
         
-        assertEquals("{\"_type\":\"PaginationContext\","
+        assertEquals("{\"model_type\":\"PaginationContext\","
         		+ "\"children\":{"
-        		+ 	"\"psl\":{\"_type\":\"PaginationContext\","
+        		+ 	"\"psl\":{\"model_type\":\"PaginationContext\","
         		+ 	"\"children\":{},\"lastPage\":false,"
         		+ 	"\"lastReturnedPageNumber\":0,"
         		+ 	"\"maxItemsPerPage\":10,"
-        		+ 	"\"startAfterItem\":{\"_type\":\"PairStringLong\",\"value1\":\"str1\",\"value2\":42},"
+        		+ 	"\"startAfterItem\":{\"model_type\":\"PairStringLong\",\"value1\":\"str1\",\"value2\":42},"
         		+ 	"\"totalItemsReturned\":0}"
         		+ 	"},"
         		+ "\"lastPage\":false,"
         		+ "\"lastReturnedPageNumber\":0,"
         		+ "\"maxItemsPerPage\":10,"
-        		+ "\"startAfterItem\":{\"_type\":\"PairLongLong\",\"value1\":null,\"value2\":null},"
+        		+ "\"startAfterItem\":{\"model_type\":\"PairLongLong\",\"value1\":null,\"value2\":null},"
         		+ "\"totalItemsReturned\":0}", pll.toString());
         
     }

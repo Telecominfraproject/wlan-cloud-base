@@ -32,10 +32,10 @@ public class SerializationMainTest {
     public void testGenericResponse(){
         String withNoTypeStr = "{\"message\":\"m123\",\"success\":true}";
         GenericResponse md = BaseJsonModel.fromString(withNoTypeStr, GenericResponse.class);
-        String afterDeserialization = "{\"_type\":\"GenericResponse\",\"message\":\"m123\",\"success\":true}";
+        String afterDeserialization = "{\"model_type\":\"GenericResponse\",\"message\":\"m123\",\"success\":true}";
         assertEquals(afterDeserialization, md.toString());
         
-        String withTypeStr = "{\"_type\":\"GenericResponse\",\"message\":\"m123\",\"success\":true}";
+        String withTypeStr = "{\"model_type\":\"GenericResponse\",\"message\":\"m123\",\"success\":true}";
         md = BaseJsonModel.fromString(withTypeStr, GenericResponse.class);
         assertEquals(afterDeserialization, md.toString());
     }
@@ -60,8 +60,8 @@ public class SerializationMainTest {
 
     @Test
     public void testObjectMapperWithList() throws Exception {
-        String listStr = "[{\"_type\":\"TestMetricEvent\",\"strProp\":\"s1\",\"intProp\":1,\"objProp\":{\"_type\":\"GenericResponse\",\"message\":\"m1\",\"success\":true}},"
-                        + "{\"_type\":\"TestMetricEvent\",\"strProp\":\"s2\",\"intProp\":2,\"objProp\":{\"_type\":\"GenericResponse\",\"message\":\"m2\",\"success\":true}}]";
+        String listStr = "[{\"model_type\":\"TestMetricEvent\",\"strProp\":\"s1\",\"intProp\":1,\"objProp\":{\"model_type\":\"GenericResponse\",\"message\":\"m1\",\"success\":true}},"
+                        + "{\"model_type\":\"TestMetricEvent\",\"strProp\":\"s2\",\"intProp\":2,\"objProp\":{\"model_type\":\"GenericResponse\",\"message\":\"m2\",\"success\":true}}]";
         TypeReference<ArrayList<BaseJsonModel>> t =  new TypeReference<ArrayList<BaseJsonModel>>() { };
         List<TestMetricEvent> list = objectMapper.readValue(listStr, t);
         
@@ -80,13 +80,13 @@ public class SerializationMainTest {
     
     @Test
     public void testCollectionsOfMetricsFullTypeDeserialization() throws Exception {
-        String str = "{ \"_type\":\"CollectionsOfMetrics\","
+        String str = "{ \"model_type\":\"CollectionsOfMetrics\","
                 + "\"list\":"
-                +       "[{\"_type\":\"TestMetricEvent\",\"strProp\":\"s1\",\"intProp\":1,\"objProp\":{\"_type\":\"GenericResponse\",\"message\":\"m1\",\"success\":true}},"
-                +       "{\"_type\":\"TestMetricEvent\",\"strProp\":\"s2\",\"intProp\":2,\"objProp\":{\"_type\":\"GenericResponse\",\"message\":\"m2\",\"success\":true}}],"
+                +       "[{\"model_type\":\"TestMetricEvent\",\"strProp\":\"s1\",\"intProp\":1,\"objProp\":{\"model_type\":\"GenericResponse\",\"message\":\"m1\",\"success\":true}},"
+                +       "{\"model_type\":\"TestMetricEvent\",\"strProp\":\"s2\",\"intProp\":2,\"objProp\":{\"model_type\":\"GenericResponse\",\"message\":\"m2\",\"success\":true}}],"
                 + "\"map\":"
                 + "{\"test\":"
-                +       "{\"_type\":\"TestMetricEvent\",\"strProp\":\"s3\",\"intProp\":3,\"objProp\":{\"_type\":\"GenericResponse\",\"message\":\"m3\",\"success\":true}}"
+                +       "{\"model_type\":\"TestMetricEvent\",\"strProp\":\"s3\",\"intProp\":3,\"objProp\":{\"model_type\":\"GenericResponse\",\"message\":\"m3\",\"success\":true}}"
                 + "}}";
         
         CollectionsOfMetrics c = BaseJsonModel.fromString(str, CollectionsOfMetrics.class);
@@ -119,11 +119,11 @@ public class SerializationMainTest {
     public void testCollectionsOfMetricsNoTopLevelTypeDeserialization() throws Exception {
         String str = "{ "
                 + "\"list\":"
-                +       "[{\"_type\":\"TestMetricEvent\",\"strProp\":\"s1\",\"intProp\":1,\"objProp\":{\"_type\":\"GenericResponse\",\"message\":\"m1\",\"success\":true}},"
-                +       "{\"_type\":\"TestMetricEvent\",\"strProp\":\"s2\",\"intProp\":2,\"objProp\":{\"_type\":\"GenericResponse\",\"message\":\"m2\",\"success\":true}}],"
+                +       "[{\"model_type\":\"TestMetricEvent\",\"strProp\":\"s1\",\"intProp\":1,\"objProp\":{\"model_type\":\"GenericResponse\",\"message\":\"m1\",\"success\":true}},"
+                +       "{\"model_type\":\"TestMetricEvent\",\"strProp\":\"s2\",\"intProp\":2,\"objProp\":{\"model_type\":\"GenericResponse\",\"message\":\"m2\",\"success\":true}}],"
                 + "\"map\":"
                 + "{\"test\":"
-                +       "{\"_type\":\"TestMetricEvent\",\"strProp\":\"s3\",\"intProp\":3,\"objProp\":{\"_type\":\"GenericResponse\",\"message\":\"m3\",\"success\":true}}"
+                +       "{\"model_type\":\"TestMetricEvent\",\"strProp\":\"s3\",\"intProp\":3,\"objProp\":{\"model_type\":\"GenericResponse\",\"message\":\"m3\",\"success\":true}}"
                 + "}}";
         
         CollectionsOfMetrics c = BaseJsonModel.fromString(str, CollectionsOfMetrics.class);
@@ -157,10 +157,10 @@ public class SerializationMainTest {
         String str = "{ "
                 + "\"list\":"
                 +       "[{\"strProp\":\"s1\",\"intProp\":1,\"objProp\":{\"message\":\"m1\",\"success\":true}},"
-                +       "{\"_type\":\"TestMetricEvent\",\"strProp\":\"s2\",\"intProp\":2,\"objProp\":{\"_type\":\"GenericResponse\",\"message\":\"m2\",\"success\":true}}],"
+                +       "{\"model_type\":\"TestMetricEvent\",\"strProp\":\"s2\",\"intProp\":2,\"objProp\":{\"model_type\":\"GenericResponse\",\"message\":\"m2\",\"success\":true}}],"
                 + "\"map\":"
                 + "{\"test\":"
-                +       "{\"_type\":\"TestMetricEvent\",\"strProp\":\"s3\",\"intProp\":3,\"objProp\":{\"_type\":\"GenericResponse\",\"message\":\"m3\",\"success\":true}}"
+                +       "{\"model_type\":\"TestMetricEvent\",\"strProp\":\"s3\",\"intProp\":3,\"objProp\":{\"model_type\":\"GenericResponse\",\"message\":\"m3\",\"success\":true}}"
                 + "}}";
         
         CollectionsOfMetrics c = BaseJsonModel.fromString(str, CollectionsOfMetrics.class);
@@ -228,13 +228,13 @@ public class SerializationMainTest {
     
     @Test
     public void testCollectionsOfMetricsFullSerialization() throws Exception {
-        String str = "{\"_type\":\"CollectionsOfMetrics\","
+        String str = "{\"model_type\":\"CollectionsOfMetrics\","
                 + "\"list\":"
-                +       "[{\"_type\":\"TestMetricEvent\",\"strProp\":\"s1\",\"intProp\":1,\"objProp\":{\"_type\":\"GenericResponse\",\"message\":\"m1\",\"success\":true}},"
-                +       "{\"_type\":\"TestMetricEvent\",\"strProp\":\"s2\",\"intProp\":2,\"objProp\":{\"_type\":\"GenericResponse\",\"message\":\"m2\",\"success\":true}}],"
+                +       "[{\"model_type\":\"TestMetricEvent\",\"strProp\":\"s1\",\"intProp\":1,\"objProp\":{\"model_type\":\"GenericResponse\",\"message\":\"m1\",\"success\":true}},"
+                +       "{\"model_type\":\"TestMetricEvent\",\"strProp\":\"s2\",\"intProp\":2,\"objProp\":{\"model_type\":\"GenericResponse\",\"message\":\"m2\",\"success\":true}}],"
                 + "\"map\":"
                 + "{\"test\":"
-                +       "{\"_type\":\"TestMetricEvent\",\"strProp\":\"s3\",\"intProp\":3,\"objProp\":{\"_type\":\"GenericResponse\",\"message\":\"m3\",\"success\":true}}"
+                +       "{\"model_type\":\"TestMetricEvent\",\"strProp\":\"s3\",\"intProp\":3,\"objProp\":{\"model_type\":\"GenericResponse\",\"message\":\"m3\",\"success\":true}}"
                 + "}}";
 
         GenericResponse g1 = new GenericResponse();

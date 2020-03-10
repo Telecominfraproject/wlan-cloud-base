@@ -67,7 +67,7 @@ import com.telecominfraproject.wlan.server.exceptions.SerializationException;
 @JsonSerialize()
 @JsonTypeResolver(BaseJsonTypeResolverBuilder.class)
 @JsonIgnoreProperties(ignoreUnknown=true)
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "_type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "model_type", visible = true)
 public abstract class BaseJsonModel implements Cloneable, Serializable {
     
     private static final long serialVersionUID = -1343089800191978867L;
@@ -223,7 +223,7 @@ public abstract class BaseJsonModel implements Cloneable, Serializable {
     {
         try {
             JsonNode topNode = MAPPER.readTree(jsonStr);
-            JsonNode typeNode = topNode.get("_type");
+            JsonNode typeNode = topNode.get("model_type");
 
             Reflections reflections = new Reflections("com.telecominfraproject.wlan");
             Set<Class<? extends BaseJsonModel>> classes = reflections.getSubTypesOf(BaseJsonModel.class);

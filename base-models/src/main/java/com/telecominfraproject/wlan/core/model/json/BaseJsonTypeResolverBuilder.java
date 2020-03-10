@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.util.TokenBuffer;
 /**
  * @author dtop
  * 
- * This class provides support for deserializing JSON objects with missing _type property
+ * This class provides support for deserializing JSON objects with missing model_type property
  */
 public class BaseJsonTypeResolverBuilder extends StdTypeResolverBuilder {
 
@@ -72,7 +72,7 @@ public class BaseJsonTypeResolverBuilder extends StdTypeResolverBuilder {
     }
 
     /**
-     * Dtop: we are customizing AsPropertyTypeDeserializer to try to gracefully handle missing _type properties
+     * Dtop: we are customizing AsPropertyTypeDeserializer to try to gracefully handle missing model_type properties
      */
     
     @Override
