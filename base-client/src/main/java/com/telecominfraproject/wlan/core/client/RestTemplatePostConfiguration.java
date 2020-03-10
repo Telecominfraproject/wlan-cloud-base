@@ -18,15 +18,8 @@ public class RestTemplatePostConfiguration {
     private static final Logger LOG = LoggerFactory
             .getLogger(RestTemplatePostConfiguration.class);
 
-//    @Autowired RestTemplate restTemplate;
-//    
-//    @PostConstruct
-//    private void registerModulesWithObjectMappers() {
-//        registerModulesWithObjectMappers(restTemplate);
-//    }
-
     public static void registerModulesWithObjectMappers(AsyncRestTemplate restT) {
-        //this is needed so that rest client can produce and consume JSON objects with (and without) _type property 
+        //this is needed so that rest client can produce and consume JSON objects with (and without) model_type property 
         for(@SuppressWarnings("rawtypes") HttpMessageConverter c: restT.getMessageConverters()){
             if(c instanceof MappingJackson2HttpMessageConverter){
                 LOG.info("Configuring ObjectMapper on AsyncRestTemplate");
@@ -36,7 +29,7 @@ public class RestTemplatePostConfiguration {
     }
 
     public static void registerModulesWithObjectMappers(RestTemplate restT) {
-        //this is needed so that rest client can produce and consume JSON objects with (and without) _type property 
+        //this is needed so that rest client can produce and consume JSON objects with (and without) model_type property 
         for(@SuppressWarnings("rawtypes") HttpMessageConverter c: restT.getMessageConverters()){
             if(c instanceof MappingJackson2HttpMessageConverter){
                 LOG.info("Configuring ObjectMapper on RestTemplate");
