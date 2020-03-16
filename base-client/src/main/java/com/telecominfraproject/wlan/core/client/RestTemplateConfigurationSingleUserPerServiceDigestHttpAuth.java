@@ -45,7 +45,7 @@ import com.netflix.servo.DefaultMonitorRegistry;
 import com.netflix.servo.monitor.BasicGauge;
 import com.netflix.servo.monitor.MonitorConfig;
 import com.netflix.servo.tag.TagList;
-import com.telecominfraproject.wlan.cloudmetrics.CloudWatchTags;
+import com.telecominfraproject.wlan.cloudmetrics.CloudMetricsTags;
 import com.telecominfraproject.wlan.core.client.models.HttpClientConfig;
 import com.telecominfraproject.wlan.core.client.models.HttpClientCredentials;
 import com.telecominfraproject.wlan.server.exceptions.ConfigurationException;
@@ -59,7 +59,7 @@ import com.telecominfraproject.wlan.server.exceptions.ConfigurationException;
 @Profile("rest-template-single-user-per-service-digest-auth")
 public class RestTemplateConfigurationSingleUserPerServiceDigestHttpAuth {
 
-    private final TagList tags = CloudWatchTags.commonTags;
+    private final TagList tags = CloudMetricsTags.commonTags;
 
     private static final Logger LOG = LoggerFactory
             .getLogger(RestTemplateConfigurationSingleUserPerServiceDigestHttpAuth.class);

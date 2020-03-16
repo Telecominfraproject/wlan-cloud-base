@@ -27,11 +27,5 @@
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>
 		</dependency>
-		<!-- Need for configure by EC2 -->
-		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-ec2</artifactId>
-			<version>${aws.sdk.version}</version>
-		</dependency>
 	</dependencies>
 </project>

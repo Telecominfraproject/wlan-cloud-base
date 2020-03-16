@@ -20,7 +20,7 @@ import com.netflix.servo.tag.TagList;
  */
 public class CloudMetricsUtils {
 
-    private static final TagList tags = CloudWatchTags.commonTags;
+    private static final TagList tags = CloudMetricsTags.commonTags;
 
     private static final Map<String, Timer> timersMap = new ConcurrentHashMap<>();
     private static final Map<String, Counter> countersMap = new ConcurrentHashMap<>();

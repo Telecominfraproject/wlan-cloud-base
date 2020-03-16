@@ -5,32 +5,34 @@ import java.util.Arrays;
 import com.netflix.servo.tag.BasicTag;
 import com.netflix.servo.tag.BasicTagList;
 import com.netflix.servo.tag.TagList;
-import com.netflix.servo.tag.aws.AwsInjectableTag;
 import com.telecominfraproject.wlan.core.model.utils.SystemAndEnvPropertyResolver;
 
 /**
  * @author dtop
  *
  */
-public class CloudWatchTags {
+public class CloudMetricsTags {
 
     private static final String UNDEFINED_STR = "undefined";
     private static boolean partitionInitialized;
     private static String currentPartition;
     
-    public static final String role = getPropertyAsString("role", UNDEFINED_STR);
-    public static final String stack = getPropertyAsString("stack", UNDEFINED_STR);
-    public static final String deployment = getPropertyAsString("deployment", UNDEFINED_STR);
+
+    
+    public static final String instanceId = getPropertyAsString("container.instanceId", UNDEFINED_STR);
+    public static final String role = getPropertyAsString("container.role", UNDEFINED_STR);
+    public static final String stack = getPropertyAsString("container.stack", UNDEFINED_STR);
+    public static final String deployment = getPropertyAsString("container.deployment", UNDEFINED_STR);
+    public static final String localIpV4 = getPropertyAsString("container.localipv4", UNDEFINED_STR);
     
 
     public static final TagList commonTags = new BasicTagList(Arrays.asList(
-            AwsInjectableTag.INSTANCE_ID,
-            AwsInjectableTag.AVAILABILITY_ZONE,
-            AwsInjectableTag.LOCAL_IPV4,
-            new BasicTag("a2wTag", buildA2WTag())
+            new BasicTag("InstanceId", instanceId),
+            new BasicTag("local-ipv4", localIpV4),
+            new BasicTag("cloudTag", buildCloudTag())
          ));
     
-    private static String buildA2WTag(){
+    private static String buildCloudTag(){
         return role + "-" + stack + "-" + deployment;
     }
     

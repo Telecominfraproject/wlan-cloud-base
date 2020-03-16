@@ -32,8 +32,7 @@ import com.netflix.servo.publish.BaseMetricObserver;
 import com.netflix.servo.tag.BasicTag;
 import com.netflix.servo.tag.Tag;
 import com.netflix.servo.tag.TagList;
-import com.netflix.servo.tag.aws.AwsInjectableTag;
-import com.telecominfraproject.wlan.cloudmetrics.CloudWatchTags;
+import com.telecominfraproject.wlan.cloudmetrics.CloudMetricsTags;
 
 
 public class ElasticSearchMetricObserver extends BaseMetricObserver {
@@ -45,7 +44,7 @@ public class ElasticSearchMetricObserver extends BaseMetricObserver {
     private final BulkProcessor bulkProcessor;
     
     private final String hostName;
-    private final String appName;
+    private final String appName;    
 
     /**
      * Number of elasticsearch metrics reported.
@@ -169,27 +168,26 @@ public class ElasticSearchMetricObserver extends BaseMetricObserver {
                         .field("mAppHost", appName+"_"+hostName)
                         ;
                 
-                if(AwsInjectableTag.INSTANCE_ID.getValue() != "undefined"){
-                    metricContent.field("instanceId", AwsInjectableTag.INSTANCE_ID.getValue());
+                if(!"undefined".equals(CloudMetricsTags.instanceId)){
+                    metricContent.field("instanceId", CloudMetricsTags.instanceId);
                 }
                 
-                if(CloudWatchTags.role != "undefined"){
-                    metricContent.field("role", CloudWatchTags.role);
+                if(!"undefined".equals(CloudMetricsTags.role)){
+                    metricContent.field("role", CloudMetricsTags.role);
                 }
 
-                if(CloudWatchTags.stack != "undefined"){
-                    metricContent.field("stack", CloudWatchTags.stack);
+                if(!"undefined".equals(CloudMetricsTags.stack)){
+                    metricContent.field("stack", CloudMetricsTags.stack);
                 }
 
-                if(CloudWatchTags.deployment != "undefined"){
-                    metricContent.field("deployment", CloudWatchTags.deployment);
+                if(!"undefined".equals(CloudMetricsTags.deployment)){
+                    metricContent.field("deployment", CloudMetricsTags.deployment);
                 }
-                
-//                String tagValue = m.getConfig().getTags().getValue("a2wTag");
-//                if(tagValue!=null && !tagValue.equals("undefined-undefined-undefined")){
-//                    metricContent.field("a2wTag", tagValue);
-//                }
-                
+
+                if(!"undefined".equals(CloudMetricsTags.localIpV4)){
+                    metricContent.field("localipv4", CloudMetricsTags.localIpV4);
+                }
+
                 String tagValue = m.getConfig().getTags().getValue("class");
                 if(tagValue!=null){
                     

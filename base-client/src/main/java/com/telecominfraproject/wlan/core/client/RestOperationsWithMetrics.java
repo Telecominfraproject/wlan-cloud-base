@@ -23,12 +23,12 @@ import com.netflix.servo.monitor.MonitorConfig;
 import com.netflix.servo.monitor.Stopwatch;
 import com.netflix.servo.monitor.Timer;
 import com.netflix.servo.tag.TagList;
-import com.telecominfraproject.wlan.cloudmetrics.CloudWatchTags;
+import com.telecominfraproject.wlan.cloudmetrics.CloudMetricsTags;
 
 public class RestOperationsWithMetrics implements RestOperations{
     final RestOperations delegate;
     
-    private final TagList tags = CloudWatchTags.commonTags;
+    private final TagList tags = CloudMetricsTags.commonTags;
 
     private final Counter getsExecuted;
     private final Counter postsExecuted;

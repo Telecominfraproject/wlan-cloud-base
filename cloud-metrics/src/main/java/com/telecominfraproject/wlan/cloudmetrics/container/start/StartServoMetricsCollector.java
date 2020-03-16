@@ -22,7 +22,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.netflix.servo.monitor.MonitorConfig;
 import com.netflix.servo.publish.BasicMetricFilter;
 import com.netflix.servo.publish.CounterToRateMetricTransform;
@@ -35,8 +34,6 @@ import com.netflix.servo.publish.MetricObserver;
 import com.netflix.servo.publish.MonitorRegistryMetricPoller;
 import com.netflix.servo.publish.PollRunnable;
 import com.netflix.servo.publish.PollScheduler;
-import com.netflix.servo.publish.cloudwatch.CloudWatchMetricObserver;
-import com.netflix.servo.tag.aws.AwsInjectableTag;
 import com.telecominfraproject.wlan.cloudmetrics.observers.ElasticSearchMetricObserver;
 import com.telecominfraproject.wlan.server.exceptions.ConfigurationException;
 
@@ -245,30 +242,6 @@ public class StartServoMetricsCollector implements CommandLineRunner {
             throw new ConfigurationException("AWS CloudWatch should be used with extreme care. Very expensive!!! Before using - make sure that only a small number of metrics is published in there.");
         } else {
             LOG.info("AWS CloudWatch metrics collection is OFF");
-        }
-    }
-
-    /**
-     * This must not be used in real deployment!!!
-     * @param observers
-     * @param samplingIntervalMs
-     * @param aggregationHeartbeatMultiplier
-     */
-    @SuppressWarnings("unused")
-    private void turnOnCloudWatch(List<MetricObserver> observers, long samplingIntervalMs, int aggregationHeartbeatMultiplier) {
-        if(!"undefined".equals(AwsInjectableTag.INSTANCE_ID.getValue())){
-            LOG.info("AWS deployment - turning on AWS metrics collection");
-
-            MetricObserver cwObserver = new CloudWatchMetricObserver(
-                    environment.getProperty("app.name", "no_name"),
-                    "Art2Wave/CloudWatch",
-                    new DefaultAWSCredentialsProviderChain());
-            
-            MetricObserver transformCloudWatch = new CounterToRateMetricTransform(
-                    cwObserver, aggregationHeartbeatMultiplier * samplingIntervalMs, TimeUnit.MILLISECONDS);
-            observers.add(transformCloudWatch);
-        } else {
-            LOG.info("Local deployment - turning off AWS metrics collection");
         }
     }
 

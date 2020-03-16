@@ -29,7 +29,7 @@ import com.netflix.servo.monitor.Monitor;
 import com.netflix.servo.monitor.MonitorConfig;
 import com.netflix.servo.monitor.StepCounter;
 import com.netflix.servo.tag.TagList;
-import com.telecominfraproject.wlan.cloudmetrics.CloudWatchTags;
+import com.telecominfraproject.wlan.cloudmetrics.CloudMetricsTags;
 
 @Component
 @Profile("do_not_use") // will use JmxMetricsPoller instead
@@ -37,7 +37,7 @@ public class JvmStatsPublisher {
     
     private static final Logger LOG = LoggerFactory.getLogger(JvmStatsPublisher.class);
 
-    private final TagList tags = CloudWatchTags.commonTags;
+    private final TagList tags = CloudMetricsTags.commonTags;
     private final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 
     
