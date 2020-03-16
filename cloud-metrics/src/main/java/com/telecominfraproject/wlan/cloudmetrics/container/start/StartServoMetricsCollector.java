@@ -35,7 +35,6 @@ import com.netflix.servo.publish.MonitorRegistryMetricPoller;
 import com.netflix.servo.publish.PollRunnable;
 import com.netflix.servo.publish.PollScheduler;
 import com.telecominfraproject.wlan.cloudmetrics.observers.ElasticSearchMetricObserver;
-import com.telecominfraproject.wlan.server.exceptions.ConfigurationException;
 
 /**
  * @author dtop
@@ -91,8 +90,6 @@ public class StartServoMetricsCollector implements CommandLineRunner {
             inMemoryObserver, aggregationHeartbeatMultiplier * samplingIntervalMs, TimeUnit.MILLISECONDS);
         observers.add(transformInMemory);
         
-        registerCloudWatchIfNeeded(observers, samplingIntervalMs, aggregationHeartbeatMultiplier);
-
         registerElasticSearchIfNeeded(observers, samplingIntervalMs, aggregationHeartbeatMultiplier);
 
         PollRunnable regularMetricsPoll = new PollRunnable(
@@ -103,8 +100,7 @@ public class StartServoMetricsCollector implements CommandLineRunner {
         
         scheduler.addPoller(regularMetricsPoll, samplingIntervalMs, TimeUnit.MILLISECONDS);
 
-        if("true".equalsIgnoreCase(environment.getProperty("whizcontrol.enableCloudWatch", "false"))
-              || environment.acceptsProfiles("cloud-metrics-elastic-search", "cloud-metrics-aws-elastic-search") ){
+        if(environment.acceptsProfiles("cloud-metrics-elastic-search") ){
             
             //poll for these metrics only when there's an external system available to publish them into
             
@@ -237,16 +233,8 @@ public class StartServoMetricsCollector implements CommandLineRunner {
         
     }
 
-    private void registerCloudWatchIfNeeded(List<MetricObserver> observers, long samplingIntervalMs, int aggregationHeartbeatMultiplier) {
-        if("true".equalsIgnoreCase(environment.getProperty("whizcontrol.enableCloudWatch", "false"))){
-            throw new ConfigurationException("AWS CloudWatch should be used with extreme care. Very expensive!!! Before using - make sure that only a small number of metrics is published in there.");
-        } else {
-            LOG.info("AWS CloudWatch metrics collection is OFF");
-        }
-    }
-
     private void registerElasticSearchIfNeeded(List<MetricObserver> observers, long samplingIntervalMs, int aggregationHeartbeatMultiplier) {
-        if(environment.acceptsProfiles("cloud-metrics-elastic-search", "cloud-metrics-aws-elastic-search")){
+        if(environment.acceptsProfiles("cloud-metrics-elastic-search")){
             try{
                 MetricObserver elasticSearchObserver = new ElasticSearchMetricObserver(applicationContext);
                 
