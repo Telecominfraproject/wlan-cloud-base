@@ -3,14 +3,19 @@
  */
 package com.telecominfraproject.wlan.elasticsearch.client;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
-import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.apache.http.HttpHost;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 
 import com.telecominfraproject.wlan.server.exceptions.ConfigurationException;
@@ -22,10 +27,13 @@ import com.telecominfraproject.wlan.server.exceptions.ConfigurationException;
  *
  */
 public abstract class BaseElasticSearchClientConfigurer {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(BaseElasticSearchClientConfigurer.class);
+	
     /**
      * Default client port
      */
-    public static final int DEFAULT_CLIENT_PORT = 9300;
+    public static final int DEFAULT_CLIENT_PORT = 9200;
 
     protected static int getProperty(Environment environment, String key, int defaultValue) {
         if (null == key) {
@@ -61,9 +69,9 @@ public abstract class BaseElasticSearchClientConfigurer {
     private final String defaultClusterName;
 
     /**
-     * The transport client
+     * The elasticsearch client
      */
-    private TransportClient client;
+    private RestHighLevelClient client;
     /**
      * Client port
      */
@@ -98,13 +106,13 @@ public abstract class BaseElasticSearchClientConfigurer {
         return this.clusterName;
     }
 
-    protected TransportClient buildTransportClient(Environment environment) {
+    protected RestHighLevelClient buildTransportClient(Environment environment) {
         getLogger().info("Configuring ElasticSearchClient for {}", getClientName());
         if (null != this.client) {
             return this.client;
         }
         // see
-        // https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/transport-client.html
+        // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/master/java-rest-high.html
 
         // on startup
         // discover all nodes in cluster
@@ -112,11 +120,9 @@ public abstract class BaseElasticSearchClientConfigurer {
             this.clusterName = getProperty(environment, clusterNameProperty, defaultClusterName);
         }
         this.clientPort = getProperty(environment, clientPortProperty, defaultClientPort);
-        Settings settings = Settings.settingsBuilder().put("cluster.name", clusterName)
-                .put("client.transport.sniff", true).build();
-
-        this.client = TransportClient.builder().settings(settings).build();
-
+        
+        List<HttpHost>  httpHosts = new ArrayList<>();
+        		
         Set<String> addressList = getHostForCluster(environment);
         if (addressList.isEmpty()) {
             getLogger().error("No host address found for {} cluster {}", getClientName(), clusterName);
@@ -126,7 +132,7 @@ public abstract class BaseElasticSearchClientConfigurer {
 
         for (String address : addressList) {
             try {
-                client.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(address), clientPort));
+                httpHosts.add(new HttpHost(InetAddress.getByName(address), clientPort, "http"));
                 getLogger().info("Added transport address {} to {}({})", address, getClientName(), this.clusterName);
             } catch (UnknownHostException e) {
                 getLogger().error("Invalid host address specified for {} ElasticSearchClient {}: {}", getClientName(),
@@ -136,12 +142,18 @@ public abstract class BaseElasticSearchClientConfigurer {
             }
             knownHostsAdded(addressList);
         }
+        
+        
+		RestClientBuilder restClientBuilder = RestClient.builder( httpHosts.toArray(new HttpHost[0]) );
+		this.client = new RestHighLevelClient(restClientBuilder);
+		
+
         return this.client;
     }
 
     public abstract String getClientName();
 
-    protected TransportClient getClient() {
+    protected RestHighLevelClient getClient() {
         return client;
     }
 
@@ -185,7 +197,12 @@ public abstract class BaseElasticSearchClientConfigurer {
      */
     protected void shutdownClient() {
         // TODO: add shutdown hook?
-        client.close();
+        try {
+			client.close();
+		} catch (IOException e) {
+			LOG.debug("Exception when closing elasticsearch client", e);
+		}
+        
         client = null;
     }
 }

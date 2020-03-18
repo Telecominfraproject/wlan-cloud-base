@@ -1,6 +1,6 @@
 package com.telecominfraproject.wlan.cloudmetrics.elasticsearch.client;
 
-import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class ElasticSearchStaticClientConfigurer extends BaseElasticSearchStatic
     }
 
     @Bean
-    public TransportClient cloudMetricsTransportClient() {
+    public RestHighLevelClient cloudMetricsTransportClient() {
         return buildTransportClient(environment);
     }
 
@@ -48,7 +48,4 @@ public class ElasticSearchStaticClientConfigurer extends BaseElasticSearchStatic
         return LOG;
     }
 
-    // on shutdown
-    // TODO: add shutdown hook?
-    // client.close();
 }

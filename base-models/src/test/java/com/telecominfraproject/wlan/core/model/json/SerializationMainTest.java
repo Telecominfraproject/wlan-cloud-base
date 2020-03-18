@@ -62,7 +62,7 @@ public class SerializationMainTest {
     public void testObjectMapperWithList() throws Exception {
         String listStr = "[{\"model_type\":\"TestMetricEvent\",\"strProp\":\"s1\",\"intProp\":1,\"objProp\":{\"model_type\":\"GenericResponse\",\"message\":\"m1\",\"success\":true}},"
                         + "{\"model_type\":\"TestMetricEvent\",\"strProp\":\"s2\",\"intProp\":2,\"objProp\":{\"model_type\":\"GenericResponse\",\"message\":\"m2\",\"success\":true}}]";
-        TypeReference<ArrayList<BaseJsonModel>> t =  new TypeReference<ArrayList<BaseJsonModel>>() { };
+        TypeReference<ArrayList<TestMetricEvent>> t =  new TypeReference<ArrayList<TestMetricEvent>>() { };
         List<TestMetricEvent> list = objectMapper.readValue(listStr, t);
         
         assertEquals(2, list.size());

@@ -9,10 +9,10 @@ import org.apache.catalina.connector.Connector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
-import org.springframework.boot.context.embedded.tomcat.TomcatContextCustomizer;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -25,7 +25,7 @@ import org.springframework.util.ResourceUtils;
  *
  */
 @PropertySource({ "${ssl.props:classpath:ssl.properties}" })
-public abstract class ServletContainerCustomizer implements EmbeddedServletContainerCustomizer {
+public abstract class ServletContainerCustomizer implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
 
     @Autowired private ApplicationContext appContext;
     
@@ -41,9 +41,14 @@ public abstract class ServletContainerCustomizer implements EmbeddedServletConta
     // see http://docs.spring.io/spring-boot/docs/1.1.1.RELEASE/reference/htmlsingle/#boot-features-customizing-embedded-containers
 
     @Override
-    public void customize(ConfigurableEmbeddedServletContainer factory) {
+    public void customize(ConfigurableServletWebServerFactory factory) {
         throw new IllegalStateException("ServletContainerCustomizer.customize method has to be overridden !!!");
     }
+    
+//    @Bean
+//    public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> webServerFactoryCustomizer() {
+//        return (factory) -> factory.addErrorPages(new ErrorPage(HttpStatus.UNAUTHORIZED, "/401.html"));
+//    }
     
     protected void enableCompression(Connector connector) {
         //enable compression for rest services
@@ -54,7 +59,7 @@ public abstract class ServletContainerCustomizer implements EmbeddedServletConta
         connector.setProperty("compressableMimeType", "text/html,text/xml,text/plain,text/css,text/javascript,image/svg+xml,application/json,application/xml,application/javascript,application/json;charset=UTF-8");
     }
 
-    protected void disableSessionCookies(TomcatEmbeddedServletContainerFactory tomcatFactory) {
+    protected void disableSessionCookies(TomcatServletWebServerFactory tomcatFactory) {
         //disable session cookies
         // http://tomcat.apache.org/tomcat-8.0-doc/config/context.html
         TomcatContextCustomizer tomcatContextCustomizer = new TomcatContextCustomizer() {

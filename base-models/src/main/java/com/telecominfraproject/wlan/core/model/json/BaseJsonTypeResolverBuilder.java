@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.NoClass;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
 import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
@@ -82,7 +83,7 @@ public class BaseJsonTypeResolverBuilder extends StdTypeResolverBuilder {
         TypeDeserializer originalDeserializer = super.buildTypeDeserializer(config, baseType, subtypes);
         TypeDeserializer ret = originalDeserializer; 
         if(ret instanceof AsPropertyTypeDeserializer){
-            TypeIdResolver idRes = idResolver(config, baseType, subtypes, false, true);
+            TypeIdResolver idRes = idResolver(config, baseType, BasicPolymorphicTypeValidator.builder().allowIfBaseType(BaseJsonModel.class).build(), subtypes, false, true);
             JavaType defaultImpl;
 
             if (_defaultImpl == null) {

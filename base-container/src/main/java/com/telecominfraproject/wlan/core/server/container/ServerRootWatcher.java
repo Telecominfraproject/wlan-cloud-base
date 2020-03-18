@@ -6,16 +6,16 @@ package com.telecominfraproject.wlan.core.server.container;
 import java.io.File;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.catalina.Container;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
-import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.context.embedded.EmbeddedServletContainer;
-import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer;
+import org.springframework.boot.web.context.WebServerApplicationContext;
+import org.springframework.boot.web.embedded.tomcat.TomcatWebServer;
+import org.springframework.boot.web.server.WebServer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -41,14 +41,14 @@ public class ServerRootWatcher implements ApplicationListener<ContextRefreshedEv
         ApplicationContext context = event.getApplicationContext();
         LOG.debug("Processing ContextRefreshedEvent for {}", context.getClass().getSimpleName());
 
-        if (!EmbeddedWebApplicationContext.class.isInstance(context)) {
+        if (!WebServerApplicationContext.class.isInstance(context)) {
             return;
         }
-        EmbeddedServletContainer container = ((EmbeddedWebApplicationContext) context).getEmbeddedServletContainer();
-        if (!TomcatEmbeddedServletContainer.class.isInstance(container)) {
+        WebServer container = ((WebServerApplicationContext) context).getWebServer();
+        if (!TomcatWebServer.class.isInstance(container)) {
             return;
         }
-        Tomcat tomcat = ((TomcatEmbeddedServletContainer) container).getTomcat();
+        Tomcat tomcat = ((TomcatWebServer) container).getTomcat();
         for (Container child : tomcat.getHost().findChildren()) {
             if (!StandardContext.class.isInstance(child)) {
                 continue;

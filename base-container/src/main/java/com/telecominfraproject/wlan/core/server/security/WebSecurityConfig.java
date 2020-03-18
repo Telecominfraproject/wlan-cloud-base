@@ -123,7 +123,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         DigestAuthenticationEntryPoint daep = new DigestAuthenticationEntryPoint() {
             @Override
             public void commence(HttpServletRequest request, HttpServletResponse response,
-                    AuthenticationException authException) throws IOException, ServletException {
+                    AuthenticationException authException) throws IOException {
 
                 // DTOP: this method is copied from the parent class because we
                 // want to use custom Authentication Header while re-using the
@@ -564,7 +564,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .authenticationEntryPoint(new Http403ForbiddenEntryPoint() {
                         @Override
                         public void commence(HttpServletRequest request, HttpServletResponse response,
-                                AuthenticationException arg2) throws IOException, ServletException {
+                                AuthenticationException arg2) throws IOException {
                             LOG.debug("X509 client auth entry point");
                             super.commence(request, response, arg2);
                         }

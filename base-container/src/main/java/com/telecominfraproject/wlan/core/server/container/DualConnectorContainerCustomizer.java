@@ -4,9 +4,9 @@ import org.apache.catalina.connector.Connector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
-import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomizer;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -23,10 +23,10 @@ public class DualConnectorContainerCustomizer extends ServletContainerCustomizer
     @Autowired private ConnectorProperties connectorProperties;
     
     @Override
-    public void customize(ConfigurableEmbeddedServletContainer factory) {
+    public void customize(ConfigurableServletWebServerFactory factory) {
         
-        if(factory instanceof TomcatEmbeddedServletContainerFactory) {
-            TomcatEmbeddedServletContainerFactory tomcatFactory = (TomcatEmbeddedServletContainerFactory) factory;
+        if(factory instanceof TomcatServletWebServerFactory) {
+        	TomcatServletWebServerFactory tomcatFactory = (TomcatServletWebServerFactory) factory;
             
             //tomcat factory will create by default only one Http connector - on the port configured in application.properties (server.port)
             //customize that connector to support SSL
@@ -47,7 +47,7 @@ public class DualConnectorContainerCustomizer extends ServletContainerCustomizer
 
             tomcatFactory.addAdditionalTomcatConnectors(secondConnector);
             //default timeout is 30 minutes, connection is dropped after that by the server
-            tomcatFactory.setSessionTimeout(-1);
+            //tomcatFactory.setSessionTimeout(-1);
 
             disableSessionCookies(tomcatFactory);
             
