@@ -42,6 +42,17 @@
                                 <module>../cloud-metrics</module>
                                 <module>../base-container</module>
                                 <module>../base-client</module>
+                                <module>../base-datastore-inmemory</module>
+                                <module>../base-hazelcast-client</module>
+                                <module>../base-hierarchical-datastore</module>
+                                <module>../base-jdbc</module>
+                                <module>../base-jdbc-tests</module>
+                                <module>../base-job</module>
+                                <module>../base-partitioner</module>
+                                <module>../base-remote-tests</module>
+                                <module>../base-scheduler</module>
+                                <module>../base-stream-interface</module>
+                                <module>../common-hazelcast</module>
                         </modules>
                 </profile>
         </profiles>

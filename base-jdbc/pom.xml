@@ -1,0 +1,43 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+    <parent>
+      <groupId>com.telecominfraproject.wlan</groupId>
+      <artifactId>tip-wlan-cloud-root-pom</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <relativePath>../../tip-wlan-cloud-root</relativePath>
+    </parent>
+  <artifactId>base-jdbc</artifactId>
+  <name>base-jdbc</name>
+  <description>Common classes used by jdbc data sources and connection pools.</description>
+  
+  <dependencies>
+    <!-- JDBC Data Access Library 
+        (depends on spring-core, spring-beans, spring-context, spring-tx)
+        Define this if you use Spring's JdbcTemplate API 
+        (org.springframework.jdbc.*)-->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
+    </dependency>    
+    <!-- Transaction Management Abstraction 
+        (depends on spring-core, spring-beans, spring-aop, spring-context)
+        Define this if you use Spring Transactions or DAO Exception Hierarchy
+        (org.springframework.transaction.*/org.springframework.dao.*)-->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-tx</artifactId>
+    </dependency>
+
+	<dependency>
+		<groupId>org.apache.commons</groupId>
+		<artifactId>commons-dbcp2</artifactId>
+	</dependency>
+
+	<dependency>
+	    <groupId>com.telecominfraproject.wlan</groupId>
+	    <artifactId>cloud-metrics</artifactId>
+        <version>${tip-wlan-cloud.release.version}</version>
+	</dependency>
+  
+  </dependencies>
+</project>
