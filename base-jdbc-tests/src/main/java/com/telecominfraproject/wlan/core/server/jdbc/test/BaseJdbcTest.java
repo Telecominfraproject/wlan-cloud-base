@@ -106,7 +106,7 @@ public abstract class BaseJdbcTest {
             // exists.
             //
             Reflections reflections = new Reflections(new ConfigurationBuilder()
-                    .setUrls(ClasspathHelper.forPackage("com.whizcontrol")).setScanners(new ResourcesScanner()));
+                    .setUrls(ClasspathHelper.forPackage("com.telecominfraproject.wlan")).setScanners(new ResourcesScanner()));
             Set<String> testDataFiles = reflections.getResources(Pattern.compile("test-data.sql"));
 
             if (!CollectionUtils.isEmpty(testDataFiles)) {

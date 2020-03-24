@@ -66,7 +66,7 @@ public class RestTemplateConfigurationSingleUserPerServiceDigestHttpAuth {
 
     @Autowired
     private HttpClientConfig httpClientConfig;
-    @Autowired
+    @Autowired(required = false)
     private SSLContext sslContext;
     @Autowired
     private RestHttpClientConfig restHttpClientConfig;

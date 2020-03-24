@@ -23,7 +23,7 @@ public class ExceptionPropagatingErrorHandlerTests {
     @Test
     public void testAllExceptions() {
         ExceptionPropagatingErrorHandler handler = new ExceptionPropagatingErrorHandler();
-        Reflections reflections = new Reflections("com.whizcontrol");
+        Reflections reflections = new Reflections("com.telecominfraproject.wlan");
         for (Class<? extends RuntimeException> expClass : reflections.getSubTypesOf(RuntimeException.class)) {
             testHandling(handler, expClass);
         }

@@ -18,7 +18,7 @@ public class ClientDistributedObjectListener implements DistributedObjectListene
 
     private final HazelcastInstance hazelcastInstance;
     
-    private final static boolean propagateHazelcastDestroyEvents = Boolean.getBoolean("whizcontrol.hazelcast.propagateDestroyEvents");
+    private final static boolean propagateHazelcastDestroyEvents = Boolean.getBoolean("tip.wlan.hazelcast.propagateDestroyEvents");
     
     /**
      * This listener cleans up locally-known distributed objects when their remote counterparts get destroyed

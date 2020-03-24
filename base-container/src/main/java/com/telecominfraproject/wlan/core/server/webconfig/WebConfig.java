@@ -32,7 +32,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Autowired private Environment environment;
     private static final Logger LOG = LoggerFactory.getLogger(WebConfig.class);
-    private static final String WEB_RESOURCE_PROP = "whizcontrol.webResources";
+    private static final String WEB_RESOURCE_PROP = "tip.wlan.webResources";
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -48,10 +48,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
             .addResourceHandler("/**")
             .addResourceLocations(resourceLocations.toArray(new String[0]));
 
-        if(environment.getProperty("whizcontrol.webResources.cachePeriodSec")!=null){
+        if(environment.getProperty("tip.wlan.webResources.cachePeriodSec")!=null){
             //0 means no caching
             //absense of the call below means relying on file last-modified timestamps
-            resourceHandlerRegistration.setCachePeriod(Integer.getInteger("whizcontrol.webResources.cachePeriodSec", 0));
+            resourceHandlerRegistration.setCachePeriod(Integer.getInteger("tip.wlan.webResources.cachePeriodSec", 0));
         }
 
 

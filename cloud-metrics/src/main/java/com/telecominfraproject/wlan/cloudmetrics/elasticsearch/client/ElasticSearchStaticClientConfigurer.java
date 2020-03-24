@@ -24,8 +24,8 @@ public class ElasticSearchStaticClientConfigurer extends BaseElasticSearchStatic
     private Environment environment;
 
     public ElasticSearchStaticClientConfigurer() {
-        super("whizcontrol.metricsElasticSearch.clusterName", "elasticsearch",
-                "whizcontrol.metricsElasticSearch.hostNames", "localhost", null, DEFAULT_CLIENT_PORT);
+        super("tip.wlan.metricsElasticSearch.clusterName", "elasticsearch",
+                "tip.wlan.metricsElasticSearch.hostNames", "localhost", null, DEFAULT_CLIENT_PORT);
     }
 
     @Bean

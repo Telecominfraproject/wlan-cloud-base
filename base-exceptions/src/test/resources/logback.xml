@@ -39,7 +39,7 @@
    -->
   <logger name="org.springframework" level="WARN"/>
   <logger name="org.reflections" level="WARN"/>
-  <logger name="com.telecominfraproject.wlan" level="${art2waveLogLevel:-DEBUG}"/>
+  <logger name="com.telecominfraproject.wlan" level="${tipWlanLogLevel:-DEBUG}"/>
   <logger name="com.netflix.servo.tag.aws.AwsInjectableTag" level="OFF"/>
 
   <root level="WARN">

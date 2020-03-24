@@ -25,7 +25,7 @@ public class TestClientExceptionResponse implements ClientHttpResponse {
 
     /**
      * see
-     * com.whizcontrol.core.server.webconfig.CommonControllerAdvice.generateException(HttpServletRequest,
+     * com.telecominfraproject.wlan.core.server.webconfig.CommonControllerAdvice.generateException(HttpServletRequest,
      * Exception)
      * 
      * @param exception

@@ -57,7 +57,7 @@ public class SystemAndEnvPropertyResolver {
                     for(Annotation annotation: f.getDeclaredAnnotations()){
                         String aVal = annotation.toString();
                         //example of aVal:
-                        // @org.springframework.beans.factory.annotation.Value(value=${whizcontrol.hazelcast.systemEventsRecordIndex.ttlSeconds:7200})
+                        // @org.springframework.beans.factory.annotation.Value(value=${tip.wlan.hazelcast.systemEventsRecordIndex.ttlSeconds:7200})
                         if(aVal.startsWith(valueAnnotationPrefix)){
                             int indexOfSeparator = aVal.lastIndexOf(':');
                             String propName = aVal.substring(valueAnnotationPrefix.length(), indexOfSeparator);

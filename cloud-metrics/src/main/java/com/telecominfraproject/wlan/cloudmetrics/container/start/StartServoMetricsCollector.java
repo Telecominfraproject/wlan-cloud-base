@@ -76,8 +76,8 @@ public class StartServoMetricsCollector implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         
-        long samplingIntervalMs = environment.getProperty("whizcontrol.servo.samplingIntervalMs", Long.class, TimeUnit.MINUTES.toMillis(1));
-        int aggregationHeartbeatMultiplier = environment.getProperty("whizcontrol.servo.aggregationHeartbeatMultiplier", Integer.class, 2);
+        long samplingIntervalMs = environment.getProperty("tip.wlan.servo.samplingIntervalMs", Long.class, TimeUnit.MINUTES.toMillis(1));
+        int aggregationHeartbeatMultiplier = environment.getProperty("tip.wlan.servo.aggregationHeartbeatMultiplier", Integer.class, 2);
                 
         PollScheduler scheduler = PollScheduler.getInstance();
         if(!scheduler.isStarted()){

@@ -41,13 +41,13 @@ public class RecordIndexRegistry {
         metricDataType;
     }
 
-    @Value("${whizcontrol.RawEquipmentEventDatastore.s3ds.fileNamePrefix:ree}")
+    @Value("${tip.wlan.RawEquipmentEventDatastore.s3ds.fileNamePrefix:ree}")
     private String reeFileNamePrefix;
 
-    @Value("${whizcontrol.SystemEventDatastore.s3ds.fileNamePrefix:se}")
+    @Value("${tip.wlan.SystemEventDatastore.s3ds.fileNamePrefix:se}")
     private String seFileNamePrefix;
     
-    @Value("${whizcontrol.ServiceMetricsDatastore.s3ds.fileNamePrefix:sm}")
+    @Value("${tip.wlan.ServiceMetricsDatastore.s3ds.fileNamePrefix:sm}")
     private String smFileNamePrefix;
 */
 

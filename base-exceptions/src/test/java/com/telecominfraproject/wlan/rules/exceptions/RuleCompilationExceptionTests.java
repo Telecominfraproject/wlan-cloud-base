@@ -1,4 +1,4 @@
-package com.whizcontrol.rules.exceptions;
+package com.telecominfraproject.wlan.rules.exceptions;
 
 import org.junit.Test;
 import org.slf4j.Logger;

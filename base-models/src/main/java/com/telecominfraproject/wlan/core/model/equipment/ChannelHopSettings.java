@@ -19,7 +19,7 @@ public class ChannelHopSettings extends BaseJsonModel
 
     /*
      * Defaults described here:
-     * https://whizcontrol.atlassian.net/browse/NAAS-4886
+     * https://kdc.atlassian.net/browse/NAAS-4886
      */
     private ChannelHopSettings()
     {

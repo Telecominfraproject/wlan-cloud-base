@@ -26,7 +26,7 @@ public class JobManager {
      */
     protected static final long JOB_QUEUE_POLL_TIME_MS = 1000;
 
-    private final int queueSize = Integer.getInteger("com.whizcontrol.JobManager.queueSize", 10000);
+    private final int queueSize = Integer.getInteger("tip.wlan.JobManager.queueSize", 10000);
     /**
      *  job queue
      */

@@ -31,7 +31,7 @@ public enum NetworkInterfaceType {
      */
     RESERVED(3),
     /**
-     * Invalid, non Art2wave
+     * Invalid, not supported
      */
     UNSUPPORTED(-1);
 

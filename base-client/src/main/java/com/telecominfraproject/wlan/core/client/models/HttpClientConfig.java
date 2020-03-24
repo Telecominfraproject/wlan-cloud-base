@@ -32,7 +32,7 @@ public class HttpClientConfig extends BaseJsonModel {
     /**
      * Environment property to encrypt password store key
      */
-    public static final String HTTP_CLIENT_ENC_KEY_PROP = "whizcontrol.httpClient.encKey";
+    public static final String HTTP_CLIENT_ENC_KEY_PROP = "tip.wlan.httpClient.encKey";
 
     public static String decodeStorePasswordValue(String password, String key) {
         String result = null;

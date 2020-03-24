@@ -82,7 +82,7 @@ public class ServiceInstanceInformation {
         if (null == this.deploymentType) {
             synchronized (this) {
                 if (null == this.deploymentType) {
-                    deploymentType = enviornment.getProperty("whizcontrol.deploy.type", DEPLOYMENT_TYPE_UNKNOWN);
+                    deploymentType = enviornment.getProperty("tip.wlan.deploy.type", DEPLOYMENT_TYPE_UNKNOWN);
                 }
             }
         }

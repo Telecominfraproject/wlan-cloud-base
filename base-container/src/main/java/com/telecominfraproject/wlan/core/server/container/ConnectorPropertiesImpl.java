@@ -28,13 +28,13 @@ public class ConnectorPropertiesImpl implements ConnectorProperties {
     public ConnectorPropertiesImpl(Environment environment){
         
         int _externalPort = Integer.parseInt(environment.getProperty("server.port").trim());
-        int _internalPort = Integer.parseInt(environment.getProperty("whizcontrol.secondaryPort", "7070").trim());
+        int _internalPort = Integer.parseInt(environment.getProperty("tip.wlan.secondaryPort", "7070").trim());
         InetAddress _externalIpAddress;
         InetAddress _internalIpAddress;
-        String _externalHostName = environment.getProperty("whizcontrol.externalHostName");
-        String _internalHostName = environment.getProperty("whizcontrol.internalHostName");
+        String _externalHostName = environment.getProperty("tip.wlan.externalHostName");
+        String _internalHostName = environment.getProperty("tip.wlan.internalHostName");
         
-        String externalIpAddrStr = environment.getProperty("whizcontrol.externalIpAddress");
+        String externalIpAddrStr = environment.getProperty("tip.wlan.externalIpAddress");
         if(externalIpAddrStr==null){
             try {
                 _externalIpAddress = InetAddress.getLocalHost();
@@ -53,7 +53,7 @@ public class ConnectorPropertiesImpl implements ConnectorProperties {
             _externalHostName = _externalIpAddress.getCanonicalHostName();
         }
 
-        String internalIpAddrStr = environment.getProperty("whizcontrol.internalIpAddress");
+        String internalIpAddrStr = environment.getProperty("tip.wlan.internalIpAddress");
         if(internalIpAddrStr==null){
             try {
                 _internalIpAddress = InetAddress.getLocalHost();

@@ -7,7 +7,7 @@ package com.telecominfraproject.wlan.core.server.container;
 public enum ConnectorType {
     internalConnector, externalConnector ;
 
-    public static final String CONNECTOR_ATTRIBUTE_NAME = "WHIZCONTROL.CONNECTOR_TYPE";
+    public static final String CONNECTOR_ATTRIBUTE_NAME = "TIP.WLAN.CONNECTOR_TYPE";
     
 
 }

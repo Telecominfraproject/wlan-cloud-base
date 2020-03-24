@@ -33,10 +33,10 @@ public class HttpClientConfigResolver {
         try {
             String configLocation;
             if(environment!=null){
-                configLocation = environment.getProperty("whizcontrol.httpClientConfig",DEFAULT_CONFIG_LOCATION);
+                configLocation = environment.getProperty("tip.wlan.httpClientConfig",DEFAULT_CONFIG_LOCATION);
             }
             else {
-                configLocation = System.getProperty("whizcontrol.httpClientConfig",DEFAULT_CONFIG_LOCATION);
+                configLocation = System.getProperty("tip.wlan.httpClientConfig",DEFAULT_CONFIG_LOCATION);
             }
             LOG.info("Loading http client configuration from {}",
                     configLocation);

@@ -134,7 +134,7 @@ public class ServletFilters {
     @Bean
     @Profile(value="app_push_state_routing") // used only in portals
     public Filter appForwardFilter(final Environment env) {
-        final String appPrefix = env.getProperty("whizcontrol.pushStateRouting.prefix", "/app/");
+        final String appPrefix = env.getProperty("tip.wlan.pushStateRouting.prefix", "/app/");
         
         return new OncePerRequestFilter() {
             

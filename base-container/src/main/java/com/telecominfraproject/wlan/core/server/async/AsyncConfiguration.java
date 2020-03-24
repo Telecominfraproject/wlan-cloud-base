@@ -334,9 +334,9 @@ public class AsyncConfiguration implements AsyncConfigurer {
             
         };
         
-        executor.setCorePoolSize(Integer.parseInt(environment.getProperty("whizcontrol.AsyncExecutor.CorePoolSize", "7")));
-        executor.setMaxPoolSize(Integer.parseInt(environment.getProperty("whizcontrol.AsyncExecutor.MaxPoolSize", "42")));
-        int queueCapacity = Integer.parseInt(environment.getProperty("whizcontrol.AsyncExecutor.QueueCapacity", "11"));
+        executor.setCorePoolSize(Integer.parseInt(environment.getProperty("tip.wlan.AsyncExecutor.CorePoolSize", "7")));
+        executor.setMaxPoolSize(Integer.parseInt(environment.getProperty("tip.wlan.AsyncExecutor.MaxPoolSize", "42")));
+        int queueCapacity = Integer.parseInt(environment.getProperty("tip.wlan.AsyncExecutor.QueueCapacity", "11"));
         executor.setQueueCapacity(queueCapacity);
         executor.setThreadNamePrefix("AsyncExecutor-");
         executor.setDaemon(true);

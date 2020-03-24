@@ -70,7 +70,7 @@ where file template_cm.json has this:
 Then add the following properties to the java processes (be careful with spring.profiles.active - if it exists, then add to it):
 
 OPTIONS="$OPTIONS -Dspring.profiles.active=cloud-metrics-elastic-search"
-OPTIONS="$OPTIONS -Dwhizcontrol.metricsElasticSearch.hostName=elasticsearch03.useast.123wlan.com”
+OPTIONS="$OPTIONS -Dtip.wlan.metricsElasticSearch.hostName=elasticsearch03.useast.123wlan.com”
 
 ----
 Then restart java processes and they will publish their metrics into ES every minute.

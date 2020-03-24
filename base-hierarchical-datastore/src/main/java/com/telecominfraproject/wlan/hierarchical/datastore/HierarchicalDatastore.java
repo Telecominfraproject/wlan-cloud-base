@@ -1161,7 +1161,7 @@ public class HierarchicalDatastore{
     }
 
     /**
-     * This method is called by com.whizcontrol.datastore.kinesistohds.connector.HourlyIndexBuildRequestProcessor
+     * This method is called by HourlyIndexBuildRequestProcessor
      *  when a request to build hourly index is read from the hazelcast queue.
      * The name of the queue comes from hazelcastObjectsConfiguration.getRebuildIdxHourlyDirectoryNamesQueue().
      * 

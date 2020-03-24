@@ -60,8 +60,8 @@ public class HazelcastForUnitTest {
          */
         public static void initializeSystemProperty(Class<?> testClass) {
             int hashCode = testClass.hashCode();
-            System.setProperty("whizcontrol.hazelcast.groupName", "wc-dev" + hashCode);
-            System.setProperty("whizcontrol.hazelcast.groupPassword", "wc-dev-pass" + hashCode);
+            System.setProperty("tip.wlan.hazelcast.groupName", "wc-dev" + hashCode);
+            System.setProperty("tip.wlan.hazelcast.groupPassword", "wc-dev-pass" + hashCode);
         }
     }
 
@@ -72,8 +72,8 @@ public class HazelcastForUnitTest {
         config.setProperty(GroupProperty.LOGGING_TYPE.getName(), "slf4j");
         config.setProperty(GroupProperty.PHONE_HOME_ENABLED.getName(), "false");
         
-        GroupConfig groupConfig = new GroupConfig(System.getProperty("whizcontrol.hazelcast.groupName", "wc-dev"));
-        groupConfig.setPassword(System.getProperty("whizcontrol.hazelcast.groupPassword", "wc-dev-pass"));
+        GroupConfig groupConfig = new GroupConfig(System.getProperty("tip.wlan.hazelcast.groupName", "wc-dev"));
+        groupConfig.setPassword(System.getProperty("tip.wlan.hazelcast.groupPassword", "wc-dev-pass"));
         config.setGroupConfig(groupConfig);
         config.getNetworkConfig().setPublicAddress("127.0.0.1").setPort(5900).setPortAutoIncrement(true)
                 .setInterfaces(new InterfacesConfig().addInterface("127.0.0.1"));

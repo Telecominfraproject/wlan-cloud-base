@@ -30,13 +30,13 @@
 		level="ERROR" />
 	<logger
 		name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"
-		level="${art2waveLogLevel:-INFO}" />
+		level="${tipWlanLogLevel:-INFO}" />
 	<logger
 		name="org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer"
-		level="${art2waveLogLevel:-INFO}" />
+		level="${tipWlanLogLevel:-INFO}" />
 
-	<logger name="com.whizcontrol" level="${art2waveLogLevel:-DEBUG}" />
-	<logger name="com.whizcontrol.core.server" level="${art2waveLogLevel:-WARN}" />
+	<logger name="com.telecominfraproject.wlan" level="${tipWlanLogLevel:-DEBUG}" />
+	<logger name="com.telecominfraproject.wlan.core.server" level="${tipWlanLogLevel:-WARN}" />
 	<logger name="com.netflix.servo.tag.aws.AwsInjectableTag"
 		level="OFF" />
 

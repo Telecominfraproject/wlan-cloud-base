@@ -36,22 +36,22 @@ public class HazelcastClientConfiguration {
     //
     // hazelcast group security settings
     //
-    @Value("${whizcontrol.hazelcast.groupName:wc-dev}")
+    @Value("${tip.wlan.hazelcast.groupName:wc-dev}")
     private String groupName;
-    @Value("${whizcontrol.hazelcast.groupPassword:wc-dev-pass}")
+    @Value("${tip.wlan.hazelcast.groupPassword:wc-dev-pass}")
     private String groupPassword;
 
     /**
      * comma-separated list of ipAddr:port of some of the nodes in the hazelcast
      * cluster
      */
-    @Value("${whizcontrol.hazelcast.nodeAddresses:127.0.0.1:5701}")
+    @Value("${tip.wlan.hazelcast.nodeAddresses:127.0.0.1:5701}")
     private String nodeAddressesStr;
 
-    @Value("${whizcontrol.hazelcast.awsStackName:hcn01}")
+    @Value("${tip.wlan.hazelcast.awsStackName:hcn01}")
     private String stackName;
 
-    @Value("${whizcontrol.hazelcast.reconnectTimeSec:3600}")
+    @Value("${tip.wlan.hazelcast.reconnectTimeSec:3600}")
     private int reconnectTimeSec;
 
     private String awsRegion;
@@ -64,7 +64,7 @@ public class HazelcastClientConfiguration {
 
     @PostConstruct
     public void setupConfiguration() {
-        this.awsRegion = environment.getProperty("whizcontrol.hazelcast.awsRegion");
+        this.awsRegion = environment.getProperty("tip.wlan.hazelcast.awsRegion");
     }
 
     /**
@@ -109,17 +109,17 @@ public class HazelcastClientConfiguration {
      */
     public static HazelcastClientConfiguration createOutsideOfSpringApp() {
         String nodeAddressesStr = SystemAndEnvPropertyResolver
-                .getPropertyAsString("whizcontrol.hazelcast.nodeAddresses", null);
-        String groupPassword = SystemAndEnvPropertyResolver.getPropertyAsString("whizcontrol.hazelcast.groupPassword",
+                .getPropertyAsString("tip.wlan.hazelcast.nodeAddresses", null);
+        String groupPassword = SystemAndEnvPropertyResolver.getPropertyAsString("tip.wlan.hazelcast.groupPassword",
                 "wc-dev-pass");
-        String groupName = SystemAndEnvPropertyResolver.getPropertyAsString("whizcontrol.hazelcast.groupName",
+        String groupName = SystemAndEnvPropertyResolver.getPropertyAsString("tip.wlan.hazelcast.groupName",
                 "wc-dev");
         if (nodeAddressesStr == null) {
-            String stackName = SystemAndEnvPropertyResolver.getPropertyAsString("whizcontrol.hazelcast.awsStackName",
+            String stackName = SystemAndEnvPropertyResolver.getPropertyAsString("tip.wlan.hazelcast.awsStackName",
                     "hcn01");
 
             String awsRegion = SystemAndEnvPropertyResolver
-                    .getPropertyAsString("whizcontrol.hazelcast.awsRegion", null);
+                    .getPropertyAsString("tip.wlan.hazelcast.awsRegion", null);
             return new HazelcastClientConfiguration(groupName, groupPassword, stackName, awsRegion);
         }
         return new HazelcastClientConfiguration(groupName, groupPassword, nodeAddressesStr);

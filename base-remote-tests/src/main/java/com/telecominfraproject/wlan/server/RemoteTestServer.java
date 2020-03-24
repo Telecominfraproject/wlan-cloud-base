@@ -13,7 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @author yongli
  *
  */
-@ComponentScan(basePackages = { "com.whizcontrol" })
+@ComponentScan(basePackages = { "com.telecominfraproject.wlan" })
 @EnableAutoConfiguration
 public class RemoteTestServer {
     public static void main(String[] args) {

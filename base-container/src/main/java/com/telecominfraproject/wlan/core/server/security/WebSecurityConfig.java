@@ -98,17 +98,17 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     protected static final int MAX_AUTH0_PROVIDER = 3;
     private static final String DEFAULT_AUTH0_PROPERTY = "unknown";
-    private static final String AUTH_REQUIRED_AUTHORITIES = "whizcontrol.requiredAuthorities";
+    private static final String AUTH_REQUIRED_AUTHORITIES = "tip.wlan.requiredAuthorities";
     /**
      * List of path to protected for API
      */
-    private static final String LIST_PROTECTED_PATH_PROP = "whizcontrol.listOfPathsToProtect";
+    private static final String LIST_PROTECTED_PATH_PROP = "tip.wlan.listOfPathsToProtect";
 
     @Bean
     public UserDetailsService userDetailsService() {
         UserDetailsService uds = new InMemoryUserDetailsManager(
-                Arrays.asList(new UserDetails[] { new User(environment.getProperty("whizcontrol.serviceUser", "user"),
-                        environment.getProperty("whizcontrol.servicePassword", "password"), true, true, true, true,
+                Arrays.asList(new UserDetails[] { new User(environment.getProperty("tip.wlan.serviceUser", "user"),
+                        environment.getProperty("tip.wlan.servicePassword", "password"), true, true, true, true,
                         Arrays.asList(new SimpleGrantedAuthority[] { USER_AUTHORITY, MSP_AUTHORITY,
                                 SERVICE_PROVIDER_AUTHORITY, TECH_SUPPORT_AUTHORITY, API_AUTHORITY })), }));
 
@@ -178,10 +178,10 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
             }
         };
-        daep.setKey(env.getProperty("whizcontrol.digestKey", "skhfgjkhgekhg3u65i7"));
+        daep.setKey(env.getProperty("tip.wlan.digestKey", "skhfgjkhgekhg3u65i7"));
         daep.setNonceValiditySeconds(
-                Integer.parseInt(env.getProperty("whizcontrol.digestNonceValiditySeconds", "120")));
-        daep.setRealmName(env.getProperty("whizcontrol.digestRealmName", "WhizControlRealm"));
+                Integer.parseInt(env.getProperty("tip.wlan.digestNonceValiditySeconds", "120")));
+        daep.setRealmName(env.getProperty("tip.wlan.digestRealmName", "TIPWlanRealm"));
         return daep;
     }
 
@@ -236,7 +236,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     protected void commonConfiguration(HttpSecurity http) {
         boolean useCsrfProtection = Boolean
-                .parseBoolean(applicationContext.getEnvironment().getProperty("whizcontrol.csrf-enabled", "true"));
+                .parseBoolean(applicationContext.getEnvironment().getProperty("tip.wlan.csrf-enabled", "true"));
         if (!useCsrfProtection) {
             try {
                 http.csrf().disable();
@@ -342,7 +342,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         }
         // configure cross origin verification
         try {
-            Boolean xframeSameOrigin = environment.getProperty("whizcontrol.xframeSameOrigin", Boolean.class);
+            Boolean xframeSameOrigin = environment.getProperty("tip.wlan.xframeSameOrigin", Boolean.class);
 
             if (Boolean.TRUE.equals(xframeSameOrigin)) {
                 http.headers().frameOptions().sameOrigin();
@@ -486,7 +486,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public static Set<String> getCachablePaths(Environment env) {
         Set<String> ret = new HashSet<>();
 
-        String listOfPathsCachable = env.getProperty("whizcontrol.listOfPathsCachable", "");
+        String listOfPathsCachable = env.getProperty("tip.wlan.listOfPathsCachable", "");
         if (!listOfPathsCachable.isEmpty()) {
             for (String path : listOfPathsCachable.split(",")) {
                 if (!path.trim().isEmpty()) {
@@ -546,7 +546,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * 
      * with self-signed rootCA and all the certificates signed by that rootCA
      * wget --progress=dot --output-document=- --no-check-certificate
-     * --ca-cert=WhizControlTestRootCA.crt --certificate=Ap_1_client.crt
+     * --ca-cert=TIPWlanTestRootCA.crt --certificate=Ap_1_client.crt
      * --private-key=Ap_1_client.key https://192.168.0.124:9090/ping
      * 
      * @param http
@@ -588,18 +588,18 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * Digest authentication for use with REST web services X509 Client
      * certificate auth will be used on the primary server connector (
      * configured by server.port property ) Http Digest auth will be used on the
-     * secondary server connector (configured by whizcontrol.secondaryPort
+     * secondary server connector (configured by tip.wlan.secondaryPort
      * property)
      * 
      * Examples of calling web service: on primary connector: curl --request
      * POST --key local-ca/private/Ap_1_client.key --cert
      * local-ca/certs/Ap_1_client.crt --cacert
-     * local-ca/certs/WhizControlTestRootCA.crt --insecure --header
+     * local-ca/certs/TIPWlanTestRootCA.crt --insecure --header
      * "Content-Type: application/json; charset=utf-8" --data '{"test":42}'
      * https://localhost:9096/command
      * 
      * on secondary connector: curl --digest --user user:password --request POST
-     * --cacert local-ca/certs/WhizControlTestRootCA.crt --insecure --header
+     * --cacert local-ca/certs/TIPWlanTestRootCA.crt --insecure --header
      * "Content-Type: application/json; charset=utf-8" --data '{"test":42}'
      * https://localhost:7071/command
      * 
@@ -651,7 +651,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Profile("client_certificate_and_basic_auth")
     protected BasicAuthenticationEntryPoint basicAuthenticationEntryPoint() {
         BasicAuthenticationEntryPoint baep = new BasicAuthenticationEntryPoint();
-        baep.setRealmName("WhizControl");
+        baep.setRealmName("TIPWlanRealm");
         return baep;
     }
 
@@ -674,12 +674,12 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * authentication for use with REST web services X509 Client certificate
      * auth will be used on the primary server connector ( configured by
      * server.port property ) Http Basic auth will be used on the secondary
-     * server connector (configured by whizcontrol.secondaryPort property)
+     * server connector (configured by tip.wlan.secondaryPort property)
      * 
      * Examples of calling web service: on primary connector: curl --request
      * POST --key local-ca/private/Ap_1_client.key --cert
      * local-ca/certs/Ap_1_client.crt --cacert
-     * local-ca/certs/WhizControlTestRootCA.crt --insecure --header
+     * local-ca/certs/TIPWlanTestRootCA.crt --insecure --header
      * "Content-Type: application/json; charset=utf-8" --data '{"test":42}'
      * https://localhost:9096/command
      * 
@@ -858,17 +858,17 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         String securedRoute;
         String accessTypeValue;
         if (0 == providerIndex) {
-            clientId = environment.getProperty("whizcontrol.auth0.clientId", DEFAULT_AUTH0_PROPERTY);
-            clientSecret = environment.getProperty("whizcontrol.auth0.clientSecret", DEFAULT_AUTH0_PROPERTY);
-            securedRoute = environment.getProperty("whizcontrol.auth0.securedRoute", DEFAULT_AUTH0_PROPERTY);
-            accessTypeValue = environment.getProperty("whizcontrol.auth0.accessType",
+            clientId = environment.getProperty("tip.wlan.auth0.clientId", DEFAULT_AUTH0_PROPERTY);
+            clientSecret = environment.getProperty("tip.wlan.auth0.clientSecret", DEFAULT_AUTH0_PROPERTY);
+            securedRoute = environment.getProperty("tip.wlan.auth0.securedRoute", DEFAULT_AUTH0_PROPERTY);
+            accessTypeValue = environment.getProperty("tip.wlan.auth0.accessType",
                     getDefaultAccessType(providerIndex));
         } else {
-            clientId = environment.getProperty("whizcontrol.auth0.clientId" + providerIndex);
-            clientSecret = environment.getProperty("whizcontrol.auth0.clientSecret" + providerIndex);
-            securedRoute = environment.getProperty("whizcontrol.auth0.securedRoute" + providerIndex,
+            clientId = environment.getProperty("tip.wlan.auth0.clientId" + providerIndex);
+            clientSecret = environment.getProperty("tip.wlan.auth0.clientSecret" + providerIndex);
+            securedRoute = environment.getProperty("tip.wlan.auth0.securedRoute" + providerIndex,
                     DEFAULT_AUTH0_PROPERTY);
-            accessTypeValue = environment.getProperty("whizcontrol.auth0.accessType" + providerIndex,
+            accessTypeValue = environment.getProperty("tip.wlan.auth0.accessType" + providerIndex,
                     getDefaultAccessType(providerIndex));
         }
         if (null == clientId) {

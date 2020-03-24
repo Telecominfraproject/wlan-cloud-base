@@ -1,17 +1,20 @@
 package com.telecominfraproject.wlan.remote.tests;
 
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.context.WebServerApplicationContext;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.web.context.WebServerApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
@@ -54,9 +57,11 @@ import com.telecominfraproject.wlan.server.RemoteTestServer;
 @SpringBootTest(
         webEnvironment = WebEnvironment.RANDOM_PORT,
         classes = { RemoteTestServer.class },
-        value = { "whizcontrol.serviceUser=user", "whizcontrol.servicePassword=password",
-                "whizcontrol.csrf-enabled=false" })
+        value = { "tip.wlan.serviceUser=user", "tip.wlan.servicePassword=password",
+                "tip.wlan.csrf-enabled=false" })
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
+@Import(value = {
+})
 public abstract class BaseRemoteTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseRemoteTest.class);
@@ -71,6 +76,10 @@ public abstract class BaseRemoteTest {
 
     @Value("${local.server.port}")
     protected String port;
+    
+    private AtomicInteger customerIdGen = new AtomicInteger();
+    private AtomicLong equipmentIdGen = new AtomicLong();
+    private AtomicLong locationIdGen = new AtomicLong();
 
     protected void configureBaseUrl(String propertyName) {
         if (env.getProperty(propertyName) == null) {
@@ -131,6 +140,18 @@ public abstract class BaseRemoteTest {
             return ptm;
         }
 
+    }
+
+    protected int getNextCustomerId() {
+    	return customerIdGen.incrementAndGet();
+    }
+    
+    protected long getNextEquipmentId() {
+    	return equipmentIdGen.incrementAndGet();
+    }
+
+    protected long getNextLocationId() {
+    	return locationIdGen.incrementAndGet();
     }
 
 }
