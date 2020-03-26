@@ -18,6 +18,7 @@ import java.util.concurrent.ThreadFactory;
 import javax.annotation.PostConstruct;
 
 import org.junit.AfterClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +129,7 @@ public class HierarchicalDatastoreRecordIndexTests {
     private final static String clientIdx = "client";
 
     @Test
+    @Ignore("TODO: dtop - rewrite this test so it does not depend on currentTimeMillis()")
     public void testNormalOneIndex() throws IOException{
 
         //create 2 data files in s3ds, 2 records each - one with record index, one without any indexes
