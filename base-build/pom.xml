@@ -53,6 +53,7 @@
                                 <module>../base-scheduler</module>
                                 <module>../base-stream-interface</module>
                                 <module>../common-hazelcast</module>
+                                <module>../webtoken-auth-service</module>
                         </modules>
                 </profile>
         </profiles>
