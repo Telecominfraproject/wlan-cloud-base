@@ -49,6 +49,7 @@ import static org.reflections.util.Utils.repeat;
  * <p>depends on Reflections configured with {@link org.reflections.scanners.TypeElementsScanner}
  * <p><p>the {@link #save(org.reflections.Reflections, String)} method filename should be in the pattern: path/path/path/package.package.classname
  * */
+@SuppressWarnings("rawtypes")
 public class JavaCodeSerializer1 implements Serializer {
 
     private static final String pathSeparator = "_";
@@ -140,7 +141,7 @@ public class JavaCodeSerializer1 implements Serializer {
             String cn = fqn.contains(".") ? fqn.substring(fqn.lastIndexOf(".") + 1) : "";
 
             if (prev.length() > common.length() + 1) {
-                for (String ignored : prev.substring(common.length() + 1).split("\\.")) {
+                for (@SuppressWarnings("unused") String ignored : prev.substring(common.length() + 1).split("\\.")) {
                     if (!prevEmpty) sb.indentLeft(); else prevEmpty = false;
                     sb.append("}\n");
                 }
@@ -186,7 +187,7 @@ public class JavaCodeSerializer1 implements Serializer {
             prev = fqn;
         }
 
-        for (String ignored : prev.split("\\.")) {
+        for (@SuppressWarnings("unused") String ignored : prev.split("\\.")) {
             sb.indentLeft().append("}\n");
         }
 
@@ -258,7 +259,8 @@ public class JavaCodeSerializer1 implements Serializer {
             Class<?> declaringClass = annotation.getDeclaringClass().getDeclaringClass();
             Class<?> aClass = resolveClassOf(declaringClass);
             //noinspection unchecked
-            Class<? extends Annotation> aClass1 = (Class<? extends Annotation>) ReflectionUtils.forName(name);
+            @SuppressWarnings("unchecked")
+			Class<? extends Annotation> aClass1 = (Class<? extends Annotation>) ReflectionUtils.forName(name);
             return aClass.getAnnotation(aClass1);
         } catch (Exception e) {
             throw new ReflectionsException("could not resolve to annotation " + annotation.getName(), e);

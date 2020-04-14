@@ -473,7 +473,7 @@ public abstract class BaseJsonModel implements Cloneable, Serializable {
 
             for (Object c : modelClasses) {
                 if (c instanceof Class) {
-                    Class subClazz = (Class) c; 
+                    Class<?> subClazz = (Class<?>) c; 
                     String subJsonStr = generateBadJsonField(setMethod, subClazz);
                     if (null != subJsonStr) {
                         return subJsonStr;

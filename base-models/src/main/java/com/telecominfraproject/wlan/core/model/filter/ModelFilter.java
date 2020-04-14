@@ -107,7 +107,8 @@ public abstract class ModelFilter<T> extends BaseJsonModel {
             if (!(obj instanceof Not)) {
                 return false;
             }
-            Not other = (Not) obj;
+            @SuppressWarnings("unchecked")
+			Not<T> other = (Not<T>) obj;
             return Objects.equals(filter, other.filter);
         }
     }
@@ -155,7 +156,8 @@ public abstract class ModelFilter<T> extends BaseJsonModel {
             if (!(obj instanceof And)) {
                 return false;
             }
-            And other = (And) obj;
+            @SuppressWarnings("unchecked")
+			And<T> other = (And<T>) obj;
             return Objects.equals(filters, other.filters);
         }
 
@@ -228,7 +230,8 @@ public abstract class ModelFilter<T> extends BaseJsonModel {
             if (!(obj instanceof Or)) {
                 return false;
             }
-            Or other = (Or) obj;
+            @SuppressWarnings("unchecked")
+			Or<T> other = (Or<T>) obj;
             return Objects.equals(filters, other.filters);
         }
 

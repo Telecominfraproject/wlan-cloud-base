@@ -86,7 +86,7 @@ public class MacAddressTest {
     public void testBasicConversion() throws Exception {
         byte address[] = { 1, 2, 3, 4, 5, 6 };
         MacAddress macAddress = new MacAddress(address);
-        assertEquals(new Long(1108152157446L), macAddress.getAddressAsLong());
+        assertEquals((Long) 1108152157446L, macAddress.getAddressAsLong());
     }
 
     @Test

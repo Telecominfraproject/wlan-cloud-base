@@ -63,7 +63,7 @@ public class JobSchedule<T extends Comparable<T>> implements Comparable<JobSched
         if (!(obj instanceof JobSchedule)) {
             return false;
         }
-        JobSchedule other = (JobSchedule) obj;
+        JobSchedule<?> other = (JobSchedule<?>) obj;
         return Objects.equals(jobId, other.jobId) && Objects.equals(timeWindows, other.timeWindows);
     }
     

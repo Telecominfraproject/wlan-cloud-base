@@ -73,7 +73,7 @@ public class CurrentAndPreviousState<T extends Enum<T>> extends BaseJsonModel {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        CurrentAndPreviousState other = (CurrentAndPreviousState) obj;
+        CurrentAndPreviousState<?> other = (CurrentAndPreviousState<?>) obj;
         if (currentState == null) {
             if (other.currentState != null) {
                 return false;

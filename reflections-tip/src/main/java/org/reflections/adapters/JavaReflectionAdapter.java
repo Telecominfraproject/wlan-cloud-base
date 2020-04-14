@@ -15,6 +15,7 @@ import java.util.List;
 import static org.reflections.ReflectionUtils.forName;
 
 /** */
+@SuppressWarnings("rawtypes")
 public class JavaReflectionAdapter implements MetadataAdapter<Class, Field, Member> {
 
     public List<Field> getFields(Class cls) {

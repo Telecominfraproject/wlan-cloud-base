@@ -16,7 +16,9 @@ import com.telecominfraproject.wlan.core.model.json.BaseJsonModel;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
 public class JsonMap extends BaseJsonModel {
 
-    private Map<String, Object> m = new HashMap<>();
+	private static final long serialVersionUID = 1502983533893669382L;
+	
+	private Map<String, Object> m = new HashMap<>();
     
     public Map<String, Object> getM() {
         return m;

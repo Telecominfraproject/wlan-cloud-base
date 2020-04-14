@@ -1,14 +1,15 @@
 package org.reflections.scanners;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-import javassist.bytecode.LocalVariableAttribute;
-import javassist.bytecode.MethodInfo;
-import org.reflections.adapters.MetadataAdapter;
-
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.reflections.adapters.MetadataAdapter;
+
+import com.google.common.base.Joiner;
+
+import javassist.bytecode.LocalVariableAttribute;
+import javassist.bytecode.MethodInfo;
 
 /** scans methods/constructors and indexes parameter names */
 @SuppressWarnings("unchecked")
@@ -16,7 +17,8 @@ public class MethodParameterNamesScanner extends AbstractScanner {
 
     @Override
     public void scan(Object cls) {
-        final MetadataAdapter md = getMetadataAdapter();
+        @SuppressWarnings("rawtypes")
+		final MetadataAdapter md = getMetadataAdapter();
 
         for (Object method : md.getMethods(cls)) {
             String key = md.getMethodFullKey(cls, method);

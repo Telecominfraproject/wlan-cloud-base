@@ -258,7 +258,8 @@ public class TestClient {
         long end;
         
         if(Boolean.getBoolean("populateMapBeforeTest")){
-            List<Future> futures = new ArrayList<>(1000);
+            @SuppressWarnings("rawtypes")
+			List<Future> futures = new ArrayList<>(1000);
 
             //populate map with entries        
             for(int i=0; i<1000000; i++){
@@ -283,7 +284,7 @@ public class TestClient {
 
                 //wait for a batch of futures to complete
                 if(futures.size()>=990){
-                    for(Future f: futures){
+                    for(Future<?> f: futures){
                         f.get();
                     }
                     
@@ -292,7 +293,7 @@ public class TestClient {
                 
             }
 
-            for(Future f: futures){
+            for(Future<?> f: futures){
                 f.get();
             }
 

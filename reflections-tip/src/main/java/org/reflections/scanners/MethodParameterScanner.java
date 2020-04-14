@@ -10,7 +10,7 @@ public class MethodParameterScanner extends AbstractScanner {
 
     @Override
     public void scan(Object cls) {
-        final MetadataAdapter md = getMetadataAdapter();
+        final MetadataAdapter<Object, ?, Object> md = getMetadataAdapter();
 
         for (Object method : md.getMethods(cls)) {
 

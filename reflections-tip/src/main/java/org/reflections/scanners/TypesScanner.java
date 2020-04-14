@@ -1,6 +1,5 @@
 package org.reflections.scanners;
 
-import org.reflections.ReflectionsException;
 import org.reflections.vfs.Vfs;
 
 /** scans classes and stores fqn as key and full path as value.
@@ -11,7 +10,8 @@ public class TypesScanner extends AbstractScanner {
     @Override
     public Object scan(Vfs.File file, Object classObject) {
         classObject = super.scan(file, classObject);
-        String className = getMetadataAdapter().getClassName(classObject);
+        @SuppressWarnings("unchecked")
+		String className = getMetadataAdapter().getClassName(classObject);
         getStore().put(className, className);
         return classObject;
     }

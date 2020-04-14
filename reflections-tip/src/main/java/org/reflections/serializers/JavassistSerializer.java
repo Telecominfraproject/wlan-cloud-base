@@ -12,7 +12,7 @@ import java.io.InputStream;
  */
 public class JavassistSerializer implements Serializer {
 
-    private final MetadataAdapter javassist;
+    private final MetadataAdapter<?, ?, ?> javassist;
 
     public JavassistSerializer(Configuration configuration) {
         javassist = configuration.getMetadataAdapter();

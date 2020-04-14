@@ -5,11 +5,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -43,7 +43,6 @@ import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.cache.SpringCacheBasedUserCache;
-import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.crypto.codec.Hex;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
@@ -146,7 +145,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 long expiryTime = System.currentTimeMillis() + (getNonceValiditySeconds() * 1000);
                 String signatureValue = md5Hex(expiryTime + ":" + getKey());
                 String nonceValue = expiryTime + ":" + signatureValue;
-                String nonceValueBase64 = new String(Base64.encode(nonceValue.getBytes()));
+                String nonceValueBase64 = new String(Base64.getEncoder().encode(nonceValue.getBytes()));
 
                 // qop is quality of protection, as defined by RFC 2617.
                 // we do not use opaque due to IE violation of RFC 2617 in not

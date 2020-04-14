@@ -43,7 +43,8 @@ import java.util.concurrent.Executors;
 public class ConfigurationBuilder implements Configuration {
     @Nonnull private Set<Scanner> scanners;
     @Nonnull private Set<URL> urls;
-    /*lazy*/ protected MetadataAdapter metadataAdapter;
+    /*lazy*/ @SuppressWarnings("rawtypes")
+	protected MetadataAdapter metadataAdapter;
     @Nullable private Predicate<String> inputsFilter;
     /*lazy*/ private Serializer serializer;
     @Nullable private ExecutorService executorService;
@@ -77,7 +78,7 @@ public class ConfigurationBuilder implements Configuration {
             for (Object param : params) {
                 if (param != null) {
                     if (param.getClass().isArray()) { for (Object p : (Object[]) param) if (p != null) parameters.add(p); }
-                    else if (param instanceof Iterable) { for (Object p : (Iterable) param) if (p != null) parameters.add(p); }
+                    else if (param instanceof Iterable) { for (Object p : (Iterable<?>) param) if (p != null) parameters.add(p); }
                     else parameters.add(param);
                 }
             }
@@ -96,11 +97,11 @@ public class ConfigurationBuilder implements Configuration {
                 filter.includePackage((String) param);
             }
             else if (param instanceof Class) {
-                if (Scanner.class.isAssignableFrom((Class) param)) {
-                    try { builder.addScanners(((Scanner) ((Class) param).newInstance())); } catch (Exception e) { /*fallback*/ }
+                if (Scanner.class.isAssignableFrom((Class<?>) param)) {
+                    try { builder.addScanners(((Scanner) ((Class<?>) param).getDeclaredConstructor().newInstance())); } catch (Exception e) { /*fallback*/ }
                 }
-                builder.addUrls(ClasspathHelper.forClass((Class) param, classLoaders));
-                filter.includePackage(((Class) param));
+                builder.addUrls(ClasspathHelper.forClass((Class<?>) param, classLoaders));
+                filter.includePackage(((Class<?>) param));
             }
             else if (param instanceof Scanner) { scanners.add((Scanner) param); }
             else if (param instanceof URL) { builder.addUrls((URL) param); }
@@ -189,7 +190,7 @@ public class ConfigurationBuilder implements Configuration {
     /** returns the metadata adapter.
      * if javassist library exists in the classpath, this method returns {@link JavassistAdapter} otherwise defaults to {@link JavaReflectionAdapter}.
      * <p>the {@link JavassistAdapter} is preferred in terms of performance and class loading. */
-    public MetadataAdapter getMetadataAdapter() {
+    public MetadataAdapter<?, ?, ?> getMetadataAdapter() {
         if (metadataAdapter != null) return metadataAdapter;
         else {
             try {
@@ -203,7 +204,7 @@ public class ConfigurationBuilder implements Configuration {
     }
 
     /** sets the metadata adapter used to fetch metadata from classes */
-    public ConfigurationBuilder setMetadataAdapter(final MetadataAdapter metadataAdapter) {
+    public ConfigurationBuilder setMetadataAdapter(final MetadataAdapter<?, ?, ?> metadataAdapter) {
         this.metadataAdapter = metadataAdapter;
         return this;
     }

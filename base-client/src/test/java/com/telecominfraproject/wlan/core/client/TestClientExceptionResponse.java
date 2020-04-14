@@ -38,7 +38,7 @@ public class TestClientExceptionResponse implements ClientHttpResponse {
         jse.setTimestamp(System.currentTimeMillis());
         body = jse.toString();
         headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        headers.setContentType(MediaType.APPLICATION_JSON);
     }
 
     public InputStream getBody() throws IOException {

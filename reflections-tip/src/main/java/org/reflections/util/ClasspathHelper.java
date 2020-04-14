@@ -290,10 +290,9 @@ public abstract class ClasspathHelper {
     public static Collection<URL> forManifest(final URL url) {
         final Collection<URL> result = new ArrayList<URL>();
         result.add(url);
-        try {
-            final String part = cleanPath(url);
+        final String part = cleanPath(url);
+        try (JarFile myJar = new JarFile(part) ) {
             File jarFile = new File(part);
-            JarFile myJar = new JarFile(part);
             URL validUrl = tryToGetValidUrl(jarFile.getPath(), new File(part).getParent(), part);
             if (validUrl != null) { result.add(validUrl); }
             final Manifest manifest = myJar.getManifest();

@@ -1,19 +1,17 @@
 package org.reflections.scanners;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Multimap;
 import org.reflections.Configuration;
 import org.reflections.ReflectionsException;
 import org.reflections.adapters.MetadataAdapter;
 import org.reflections.vfs.Vfs;
 
-import static org.reflections.Reflections.log;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Multimap;
 
 /**
  *
  */
-@SuppressWarnings({"RawUseOfParameterizedType", "unchecked"})
 public abstract class AbstractScanner implements Scanner {
 
 	private Configuration configuration;
@@ -72,6 +70,7 @@ public abstract class AbstractScanner implements Scanner {
 		return fqn != null && resultFilter.apply(fqn);
 	}
 
+	@SuppressWarnings("rawtypes")
 	protected MetadataAdapter getMetadataAdapter() {
 		return configuration.getMetadataAdapter();
 	}

@@ -22,8 +22,8 @@ public interface Configuration {
     Set<URL> getUrls();
 
     /** the metadata adapter used to fetch metadata from classes */
-    @SuppressWarnings({"RawUseOfParameterizedType"})
-    MetadataAdapter getMetadataAdapter();
+    @SuppressWarnings("rawtypes")
+	MetadataAdapter getMetadataAdapter();
 
     /** get the fully qualified name filter used to filter types to be scanned */
     @Nullable

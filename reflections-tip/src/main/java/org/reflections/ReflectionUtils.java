@@ -52,7 +52,7 @@ import static org.reflections.util.Utils.isEmpty;
  *                      withParametersCount(0)));
  *     </pre>
  * */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public abstract class ReflectionUtils {
 
     /** would include {@code Object.class} when {@link #getAllSuperTypes(Class, com.google.common.base.Predicate[])}. default is false. */
@@ -85,7 +85,7 @@ public abstract class ReflectionUtils {
     }
 
     /** get all constructors of given {@code type}, up the super class hierarchy, optionally filtered by {@code predicates} */
-    public static Set<Constructor> getAllConstructors(final Class<?> type, Predicate<? super Constructor>... predicates) {
+	public static Set<Constructor> getAllConstructors(final Class<?> type, Predicate<? super Constructor>... predicates) {
         Set<Constructor> result = Sets.newHashSet();
         for (Class<?> t : getAllSuperTypes(type)) {
             result.addAll(getConstructors(t, predicates));

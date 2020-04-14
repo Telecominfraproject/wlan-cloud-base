@@ -25,6 +25,7 @@ import static org.reflections.ReflectionUtils.forName;
 /**
  * a garbage can of convenient methods
  */
+@SuppressWarnings("rawtypes")
 public abstract class Utils {
 
     public static String repeat(String string, int times) {

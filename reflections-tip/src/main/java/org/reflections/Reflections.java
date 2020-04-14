@@ -104,6 +104,7 @@ import static org.reflections.util.Utils.*;
  * than the later will not be scanned). in that case use the other constructors and specify the relevant packages/urls
  * <p><p><p>For Javadoc, source code, and more information about Reflections Library, see http://code.google.com/p/reflections/
  */
+@SuppressWarnings("rawtypes")
 public class Reflections {
     @Nullable public static Logger log = findLogger(Reflections.class);
 
@@ -466,7 +467,7 @@ public class Reflections {
      * get all constructors annotated with a given annotation
      * <p/>depends on MethodAnnotationsScanner configured
      */
-    public Set<Constructor> getConstructorsAnnotatedWith(final Class<? extends Annotation> annotation) {
+	public Set<Constructor> getConstructorsAnnotatedWith(final Class<? extends Annotation> annotation) {
         Iterable<String> methods = store.get(index(MethodAnnotationsScanner.class), annotation.getName());
         return getConstructorsFromDescriptors(methods, loaders());
     }

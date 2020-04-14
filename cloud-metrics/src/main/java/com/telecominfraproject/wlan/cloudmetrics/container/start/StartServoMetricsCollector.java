@@ -20,6 +20,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.stereotype.Component;
 
 import com.netflix.servo.monitor.MonitorConfig;
@@ -100,7 +101,7 @@ public class StartServoMetricsCollector implements CommandLineRunner {
         
         scheduler.addPoller(regularMetricsPoll, samplingIntervalMs, TimeUnit.MILLISECONDS);
 
-        if(environment.acceptsProfiles("cloud-metrics-elastic-search") ){
+        if(environment.acceptsProfiles(Profiles.of("cloud-metrics-elastic-search")) ){
             
             //poll for these metrics only when there's an external system available to publish them into
             
@@ -234,7 +235,7 @@ public class StartServoMetricsCollector implements CommandLineRunner {
     }
 
     private void registerElasticSearchIfNeeded(List<MetricObserver> observers, long samplingIntervalMs, int aggregationHeartbeatMultiplier) {
-        if(environment.acceptsProfiles("cloud-metrics-elastic-search")){
+        if(environment.acceptsProfiles(Profiles.of("cloud-metrics-elastic-search"))){
             try{
                 MetricObserver elasticSearchObserver = new ElasticSearchMetricObserver(applicationContext);
                 
