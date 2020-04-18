@@ -44,6 +44,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.cache.SpringCacheBasedUserCache;
 import org.springframework.security.crypto.codec.Hex;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
@@ -660,6 +664,14 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         List<AuthenticationProvider> authenticationProviders = new ArrayList<>();
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailsService());
+        
+        DelegatingPasswordEncoder passwordEncoder = (DelegatingPasswordEncoder) PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        
+        @SuppressWarnings("deprecation")
+		PasswordEncoder defaultPasswordEncoderForMatches = NoOpPasswordEncoder.getInstance();
+		passwordEncoder.setDefaultPasswordEncoderForMatches(defaultPasswordEncoderForMatches);
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+        
         authenticationProviders.add(daoAuthenticationProvider);
         AuthenticationManager authenticationManager = new ProviderManager(authenticationProviders);
 
