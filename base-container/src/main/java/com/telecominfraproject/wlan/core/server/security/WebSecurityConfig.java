@@ -414,14 +414,20 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         LOG.info("configuring basic http authentication");
 
         try {
-            http.authorizeRequests().antMatchers("/ping").permitAll()
-                    // can also use in here : .anyRequest().hasRole("USER");
-                    .anyRequest().authenticated();
 
-            http.httpBasic();
+            http.exceptionHandling()
+                    // this entry point handle cases when request is made to a
+                    // protected page and the user cannot be authenticated
+                    .defaultAuthenticationEntryPointFor(applicationContext.getBean(BasicAuthenticationEntryPoint.class), AnyRequestMatcher.INSTANCE);
+
+            http.authorizeRequests().antMatchers("/ping").permitAll()
+                    // can also have in here: .anyRequest().hasRole("USER");
+                    .anyRequest().authenticated();
         } catch (Exception e) {
             throw new ConfigurationException(e);
         }
+
+        http.addFilter(applicationContext.getBean(BasicAuthenticationFilter.class));
 
         commonConfiguration(http);
 
@@ -651,7 +657,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    @Profile("client_certificate_and_basic_auth")
+    @Profile({"client_certificate_and_basic_auth", "http_basic_auth"})
     protected BasicAuthenticationEntryPoint basicAuthenticationEntryPoint() {
         BasicAuthenticationEntryPoint baep = new BasicAuthenticationEntryPoint();
         baep.setRealmName("TIPWlanRealm");
@@ -659,7 +665,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    @Profile("client_certificate_and_basic_auth")
+    @Profile({"client_certificate_and_basic_auth", "http_basic_auth"})
     protected BasicAuthenticationFilter basicAuthenticationFilter() {
         List<AuthenticationProvider> authenticationProviders = new ArrayList<>();
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
