@@ -18,7 +18,7 @@ public class PaginationContext<T extends BaseJsonModel> extends BaseJsonModel {
     
     private static final long serialVersionUID = -6139792051056797853L;
     
-    private int maxItemsPerPage;
+    private int maxItemsPerPage = 20;
     private int lastReturnedPageNumber;
     private int totalItemsReturned;
     private boolean isLastPage;
