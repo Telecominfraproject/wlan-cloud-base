@@ -77,9 +77,9 @@ public abstract class BaseRemoteTest {
     @Value("${local.server.port}")
     protected String port;
     
-    private AtomicInteger customerIdGen = new AtomicInteger();
-    private AtomicLong equipmentIdGen = new AtomicLong();
-    private AtomicLong locationIdGen = new AtomicLong();
+    private static AtomicInteger customerIdGen = new AtomicInteger();
+    private static AtomicLong equipmentIdGen = new AtomicLong();
+    private static AtomicLong locationIdGen = new AtomicLong();
 
     protected void configureBaseUrl(String propertyName) {
         if (env.getProperty(propertyName) == null) {
