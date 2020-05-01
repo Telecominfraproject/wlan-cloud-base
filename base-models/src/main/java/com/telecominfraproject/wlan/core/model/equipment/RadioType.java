@@ -13,11 +13,13 @@ public enum RadioType {
 
     is5GHz(0),
     is2dot4GHz(1),
+    is5GHzU(2),
+    is5GHzL(3),
     UNSUPPORTED(-1);
     
     private final int id;
     private static final Map<Integer, RadioType> ELEMENTS = new HashMap<>();
-    private static final RadioType validValues[] = { is5GHz, is2dot4GHz };
+    private static final RadioType validValues[] = { is5GHz, is2dot4GHz, is5GHzU, is5GHzL };
     
     private RadioType(int id) {
         this.id = id;
