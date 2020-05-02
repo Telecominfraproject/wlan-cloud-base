@@ -7,10 +7,12 @@ import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.SortedSet;
+import java.util.TimeZone;
 import java.util.TreeSet;
 
 import org.slf4j.Logger;
@@ -116,4 +118,13 @@ public class DaysOfWeekTimeRangeSchedule extends LocalTimeRangeSchedule {
         return Objects.equals(daysOfWeek, other.daysOfWeek);
     }
 
+    public static void main(String[] args) {
+    	SortedSet<DayOfWeek> dow = new TreeSet<DayOfWeek>();
+    	dow.add(DayOfWeek.SUNDAY);
+    	dow.add(DayOfWeek.WEDNESDAY);
+		LocalTime tBegin = LocalTime.of(22, 00);
+		LocalTime tEnd = LocalTime.of(23, 30);
+		DaysOfWeekTimeRangeSchedule ds = new DaysOfWeekTimeRangeSchedule(TimeZone.getTimeZone(ZoneId.systemDefault()).getID(), dow , tBegin, tEnd);
+		System.out.println(ds);
+	}
 }
