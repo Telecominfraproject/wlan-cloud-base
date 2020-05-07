@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-@Profile(value = { "use_ssl_with_client_cert_and_digest_auth","use_ssl_with_client_cert_and_basic_auth" })
+@Profile(value = { "use_ssl_with_client_cert_and_digest_auth","use_ssl_with_client_cert_and_basic_auth","use_ssl_with_client_cert_and_webtoken_auth" })
 public class DualConnectorContainerCustomizer extends ServletContainerCustomizer {
 
     private static final Logger LOG = LoggerFactory.getLogger(DualConnectorContainerCustomizer.class);

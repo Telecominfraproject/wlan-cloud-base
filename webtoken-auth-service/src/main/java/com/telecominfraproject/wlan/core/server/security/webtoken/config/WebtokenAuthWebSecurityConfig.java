@@ -17,7 +17,9 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.www.DigestAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.client.RestOperations;
 
@@ -33,7 +35,7 @@ import com.telecominfraproject.wlan.server.exceptions.ConfigurationException;
  *
  */
 @Configuration
-@Profile(value = { "use_webtoken_auth" })
+@Profile(value = { "webtoken_auth" })
 @EnableWebSecurity
 public class WebtokenAuthWebSecurityConfig extends WebSecurityConfig {
     
@@ -46,14 +48,14 @@ public class WebtokenAuthWebSecurityConfig extends WebSecurityConfig {
  
     
     @Bean
-    @Profile(value = { "use_webtoken_auth" })
+    @Profile(value = { "webtoken_auth", "client_certificate_and_webtoken_auth" })
     public WebtokenAuthenticationEntryPoint webtokenAuthenticationEntryPoint(){
         WebtokenAuthenticationEntryPoint ret = new WebtokenAuthenticationEntryPoint();
         return ret;
     } 
 
     @Bean
-    @Profile(value = { "use_webtoken_auth" })
+    @Profile(value = { "webtoken_auth", "client_certificate_and_webtoken_auth" })
     public WebtokenAuthenticationProvider webtokenAuthenticationProvider(RestOperations restTemplate, Environment env, RestHttpClientConfig restHttpClientConfig){
         String introspectTokenApiHost = env.getProperty("tip.wlan.introspectTokenApi.host", 
                 "localhost:9070"
@@ -75,7 +77,7 @@ public class WebtokenAuthWebSecurityConfig extends WebSecurityConfig {
     } 
 
     @Bean
-    @Profile(value = { "use_webtoken_auth" })
+    @Profile(value = { "webtoken_auth", "client_certificate_and_webtoken_auth" })
     public WebtokenAuthenticationFilter webtokenAuthenticationFilter(WebtokenAuthenticationEntryPoint eaEntryPoint, WebtokenAuthenticationProvider eaProvider) {
         WebtokenAuthenticationFilter ret = new WebtokenAuthenticationFilter();
         
@@ -119,4 +121,48 @@ public class WebtokenAuthWebSecurityConfig extends WebSecurityConfig {
 
         commonConfiguration(http);
     } 
+    
+    /**
+     * Call this method to set up X509 Certificate authentication AND Http Basic
+     * authentication for use with REST web services X509 Client certificate
+     * auth will be used on the primary server connector ( configured by
+     * server.port property ) Webtoken auth will be used on the secondary
+     * server connector (configured by tip.wlan.secondaryPort property)
+     * 
+     * 
+     * @param http
+     */
+    protected void configureX509CertificateAndWebtokenAuth(HttpSecurity http) {
+        final int primaryPort = connectorProperties.getExternalPort();
+        final int secondaryPort = connectorProperties.getInternalPort();
+
+        LOG.info("configuring X509 client certificate auth for port {} and Webtoken auth for port {}",
+                primaryPort, secondaryPort);
+
+        try {
+
+            http.exceptionHandling()
+                    // these entry points handle cases when request is made to a
+                    // protected page and user cannot be authenticated
+                    .defaultAuthenticationEntryPointFor(applicationContext.getBean(WebtokenAuthenticationEntryPoint.class), new RequestMatcher() {
+                        @Override
+                        public boolean matches(HttpServletRequest request) {
+                            //APIs provide Authorization header with the Bearer token
+                            return WebtokenAuthenticationFilter.getToken(request) != null;
+                        }
+                    })// can also have in here: new AntPathRequestMatcher("/command"))
+                    .defaultAuthenticationEntryPointFor(new Http403ForbiddenEntryPoint(), AnyRequestMatcher.INSTANCE);
+
+            configureProtectedPaths(http);
+                        
+        } catch (Exception e) {
+            throw new ConfigurationException(e);
+        }
+
+        http.addFilter(x509AuthenticationFilter());
+
+        http.addFilterBefore(applicationContext.getBean(WebtokenAuthenticationFilter.class), DigestAuthenticationFilter.class);
+
+        commonConfiguration(http);
+    }
 }

@@ -116,7 +116,11 @@ public abstract class ServletContainerCustomizer implements WebServerFactoryCust
         connector.setScheme("https");
 
         Environment environment = appContext.getEnvironment();
-        LOG.info("Loading SSL properties from {}", environment.getProperty("ssl.props"));
+        if(environment.getProperty("ssl.props")!=null) {
+        	LOG.info("Loading SSL properties from {}", environment.getProperty("ssl.props"));
+        } else {
+        	LOG.info("Loading SSL properties from default location - classpath:ssl.properties");
+        }
 
         // for local-authority set up try with this
         connector.setAttribute("truststorePass", getSslProperty(environment, "truststorePass", sslPropPrefix));
@@ -171,7 +175,7 @@ public abstract class ServletContainerCustomizer implements WebServerFactoryCust
         
         connector.setAttribute("maxThreads", Integer.parseInt(appContext.getEnvironment().getProperty("maxHttpThreads", "100")));
         
-        LOG.info("Configured http connector for port {} with {} threads", connector.getPort(), connector.getAttribute("maxThreads"));
+        LOG.info("Configured https connector for port {} with {} threads", connector.getPort(), connector.getAttribute("maxThreads"));
     }
 
     /**

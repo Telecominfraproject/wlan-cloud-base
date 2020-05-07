@@ -83,7 +83,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private Environment environment;
     @Autowired
-    private ConnectorProperties connectorProperties;
+    protected ConnectorProperties connectorProperties;
 
     private static final Logger LOG = LoggerFactory.getLogger(WebSecurityConfig.class);
     public static final String AUTH_CACHE_NAME = "auth_details_cache";
@@ -750,7 +750,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     @Profile(value = { "client_certificate_auth", "client_certificate_and_digest_auth",
-            "client_certificate_and_basic_auth" })
+            "client_certificate_and_basic_auth", "client_certificate_and_webtoken_auth" })
     public X509AuthenticationFilter x509AuthenticationFilter() {
         // enable X509 certificate auth
         X509AuthenticationFilter x509AuthenticationFilter = new X509AuthenticationFilter();
