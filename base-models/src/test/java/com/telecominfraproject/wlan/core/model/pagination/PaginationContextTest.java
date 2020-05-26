@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.telecominfraproject.wlan.core.model.json.BaseJsonModel;
 import com.telecominfraproject.wlan.core.model.pagination.PaginationContext;
+import com.telecominfraproject.wlan.core.model.pair.PairIntString;
 import com.telecominfraproject.wlan.core.model.pair.PairLongLong;
 import com.telecominfraproject.wlan.core.model.pair.PairStringLong;
 
@@ -18,31 +20,32 @@ public class PaginationContextTest {
         
         PaginationContext<PairStringLong> psl = new PaginationContext<>(10);
         psl.setStartAfterItem(new PairStringLong("str1", 42L));
-        pll.getChildren().put("psl", psl);
+        pll.getChildren().getChildren().put("psl", psl);
         
         assertEquals("{\"model_type\":\"PaginationContext\","
-        		+ "\"children\":{},"
-        		+ "\"lastPage\":false,"
-        		+ "\"lastReturnedPageNumber\":0,"
-        		+ "\"maxItemsPerPage\":10,"
-        		+ "\"startAfterItem\":{\"model_type\":\"PairStringLong\",\"value1\":\"str1\",\"value2\":42},"
-        		+ "\"totalItemsReturned\":0}", psl.toString());
+        		+ "\"cursor\":\"eyJtb2RlbF90eXBlIjoiUGFpclN0cmluZ0xvbmciLCJ2YWx1ZTEiOiJzdHIxIiwidmFsdWUyIjo0Mn1AQEB7Im1vZGVsX3R5cGUiOiJDb250ZXh0Q2hpbGRyZW4iLCJjaGlsZHJlbiI6e319\","
+        		+ "\"lastPage\":false,\"lastReturnedPageNumber\":0,\"maxItemsPerPage\":10,\"totalItemsReturned\":0}", psl.toString());
         
-        assertEquals("{\"model_type\":\"PaginationContext\","
-        		+ "\"children\":{"
-        		+ 	"\"psl\":{\"model_type\":\"PaginationContext\","
-        		+ 	"\"children\":{},\"lastPage\":false,"
-        		+ 	"\"lastReturnedPageNumber\":0,"
-        		+ 	"\"maxItemsPerPage\":10,"
-        		+ 	"\"startAfterItem\":{\"model_type\":\"PairStringLong\",\"value1\":\"str1\",\"value2\":42},"
-        		+ 	"\"totalItemsReturned\":0}"
-        		+ 	"},"
-        		+ "\"lastPage\":false,"
-        		+ "\"lastReturnedPageNumber\":0,"
-        		+ "\"maxItemsPerPage\":10,"
-        		+ "\"startAfterItem\":{\"model_type\":\"PairLongLong\",\"value1\":null,\"value2\":null},"
-        		+ "\"totalItemsReturned\":0}", pll.toString());
+        assertEquals("{\"model_type\":\"PaginationContext\",\"cursor\":\"eyJtb2RlbF90eXBlIjoiUGFpckxvbmdMb25nIiwidmFsdWUxIjpudWxsLCJ2YWx1ZTIiOm51bGx9QEBAeyJtb2RlbF90eXBlIjoiQ29udGV4dENoaWxkcmVuIiwiY2hpbGRyZW4iOnsicHNsIjp7Im1vZGVsX3R5cGUiOiJQYWdpbmF0aW9uQ29udGV4dCIsImN1cnNvciI6ImV5SnRiMlJsYkY5MGVYQmxJam9pVUdGcGNsTjBjbWx1WjB4dmJtY2lMQ0oyWVd4MVpURWlPaUp6ZEhJeElpd2lkbUZzZFdVeUlqbzBNbjFBUUVCN0ltMXZaR1ZzWDNSNWNHVWlPaUpEYjI1MFpYaDBRMmhwYkdSeVpXNGlMQ0pqYUdsc1pISmxiaUk2ZTMxOSIsImxhc3RQYWdlIjpmYWxzZSwibGFzdFJldHVybmVkUGFnZU51bWJlciI6MCwibWF4SXRlbXNQZXJQYWdlIjoxMCwidG90YWxJdGVtc1JldHVybmVkIjowfX19\","
+        		+ "\"lastPage\":false,\"lastReturnedPageNumber\":0,\"maxItemsPerPage\":10,\"totalItemsReturned\":0}", pll.toString());
         
+    }
+    
+    @Test
+    public void testCursorSerialization() {
+        PaginationContext<PairIntString> context = new PaginationContext<>(10);
+        assertEquals(context.toString(), BaseJsonModel.fromString(context.toString(), BaseJsonModel.class).toString());
+//        System.out.println("-1-" + context);
+//        System.out.println("-2-" + BaseJsonModel.fromString(context.toString(), BaseJsonModel.class));
+        context.setStartAfterItem(new PairIntString(42,"myValue"));
+        assertEquals(context.toString(), BaseJsonModel.fromString(context.toString(), BaseJsonModel.class).toString());
+        
+        PaginationContext<PairIntString> childContext = new PaginationContext<>(10);
+        childContext.setStartAfterItem(new PairIntString(43,"myValueChild"));
+        
+        context.getChildren().getChildren().put("child", childContext);
+        assertEquals(context.toString(), BaseJsonModel.fromString(context.toString(), BaseJsonModel.class).toString());
+    	
     }
 
 }
