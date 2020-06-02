@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.telecominfraproject.wlan.core.model.equipment.NeighboreScanPacketType;
+import com.telecominfraproject.wlan.core.model.equipment.NeighborScanPacketType;
 import com.telecominfraproject.wlan.core.model.json.JsonDeserializationUtils;
 
-public enum NeighboreScanPacketType 
+public enum NeighborScanPacketType 
 {
    ASSOC_REQ(0),
    ASSOC_RESP(1),
@@ -27,9 +27,9 @@ public enum NeighboreScanPacketType
    UNSUPPORTED(-1);
 
    private final int id;
-   private static final Map<Integer, NeighboreScanPacketType> ELEMENTS = new HashMap<>();
+   private static final Map<Integer, NeighborScanPacketType> ELEMENTS = new HashMap<>();
 
-   private NeighboreScanPacketType(int id)
+   private NeighborScanPacketType(int id)
    {
       this.id = id;      
    }
@@ -38,10 +38,10 @@ public enum NeighboreScanPacketType
       return this.id;
    }
 
-   public static NeighboreScanPacketType getById(int enumId){
+   public static NeighborScanPacketType getById(int enumId){
       if(ELEMENTS.isEmpty()){
          //initialize elements map
-         for(NeighboreScanPacketType met : NeighboreScanPacketType.values()){
+         for(NeighborScanPacketType met : NeighborScanPacketType.values()){
             ELEMENTS.put(met.getId(), met);
          }
       }
@@ -50,11 +50,11 @@ public enum NeighboreScanPacketType
    }
 
    @JsonCreator
-   public static NeighboreScanPacketType getByName(String value) {
-       return JsonDeserializationUtils.deserializEnum(value, NeighboreScanPacketType.class, UNSUPPORTED);
+   public static NeighborScanPacketType getByName(String value) {
+       return JsonDeserializationUtils.deserializEnum(value, NeighborScanPacketType.class, UNSUPPORTED);
    }
    
-   public static boolean isUnsupported(NeighboreScanPacketType value) {
+   public static boolean isUnsupported(NeighborScanPacketType value) {
        return (UNSUPPORTED.equals(value));
    }
 }
