@@ -52,6 +52,7 @@
                                 <module>../base-remote-tests</module>
                                 <module>../base-scheduler</module>
                                 <module>../base-stream-interface</module>
+                                <module>../base-stream-consumer-interface</module>
                                 <module>../common-hazelcast</module>
                                 <module>../webtoken-auth-service</module>
                         </modules>
