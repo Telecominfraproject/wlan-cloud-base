@@ -6,11 +6,16 @@
       <version>0.0.1-SNAPSHOT</version>
       <relativePath>../../wlan-cloud-root</relativePath>
     </parent>
-  <artifactId>base-stream-consumer-interface</artifactId>
-  <name>base-stream-consumer-interface</name>
-  <description>Common interface for consumers of streams.</description>
+  <artifactId>base-stream-consumer</artifactId>
+  <name>base-stream-consumer</name>
+  <description>Common objects for consumers of streams.</description>
   
-  <dependencies>
+   <dependencies> 
+        <dependency>
+        <artifactId>base-models</artifactId>
+        <groupId>com.telecominfraproject.wlan</groupId>
+        <version>${tip-wlan-cloud.release.version}</version>
+      </dependency>
   </dependencies>
     
 </project>
