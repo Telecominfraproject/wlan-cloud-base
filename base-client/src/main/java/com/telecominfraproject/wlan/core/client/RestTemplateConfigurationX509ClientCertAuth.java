@@ -105,6 +105,17 @@ public class RestTemplateConfigurationX509ClientCertAuth {
             // and make it available externally for future reference
             X509Certificate clientCertificate = (X509Certificate) keystore
                     .getCertificate(httpClientConfig.getKeyAlias());
+            
+            //if cannot find specified key alias - try default ones: clientkeyalias and clientqrcode
+            if(clientCertificate == null) {
+            	LOG.info("Specified key alias {} not found in the keystore, will try clientkeyalias", httpClientConfig.getKeyAlias());
+            	clientCertificate = (X509Certificate) keystore.getCertificate("clientkeyalias");
+                if(clientCertificate == null) {
+                	LOG.info("clientkeyalias not found in the keystore, will try clientqrcode");
+                	clientCertificate = (X509Certificate) keystore.getCertificate("clientqrcode");
+                }
+            }
+            
             Principal principal = clientCertificate.getSubjectDN();
             subjectDn = principal.getName();
             int startPos = subjectDn.indexOf("CN=") + "CN=".length();
