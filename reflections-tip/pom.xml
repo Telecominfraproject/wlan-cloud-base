@@ -11,7 +11,7 @@
   <description>Reflections - library for Java runtime metadata analysis. Cloned reflections package to remove dependency on findbugs library. Original location - http://github.com/ronmamo/reflections. Original license - WTFPL http://www.wtfpl.net </description>
   
   <properties>
-      <guava.version>15.0</guava.version>
+      <guava.version>[24.1.1,)</guava.version>
       <javassist.version>3.18.2-GA</javassist.version>
   </properties>
   
