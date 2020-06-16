@@ -1,0 +1,38 @@
+name: Run sonar analysis
+
+on:
+  push:
+    branches: [ master ]
+
+env:
+  SONAR_URL: https://sonarcloud.io
+  SONAR_ORGANIZATION: telecominfraproject
+  SONAR_PROJECT_KEY: Telecominfraproject_wlan-cloud-base2
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  MAVEN_OPTS: -Xmx3g -Xss2m # prevents java.lang.StackOverflowError
+
+jobs:
+  sonar:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        path: wlan-cloud-base
+        fetch-depth: 0
+    - name: Checkout dependency Telecominfraproject/wlan-cloud-root
+      uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/wlan-cloud-root
+        path: wlan-cloud-root
+        fetch-depth: 0
+    - name: Install JDK14
+      uses: actions/setup-java@v1
+      with:
+        java-version: 14
+        java-package: jdk
+        architecture: x64
+    - name: Run sonar
+      working-directory: wlan-cloud-base/base-build
+      run: |
+        mvn clean verify sonar:sonar -Dsonar.host.url=${{ env.SONAR_URL }} -Dsonar.login=${{ secrets.SONAR_LOGIN }} -Dsonar.organization=${{ env.SONAR_ORGANIZATION }} -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
