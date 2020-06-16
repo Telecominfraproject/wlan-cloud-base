@@ -36,7 +36,6 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.google.common.io.Files;
 import com.hazelcast.core.HazelcastInstance;
 import com.telecominfraproject.wlan.core.model.equipment.MacAddress;
 import com.telecominfraproject.wlan.core.model.filter.EntryFilter;
@@ -111,20 +110,13 @@ public class HierarchicalDatastoreTests {
         hDs = new HierarchicalDatastore(dsRootDirName, dsPrefix, fileNamePrefix, 1, 20L, 
                 hazelcastInstance, hazelcastMapPrefix, hazelcastObjectsConfiguration, recordIndexRegistry);
     }
-    
+        
     @AfterClass
     public static void removeAllHdsFiles(){
-    	File rootDir = new File(dsRootDirName + File.separator + dsPrefix);
-    	if(rootDir.getAbsolutePath().equals("/")) {
-    		throw new IllegalArgumentException("attempting to delete / - please make sure your dsRootDirName and ds Prefix are not empty strings!");
-    	}
-    	
-    	for(File f : Files.fileTreeTraverser().postOrderTraversal(rootDir)) {
-    		f.delete();
-    	}    	
-    	
-    	rootDir.delete();
+    	File dsRootDir = new File(dsRootDirName + File.separator + dsPrefix);
+    	HdsCommonTests.removeAllHdsFiles(dsRootDir);
     }   
+
     
     @Test
     public void testGetFileNames() throws IOException, InterruptedException {
