@@ -66,8 +66,9 @@ public class TokenUtilsTests {
     @Test
     public void testBase62() {
         TestData data = new TestData(System.currentTimeMillis());
-        String token = TokenUtils.encodeToken(data, TokenUtils.PASSWORD, TokenEncoder.Base62TokenEncoder);
-        TestData decoded = TokenUtils.decodeToken(token, TestData.class, TokenUtils.PASSWORD,
+        String password = "(!This is the password!)";
+        String token = TokenUtils.encodeToken(data, password, TokenEncoder.Base62TokenEncoder);
+        TestData decoded = TokenUtils.decodeToken(token, TestData.class, password,
                 TokenEncoder.Base62TokenEncoder);
         assertEquals(data, decoded);
     }

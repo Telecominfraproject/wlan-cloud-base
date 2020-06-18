@@ -1,6 +1,9 @@
 package com.telecominfraproject.wlan.core.model.utils;
 
+import java.security.spec.AlgorithmParameterSpec;
+
 import javax.crypto.Cipher;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.slf4j.Logger;
@@ -18,9 +21,11 @@ import com.telecominfraproject.wlan.core.model.json.BaseJsonModel;
 public class TokenUtils {
     private static final Logger LOG = LoggerFactory.getLogger(TokenUtils.class);
 
-    public static final String PASSWORD = "(!This is the password!)";
+    private static String CIPHER_ALG = "AES";
+    private static String CIPHER = CIPHER_ALG + "/GCM/NoPadding";
 
-    private static String CIPHER = "AES/GCM/NoPadding";
+    private static final int authTagLength = 128;
+    private static final byte[] initializationVector = new byte[] { 1,2,3,4,5,6,7,8};
 
     /**
      * Will return null if the key's invalid.
@@ -57,8 +62,9 @@ public class TokenUtils {
             byte[] encrytedPayload = decodeFromString(encoder, encryptedPayloadStr);
 
             Cipher c = Cipher.getInstance(CIPHER);
-            SecretKeySpec k = new SecretKeySpec(pad(key, 16).getBytes(), CIPHER);
-            c.init(Cipher.DECRYPT_MODE, k);
+            SecretKeySpec k = new SecretKeySpec(key.getBytes(), CIPHER_ALG);
+            AlgorithmParameterSpec algorithmParameters = new GCMParameterSpec(authTagLength , initializationVector);
+			c.init(Cipher.DECRYPT_MODE, k, algorithmParameters);
 
             byte[] decrypted = c.doFinal(encrytedPayload);
 
@@ -99,8 +105,9 @@ public class TokenUtils {
     public static String encrypt(String payload, String key, TokenEncoder encoder) {
         try {
             Cipher c = Cipher.getInstance(CIPHER);
-            SecretKeySpec k = new SecretKeySpec(pad(key, 16).getBytes(), CIPHER);
-            c.init(Cipher.ENCRYPT_MODE, k);
+            SecretKeySpec k = new SecretKeySpec(key.getBytes(), CIPHER_ALG);           
+            AlgorithmParameterSpec algorithmParameters = new GCMParameterSpec(authTagLength , initializationVector);
+            c.init(Cipher.ENCRYPT_MODE, k, algorithmParameters);
 
             byte[] encrypted = c.doFinal(payload.getBytes());
 
