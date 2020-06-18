@@ -20,7 +20,7 @@ public class TokenUtils {
 
     public static final String PASSWORD = "(!This is the password!)";
 
-    private static String CIPHER = "AES";
+    private static String CIPHER = "AES/GCM/NoPadding";
 
     /**
      * Will return null if the key's invalid.
