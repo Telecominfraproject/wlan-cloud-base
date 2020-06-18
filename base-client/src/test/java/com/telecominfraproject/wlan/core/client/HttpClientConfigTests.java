@@ -12,13 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ResourceUtils;
 
-import com.telecominfraproject.wlan.core.client.HttpClientConfigResolver;
 import com.telecominfraproject.wlan.core.client.models.HttpClientConfig;
 
 public class HttpClientConfigTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(HttpClientConfigTests.class);
-    private static final String KEY = "fastTestKey";
+    private static final String KEY = "fastTestKey12345";
     private static final String PASSWORD = "toptopsecret";
 
     @Test
