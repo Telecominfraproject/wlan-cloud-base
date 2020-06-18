@@ -3,6 +3,7 @@ package com.telecominfraproject.wlan.core.server.webconfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.owasp.encoder.Encode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -45,7 +46,7 @@ public class CommonControllerAdvice {
         if (queryString != null) {
             msg.append('?').append(queryString);
         }
-        String requestPath = msg.toString();
+        String requestPath = Encode.forHtml(msg.toString());
 
         // now continue building the request details for logging
         String client = request.getRemoteAddr();
