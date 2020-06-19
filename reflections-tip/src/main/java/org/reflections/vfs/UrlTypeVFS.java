@@ -24,7 +24,7 @@ import com.google.common.base.Predicate;
  *
  */
 public class UrlTypeVFS implements UrlType {
-    public final static String[] REPLACE_EXTENSION = new String[]{".ear/", ".jar/", ".war/", ".sar/", ".har/", ".par/"};
+    protected final static String[] REPLACE_EXTENSION = new String[]{".ear/", ".jar/", ".war/", ".sar/", ".har/", ".par/"};
 
     final String VFSZIP = "vfszip";
     final String VFSFILE = "vfsfile";

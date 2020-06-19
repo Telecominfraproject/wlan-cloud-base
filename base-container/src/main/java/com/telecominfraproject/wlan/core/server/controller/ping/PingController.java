@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.telecominfraproject.wlan.core.server.container.ConnectorProperties;
@@ -22,7 +22,7 @@ public class PingController {
     @Autowired private ApplicationContext applicationContext;
     @Autowired private ConnectorProperties connectorProperties;
     
-    @RequestMapping("/ping")
+    @GetMapping("/ping")
     public @ResponseBody PingResponse ping() {
 
         PingResponse ret = new PingResponse(

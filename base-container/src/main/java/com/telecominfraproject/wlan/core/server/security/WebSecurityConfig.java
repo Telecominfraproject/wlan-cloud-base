@@ -43,6 +43,7 @@ import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.cache.SpringCacheBasedUserCache;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.codec.Hex;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
@@ -673,8 +674,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         
         DelegatingPasswordEncoder passwordEncoder = (DelegatingPasswordEncoder) PasswordEncoderFactories.createDelegatingPasswordEncoder();
         
-        @SuppressWarnings("deprecation")
-		PasswordEncoder defaultPasswordEncoderForMatches = NoOpPasswordEncoder.getInstance();
+		PasswordEncoder defaultPasswordEncoderForMatches = new BCryptPasswordEncoder();
 		passwordEncoder.setDefaultPasswordEncoderForMatches(defaultPasswordEncoderForMatches);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
         

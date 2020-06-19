@@ -40,7 +40,8 @@ public class CommonControllerAdvice {
         // org.springframework.web.filter.AbstractRequestLoggingFilter.createMessage(HttpServletRequest,
         // String, String)
         StringBuilder msg = new StringBuilder();
-        msg.append(request.getRequestURI());
+        // Replace pattern-breaking characters
+        msg.append(request.getRequestURI().replaceAll("[\n|\r|\t]", "_"));
 
         String queryString = request.getQueryString();
         if (queryString != null) {

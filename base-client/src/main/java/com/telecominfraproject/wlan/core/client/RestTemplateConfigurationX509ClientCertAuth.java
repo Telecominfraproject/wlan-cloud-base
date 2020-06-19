@@ -122,6 +122,9 @@ public class RestTemplateConfigurationX509ClientCertAuth {
             int endPos = subjectDn.indexOf(',', startPos);
             subjectDn = subjectDn.substring(startPos, endPos);
 
+            // Replace pattern-breaking characters
+            subjectDn = subjectDn.replaceAll("[\n|\r|\t]", "_");
+            
             LOG.info("X509 client name {}", subjectDn);
             return sslCxt;
         } catch (Exception e) {
