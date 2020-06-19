@@ -1,5 +1,7 @@
 package com.telecominfraproject.wlan.core.server.webconfig;
 
+import java.util.regex.Pattern;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -23,6 +25,8 @@ public class CommonControllerAdvice {
 
     private static final Logger LOG = LoggerFactory.getLogger(CommonControllerAdvice.class);
 
+    private static Pattern securityRepacementRegexPattern = Pattern.compile("[\n|\r|\t]");
+    
     /**
      * Custom exception handler, it will be applied to all methods (both sync
      * and async) on all controllers
@@ -41,7 +45,7 @@ public class CommonControllerAdvice {
         // String, String)
         StringBuilder msg = new StringBuilder();
         // Replace pattern-breaking characters
-        msg.append(request.getRequestURI().replaceAll("[\n|\r|\t]", "_"));
+        msg.append(securityRepacementRegexPattern.matcher(request.getRequestURI()).replaceAll( "_"));
 
         String queryString = request.getQueryString();
         if (queryString != null) {
@@ -60,7 +64,8 @@ public class CommonControllerAdvice {
         }
         String user = request.getRemoteUser();
         if (user != null) {
-            msg.append(";user=").append(user);
+            // Replace pattern-breaking characters
+            msg.append(";user=").append(securityRepacementRegexPattern.matcher(user).replaceAll( "_"));
         }
 
         String requestDetails = msg.toString();
