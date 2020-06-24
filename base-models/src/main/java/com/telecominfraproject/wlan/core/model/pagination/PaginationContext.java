@@ -31,6 +31,7 @@ public class PaginationContext<T extends BaseJsonModel> extends BaseJsonModel {
     private boolean isLastPage;
     
     private T startAfterItem;
+    private byte[] thirdPartyPagingState;
     private ContextChildren children = new ContextChildren();
        
     public PaginationContext() {
@@ -99,7 +100,23 @@ public class PaginationContext<T extends BaseJsonModel> extends BaseJsonModel {
     }
 
     /**
-     * @return opaque string, which contains a base64-encoded values of properties children and startAfterItem
+     * @see getCursor/setCursor
+     */
+    @JsonIgnore
+    public byte[] getThirdPartyPagingState() {
+		return thirdPartyPagingState;
+	}
+
+    /**
+     * @see getCursor/setCursor
+     */
+    @JsonIgnore
+	public void setThirdPartyPagingState(byte[] thirdPartyPagingState) {
+		this.thirdPartyPagingState = thirdPartyPagingState;
+	}
+
+	/**
+     * @return opaque string, which contains a base64-encoded values of properties children,  startAfterItem, and thirdPartyPagingState
      */
     public String getCursor() {
     	StringBuilder strb = new StringBuilder(512);
@@ -107,12 +124,14 @@ public class PaginationContext<T extends BaseJsonModel> extends BaseJsonModel {
     	strb.append(startAfterItem!=null?startAfterItem:"null");
     	strb.append(CURSOR_SEPARATOR);
     	strb.append(children!=null?children:"null");
+    	strb.append(CURSOR_SEPARATOR);
+    	strb.append(thirdPartyPagingState!=null?Base64Utils.encodeToString(thirdPartyPagingState):"null");
     	
 		return Base64Utils.encodeToString(strb.toString().getBytes(utf8 ));
     }
     
     /**
-     * Set values of properties children and startAfterItem from the opaque base64-encoded string 
+     * Set values of properties children, startAfterItem, and thirdPartyPagingState from the opaque base64-encoded string 
      */
     public void setCursor(String cursor) {
     	if(cursor == null || cursor.isEmpty()) {
@@ -120,18 +139,30 @@ public class PaginationContext<T extends BaseJsonModel> extends BaseJsonModel {
     	}
     	
     	String decodedCursor = new String(Base64Utils.decodeFromString(cursor), utf8);
-    	int separatorStartPos = decodedCursor.indexOf(CURSOR_SEPARATOR);
-    	if(separatorStartPos<0) {
+    	int firstSeparatorStartPos = decodedCursor.indexOf(CURSOR_SEPARATOR);
+    	if(firstSeparatorStartPos<0) {
     		throw new IllegalArgumentException("Cannot parse cursor: separator not found");
     	}
-    	String startAfterItemStr = decodedCursor.substring(0, separatorStartPos);
+    	String startAfterItemStr = decodedCursor.substring(0, firstSeparatorStartPos);
 
-    	if(separatorStartPos +  CURSOR_SEPARATOR.length() >= decodedCursor.length()) {
+    	if(firstSeparatorStartPos +  CURSOR_SEPARATOR.length() >= decodedCursor.length()) {
     		throw new IllegalArgumentException("Cannot parse cursor");
     	}
 
-    	String childrenStr = decodedCursor.substring(separatorStartPos + CURSOR_SEPARATOR.length());
-    	
+    	int secondSeparatorStartPos = decodedCursor.indexOf(CURSOR_SEPARATOR, firstSeparatorStartPos + CURSOR_SEPARATOR.length());
+
+    	if(secondSeparatorStartPos<0) {
+    		throw new IllegalArgumentException("Cannot parse cursor: second separator not found");
+    	}
+
+    	if(secondSeparatorStartPos +  CURSOR_SEPARATOR.length() >= decodedCursor.length()) {
+    		throw new IllegalArgumentException("Cannot parse cursor");
+    	}
+
+    	String childrenStr = decodedCursor.substring(firstSeparatorStartPos + CURSOR_SEPARATOR.length(), secondSeparatorStartPos);
+
+    	String thirdPartyPagingStateStr = decodedCursor.substring(secondSeparatorStartPos + CURSOR_SEPARATOR.length() );
+
     	if(!startAfterItemStr.equals("null")) {
     		startAfterItem = (T) BaseJsonModel.fromString(startAfterItemStr, BaseJsonModel.class);
     	}
@@ -140,6 +171,9 @@ public class PaginationContext<T extends BaseJsonModel> extends BaseJsonModel {
     		children = (ContextChildren) BaseJsonModel.fromString(childrenStr, BaseJsonModel.class);
     	}
 
+    	if(!thirdPartyPagingStateStr.equals("null")) {
+    		thirdPartyPagingState = Base64Utils.decodeFromString(thirdPartyPagingStateStr);
+    	}
     }
     
     @Override
@@ -153,6 +187,10 @@ public class PaginationContext<T extends BaseJsonModel> extends BaseJsonModel {
         
         if(children!=null){
             ret.children = children.clone();
+        }
+        
+        if(thirdPartyPagingState!=null) {
+        	ret.thirdPartyPagingState = thirdPartyPagingState.clone();
         }
         
         return ret;
