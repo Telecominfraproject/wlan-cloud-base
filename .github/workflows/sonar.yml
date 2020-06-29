@@ -3,13 +3,13 @@ name: Run sonar analysis
 on:
   push:
     branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 env:
   SONAR_URL: https://sonarcloud.io
   SONAR_ORGANIZATION: telecominfraproject
   SONAR_PROJECT_KEY: Telecominfraproject_wlan-cloud-base2
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  MAVEN_OPTS: -Xmx3g -Xss2m # prevents java.lang.StackOverflowError
 
 jobs:
   sonar:
@@ -32,7 +32,27 @@ jobs:
         java-version: 14
         java-package: jdk
         architecture: x64
+    - name: Cache Maven packages
+      uses: actions/cache@v1
+      with:
+        path: ~/.m2/repository/
+        key: ${{ runner.os }}-m2
+    - name: Configure maven settings.xml
+      run: cp wlan-cloud-base/.github/workflows/maven_settings_template.xml /home/runner/.m2/settings.xml
+    - name: Run maven build
+      working-directory: wlan-cloud-base/base-build
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MAVEN_REPO_USERNAME: build-pipeline
+        MAVEN_REPO_PASSWORD: ${{ secrets.MAVEN_REPO_PASSWORD }}
+      run: |
+        mvn clean verify
     - name: Run sonar
       working-directory: wlan-cloud-base/base-build
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MAVEN_REPO_USERNAME: build-pipeline
+        MAVEN_REPO_PASSWORD: ${{ secrets.MAVEN_REPO_PASSWORD }}
+        MAVEN_OPTS: -Xmx3g -Xss2m # prevents java.lang.StackOverflowError
       run: |
-        mvn clean verify sonar:sonar -Dsonar.host.url=${{ env.SONAR_URL }} -Dsonar.login=${{ secrets.SONAR_LOGIN }} -Dsonar.organization=${{ env.SONAR_ORGANIZATION }} -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
+        mvn sonar:sonar -Dsonar.host.url=${{ env.SONAR_URL }} -Dsonar.login=${{ secrets.SONAR_LOGIN }} -Dsonar.organization=${{ env.SONAR_ORGANIZATION }} -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
