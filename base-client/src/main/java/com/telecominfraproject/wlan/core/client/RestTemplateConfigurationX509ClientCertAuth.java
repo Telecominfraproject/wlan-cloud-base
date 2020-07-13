@@ -12,9 +12,8 @@ import javax.net.ssl.SSLContext;
 
 import org.apache.http.config.ConnectionConfig;
 import org.apache.http.config.SocketConfig;
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLContexts;
-import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
@@ -171,10 +170,22 @@ public class RestTemplateConfigurationX509ClientCertAuth {
             // HostnameVerifier is an additional security check that applies to
             // trusted certificates only. It is not meant as a substitute for
             // trust verification.
-            X509HostnameVerifier hostnameVerifier = new AllowAllHostnameVerifier();
-            httpClientBuilder.setHostnameVerifier(hostnameVerifier);
+            httpClientBuilder.setSSLHostnameVerifier(new NoopHostnameVerifier());
 
-            httpClientBuilder.setSslcontext(sslContext);
+            httpClientBuilder.setSSLContext(sslContext);
+            
+            //httpClientBuilder.setRetryHandler(new DefaultHttpRequestRetryHandler(3, false));
+//            httpClientBuilder.setRetryHandler((exception, executionCount, context) -> {
+//                if (executionCount > 3) {
+//                    LOG.warn("Maximum tries reached for http client pool");
+//                    return false;
+//                }
+//                if (exception instanceof org.apache.http.NoHttpResponseException) {
+//                    LOG.warn("No response from server after {} calls", executionCount);
+//                    return true;
+//                }
+//                return false;
+//            });
 
             CloseableHttpClient httpClient = httpClientBuilder.build();
 
@@ -215,14 +226,13 @@ public class RestTemplateConfigurationX509ClientCertAuth {
             // HostnameVerifier is an additional security check that applies to
             // trusted certificates only. It is not meant as a substitute for
             // trust verification.
-            X509HostnameVerifier hostnameVerifier = new AllowAllHostnameVerifier();
-            httpClientBuilder.setHostnameVerifier(hostnameVerifier);
+            httpClientBuilder.setSSLHostnameVerifier(new NoopHostnameVerifier());
 
-            httpClientBuilder.setSslcontext(sslContext);
+            httpClientBuilder.setSSLContext(sslContext);
 
             CloseableHttpClient httpClient = httpClientBuilder.build();
             CloseableHttpAsyncClient httpAsyncClient = HttpAsyncClientBuilder.create()
-                    .setHostnameVerifier(hostnameVerifier).setSSLContext(sslContext).build();
+                    .setSSLHostnameVerifier(new NoopHostnameVerifier()).setSSLContext(sslContext).build();
 
             HttpComponentsAsyncClientHttpRequestFactory asyncRequestFactory = new HttpComponentsAsyncClientHttpRequestFactory(
                     httpClient, httpAsyncClient);
