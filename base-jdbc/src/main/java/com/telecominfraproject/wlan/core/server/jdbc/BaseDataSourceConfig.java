@@ -111,6 +111,8 @@ public abstract class BaseDataSourceConfig {
             throw new ConfigurationException("Failed to set driver for data source", e);
         }
 
+        //Add SSL related properties
+        driverAdapterCPDS.setConnectionProperties(updateSSLProperties(dataSourceProperties));
         driverAdapterCPDS
                 .setMaxPreparedStatements(Integer.valueOf(dataSourceProperties.getProperty("maxPreparedStatements")));
         driverAdapterCPDS.setMaxIdle(Integer.valueOf(dataSourceProperties.getProperty("maxIdlePreparedStatements")));
@@ -171,6 +173,18 @@ public abstract class BaseDataSourceConfig {
         // return ret;
     }
 
+    private Properties updateSSLProperties(Properties dataSourceProperties) {
+        Properties sslProperties = new Properties();
+        sslProperties.setProperty("ssl", dataSourceProperties.getProperty("ssl"));
+        sslProperties.setProperty("sslmode", dataSourceProperties.getProperty("sslmode"));
+        sslProperties.setProperty("sslcert", dataSourceProperties.getProperty("sslcert"));
+        sslProperties.setProperty("sslkey", dataSourceProperties.getProperty("sslkey"));
+        sslProperties.setProperty("sslrootcert", dataSourceProperties.getProperty("sslrootcert"));
+        sslProperties.setProperty("sslfactory", dataSourceProperties.getProperty("sslfactory"));
+        sslProperties.setProperty("sslpassword", dataSourceProperties.getProperty("sslkeypassword"));
+        return sslProperties;
+    }
+
     public abstract String getDataSourceName();
 
     /**
@@ -228,6 +242,16 @@ public abstract class BaseDataSourceConfig {
         p.setProperty("testWhileIdle", environment.getProperty(getDataSourceName() + ".testWhileIdle", "true"));
         p.setProperty("keyColConversionClass", environment.getProperty(getDataSourceName() + ".keyColConversionClass",
                 "com.telecominfraproject.wlan.core.server.jdbc.KeyColumnLowerCaseConverter"));
+
+        // SSL related properties
+        p.setProperty("ssl", environment.getProperty(getDataSourceName() + ".ssl", "false"));
+        p.setProperty("sslmode", environment.getProperty(getDataSourceName() + ".sslmode", "disable"));
+        p.setProperty("sslcert", environment.getProperty(getDataSourceName() + ".sslcert", "/certs/clientcert.pem"));
+        p.setProperty("sslkey", environment.getProperty(getDataSourceName() + ".sslkey", "/certs/clientkey.p12"));
+        p.setProperty("sslrootcert", environment.getProperty(getDataSourceName() + ".sslrootcert", "/certs/cacert.pem"));
+        p.setProperty("sslfactory", environment.getProperty(getDataSourceName() + ".sslfactory", "org.postgresql.ssl.LibPQFactory"));
+        p.setProperty("sslkeypassword", environment.getProperty(getDataSourceName() + ".sslkeypassword", "SslKeyPassword"));
+
         String password = environment.getProperty(getDataSourceName() + ".password", "testdb");
         p.setProperty("passwordHash", DigestUtils.sha256Hex(password));
         LOG.info("Loaded properties for {} datasource from {}: {}", getDataSourceName(),
