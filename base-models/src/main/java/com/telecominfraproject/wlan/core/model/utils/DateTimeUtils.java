@@ -5,7 +5,9 @@ package com.telecominfraproject.wlan.core.model.utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * @author yongli
@@ -37,4 +39,43 @@ public class DateTimeUtils {
         }
         return null;
     }
+    
+    public static final TimeZone TZ_GMT = TimeZone.getTimeZone("GMT");
+
+    public static int getDayOfYear(long timestampMs) {
+        //all the date-time operations on the server are always in GMT
+        Calendar calendar = Calendar.getInstance(TZ_GMT);
+        calendar.setTimeInMillis(timestampMs);
+        int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
+
+        return dayOfYear;
+    }
+
+    public static int getYear(long timestampMs) {
+        //all the date-time operations on the server are always in GMT
+        Calendar calendar = Calendar.getInstance(TZ_GMT);
+        calendar.setTimeInMillis(timestampMs);
+        int year = calendar.get(Calendar.YEAR);
+
+        return year;
+    }
+
+    public static int getMonth(long timestampMs) {
+        //all the date-time operations on the server are always in GMT
+        Calendar calendar = Calendar.getInstance(TZ_GMT);
+        calendar.setTimeInMillis(timestampMs);
+        int month = calendar.get(Calendar.MONTH);
+
+        return month;
+    }
+
+    public static int getWeekOfYear(long timestampMs) {
+        //all the date-time operations on the server are always in GMT
+        Calendar calendar = Calendar.getInstance(TZ_GMT);
+        calendar.setTimeInMillis(timestampMs);
+        int weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
+
+        return weekOfYear;
+    }
+
 }

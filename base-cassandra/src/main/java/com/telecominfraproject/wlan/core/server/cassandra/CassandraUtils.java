@@ -9,6 +9,8 @@ import java.util.TimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.telecominfraproject.wlan.core.model.utils.DateTimeUtils;
+
 /**
  * @author dtop
  *
@@ -48,12 +50,7 @@ public class CassandraUtils {
 	private static final TimeZone tz = TimeZone.getTimeZone("GMT");
 
 	public static int getDayOfYear(long timestampMs) {
-		//all the date-time operations on the server are always in GMT
-		Calendar calendar = Calendar.getInstance(tz);
-		calendar.setTimeInMillis(timestampMs);
-		int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
-
-		return dayOfYear;
+	    return DateTimeUtils.getDayOfYear(timestampMs);
 	}
 
 	public static Set<Integer> calculateDaysOfYear(long fromTime, long toTime) {
