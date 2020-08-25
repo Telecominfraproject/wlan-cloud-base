@@ -19,6 +19,11 @@
 			<version>${tip-wlan-cloud.release.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.telecominfraproject.wlan</groupId>
+			<artifactId>base-container</artifactId>
+			<version>${tip-wlan-cloud.release.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.telecominfraproject.wlan</groupId>
@@ -41,6 +46,7 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-text</artifactId>
 		</dependency>
+
 	</dependencies>
 
 </project>
