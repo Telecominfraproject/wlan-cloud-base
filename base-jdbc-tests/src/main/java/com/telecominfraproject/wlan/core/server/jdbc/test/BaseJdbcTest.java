@@ -1,5 +1,8 @@
 package com.telecominfraproject.wlan.core.server.jdbc.test;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -30,6 +33,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import com.telecominfraproject.wlan.core.model.json.BaseJsonModel;
 import com.telecominfraproject.wlan.core.server.jdbc.BaseJDbcDataSource;
 import com.telecominfraproject.wlan.core.server.jdbc.BaseKeyColumnConverter;
 import com.telecominfraproject.wlan.core.server.jdbc.KeyColumnUpperCaseConverter;
@@ -105,9 +109,7 @@ public abstract class BaseJdbcTest {
             // We only want to add the test-data.sql if the file actually
             // exists.
             //
-            Reflections reflections = new Reflections(new ConfigurationBuilder()
-                    .setUrls(ClasspathHelper.forPackage("com.telecominfraproject.wlan")).setScanners(new ResourcesScanner()));
-            Set<String> testDataFiles = reflections.getResources(Pattern.compile("test-data.sql"));
+            Set<String> testDataFiles = getReflections().getResources(Pattern.compile("test-data.sql"));
 
             if (!CollectionUtils.isEmpty(testDataFiles)) {
                 builder.addScript("classpath:test-data.sql");
@@ -115,6 +117,32 @@ public abstract class BaseJdbcTest {
 
             EmbeddedDatabase db = builder.build();
             return new BaseJdbcTestDatabase(db, new KeyColumnUpperCaseConverter());
+        }
+
+        public static Reflections getReflections() {
+            //scan urls that contain 'com.telecominfraproject.wlan' and vendor-specific top level packages, use the ResourcesScanner
+
+            List<URL> urls =  new ArrayList<>();
+            urls.addAll(ClasspathHelper.forPackage("com.telecominfraproject.wlan"));
+            
+            //add vendor packages
+            if(BaseJsonModel.vendorTopLevelPackages!=null) {
+                String[] vendorPkgs = BaseJsonModel.vendorTopLevelPackages.split(",");
+                for(int i=0; i< vendorPkgs.length; i++) {
+                    if(vendorPkgs[i].trim().isEmpty()) {
+                        continue;
+                    }
+                    
+                    urls.addAll(ClasspathHelper.forPackage(vendorPkgs[i]));
+                    
+                }
+            }
+                    
+            Reflections reflections =   new Reflections(new ConfigurationBuilder()
+                    .setUrls(urls)
+                    .setScanners(new ResourcesScanner() ));         
+
+            return reflections;
         }
 
         @Bean

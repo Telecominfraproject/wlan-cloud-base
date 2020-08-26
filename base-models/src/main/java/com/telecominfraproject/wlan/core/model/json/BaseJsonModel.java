@@ -12,6 +12,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -29,6 +30,11 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,14 +53,13 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.annotation.JsonTypeResolver;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
-import com.telecominfraproject.wlan.core.model.json.BaseJsonModel;
-import com.telecominfraproject.wlan.core.model.json.BaseJsonTypeResolverBuilder;
 import com.telecominfraproject.wlan.server.exceptions.SerializationException;
 
 /**
  * All sub-classes are registered automatically with the static
- * {@link ObjectMapper} as long as it's in "com.telecominfraproject.wlan" package. The
- * resulting JSON document will have "_type: " SimpleClassName" to help with
+ * {@link ObjectMapper} as long as they are in "com.telecominfraproject.wlan" package 
+ * or in one of the packages specified by the system property tip.wlan.vendorTopLevelPackages (comma-separated) . 
+ * The resulting JSON document will have "model_type: " SimpleClassName" to help with
  * deserialization.
  * <p>
  * All subclass should implement {@link #clone()} {link
@@ -219,14 +224,47 @@ public abstract class BaseJsonModel implements Cloneable, Serializable {
         return ret;
     }
     
+    public static final String vendorTopLevelPackages = System.getProperty("tip.wlan.vendorTopLevelPackages", "");
+    public static Reflections getReflections() {
+        //scan urls that contain 'com.telecominfraproject.wlan' and vendor-specific top level packages, use the default scanners
+
+        List<URL> urls =  new ArrayList<>();
+        urls.addAll(ClasspathHelper.forPackage("com.telecominfraproject.wlan"));
+        
+        List<String> pkgs = new ArrayList<>();
+        pkgs.add("com.telecominfraproject.wlan");
+        
+        //add vendor packages
+        if(vendorTopLevelPackages!=null) {
+            String[] vendorPkgs = vendorTopLevelPackages.split(",");
+            for(int i=0; i< vendorPkgs.length; i++) {
+                if(vendorPkgs[i].trim().isEmpty()) {
+                    continue;
+                }
+                
+                urls.addAll(ClasspathHelper.forPackage(vendorPkgs[i]));
+                pkgs.add(vendorPkgs[i]);
+                
+                LOG.info("Registered package {} with BaseJsonModel", vendorPkgs[i]);
+            }
+        }
+                
+        Reflections reflections =   new Reflections(new ConfigurationBuilder()
+                .filterInputsBy(new FilterBuilder().includePackage(pkgs.toArray(new String[0])))
+                .setUrls(urls)
+                .setScanners(new SubTypesScanner(), new TypeAnnotationsScanner() ));
+     
+
+        return reflections;
+    }
+    
     public static Class<?> extractClass(String jsonStr)
     {
         try {
             JsonNode topNode = MAPPER.readTree(jsonStr);
             JsonNode typeNode = topNode.get("model_type");
 
-            Reflections reflections = new Reflections("com.telecominfraproject.wlan");
-            Set<Class<? extends BaseJsonModel>> classes = reflections.getSubTypesOf(BaseJsonModel.class);
+            Set<Class<? extends BaseJsonModel>> classes = getReflections().getSubTypesOf(BaseJsonModel.class);
 
             for (Class<? extends BaseJsonModel> subClazz : classes) {
                 if (Objects.equals(subClazz.getSimpleName(), typeNode.textValue())) {
@@ -401,12 +439,9 @@ public abstract class BaseJsonModel implements Cloneable, Serializable {
         //without this @JsonSubTypes annotation has to be used, which would 
         //introduce circular dependency between all model projects
         
-        //scan urls that contain 'com.telecominfraproject.wlan', use the default scanners
-        Reflections reflections = new Reflections("com.telecominfraproject.wlan");
-
         //SubTypesScanner
         Set<Class<? extends BaseJsonModel>> modelClasses = 
-            reflections.getSubTypesOf(BaseJsonModel.class);
+            getReflections().getSubTypesOf(BaseJsonModel.class);
 
         for(Class<? extends BaseJsonModel> c : modelClasses){
             objectMapper.registerSubtypes(new NamedType(c, c.getSimpleName()));
