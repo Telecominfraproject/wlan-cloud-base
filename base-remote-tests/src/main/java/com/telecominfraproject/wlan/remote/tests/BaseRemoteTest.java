@@ -46,19 +46,18 @@ import com.telecominfraproject.wlan.server.RemoteTestServer;
  * </code>
  * </pre>
  * 
- * <br>BaseRemoteTest by default configures  the value of the system property tip.wlan.componentScan.basePackages=com.telecominfraproject.wlan
- * <br>
- *  If your classes are located in a different subpackages and you want them to be scanned for the auto configuration, 
+ * <br>This class uses RemoteTestServer to perform component scanning and configuration. By default it only looks into the subpackages of com.telecominfraproject.wlan for the components and configurations. 
+ * <br>If your classes are located in a different subpackages and you want them to be scanned for the auto configuration, 
  *  you can set the system property to the list of subpackages to scan, for example:<br>
  *  <pre>
  *   static{  
- *      System.setProperty("tip.wlan.componentScan.basePackages", "com.telecominfraproject.wlan,com.netexperience");
+ *      System.setProperty("tip.wlan.vendorTopLevelPackages", "com.netexperience,com.example");
  *   }
  *  </pre>
  *  <br>
  *  The code above can be placed into the static{} initializers in the descendants of the BaseRemoteTest
- *    
- * See
+ *  <br>  
+ * <br>See
  * {@link https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html}
  * 
  * @author dtop
@@ -77,8 +76,9 @@ import com.telecominfraproject.wlan.server.RemoteTestServer;
 public abstract class BaseRemoteTest {
 
     static {
-        if(System.getProperty("tip.wlan.componentScan.basePackages", "").isEmpty()) {
-            System.setProperty("tip.wlan.componentScan.basePackages", "com.telecominfraproject.wlan");
+        //create empty value for environment variable if the variable itself is not defined, otherwise an exception will be thrown by the RemoteTestServer on startup
+        if(!System.getProperties().containsKey("tip.wlan.vendorTopLevelPackages")) {
+            System.setProperty("tip.wlan.vendorTopLevelPackages", "");
         }
       }
 
