@@ -224,7 +224,10 @@ public abstract class BaseJsonModel implements Cloneable, Serializable {
         return ret;
     }
     
-    public static final String vendorTopLevelPackages = System.getProperty("tip.wlan.vendorTopLevelPackages", "");
+    public static String getVendorTopLevelPackages() {
+        return System.getProperty("tip.wlan.vendorTopLevelPackages", "");
+    }
+    
     public static Reflections getReflections() {
         //scan urls that contain 'com.telecominfraproject.wlan' and vendor-specific top level packages, use the default scanners
 
@@ -235,6 +238,8 @@ public abstract class BaseJsonModel implements Cloneable, Serializable {
         pkgs.add("com.telecominfraproject.wlan");
         
         //add vendor packages
+        String vendorTopLevelPackages = getVendorTopLevelPackages();
+        
         if(vendorTopLevelPackages!=null) {
             String[] vendorPkgs = vendorTopLevelPackages.split(",");
             for(int i=0; i< vendorPkgs.length; i++) {
@@ -249,8 +254,10 @@ public abstract class BaseJsonModel implements Cloneable, Serializable {
             }
         }
                 
+        FilterBuilder filters = new FilterBuilder().includePackage(pkgs.toArray(new String[0]));
+        
         Reflections reflections =   new Reflections(new ConfigurationBuilder()
-                .filterInputsBy(new FilterBuilder().includePackage(pkgs.toArray(new String[0])))
+                .filterInputsBy(filters)
                 .setUrls(urls)
                 .setScanners(new SubTypesScanner(), new TypeAnnotationsScanner() ));
      

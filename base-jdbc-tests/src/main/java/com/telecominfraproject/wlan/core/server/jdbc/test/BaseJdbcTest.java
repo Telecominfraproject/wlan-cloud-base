@@ -126,8 +126,10 @@ public abstract class BaseJdbcTest {
             urls.addAll(ClasspathHelper.forPackage("com.telecominfraproject.wlan"));
             
             //add vendor packages
-            if(BaseJsonModel.vendorTopLevelPackages!=null) {
-                String[] vendorPkgs = BaseJsonModel.vendorTopLevelPackages.split(",");
+            String vendorTopLevelPackages = BaseJsonModel.getVendorTopLevelPackages();
+
+            if(vendorTopLevelPackages!=null) {
+                String[] vendorPkgs = vendorTopLevelPackages.split(",");
                 for(int i=0; i< vendorPkgs.length; i++) {
                     if(vendorPkgs[i].trim().isEmpty()) {
                         continue;
