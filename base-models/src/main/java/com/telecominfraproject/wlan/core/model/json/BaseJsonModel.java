@@ -441,6 +441,10 @@ public abstract class BaseJsonModel implements Cloneable, Serializable {
 
     }
     
+    public static void refreshRegisteredSubtypes() {
+        registerAllSubtypes(MAPPER);
+    }
+    
     public static void registerAllSubtypes(ObjectMapper objectMapper){
         //register all subclasses of BaseJsonModel - required by deserializers.
         //without this @JsonSubTypes annotation has to be used, which would 

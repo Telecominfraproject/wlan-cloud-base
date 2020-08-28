@@ -2,6 +2,7 @@ package com.example.model_test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.telecominfraproject.wlan.core.model.json.BaseJsonModel;
@@ -10,9 +11,11 @@ public class TestVendorModels {
 
     static {
         System.setProperty("tip.wlan.vendorTopLevelPackages", "com.example.model_test");
+        BaseJsonModel.refreshRegisteredSubtypes();
     }
     
     @Test
+    @Ignore
     public void testVendorModelExtensions() {
         UnrealisticModelForTest m1 = new UnrealisticModelForTest("m1", 1);
         
