@@ -12,8 +12,10 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.GenericConverter;
 
+import com.telecominfraproject.wlan.core.model.extensibleenum.EnumWithId;
 import com.telecominfraproject.wlan.core.model.json.BaseJsonModel;
 
 /**
@@ -23,6 +25,8 @@ import com.telecominfraproject.wlan.core.model.json.BaseJsonModel;
 public class WebGenericConverter implements GenericConverter {
     private static final Logger LOG = LoggerFactory.getLogger(WebGenericConverter.class);
     private Set<ConvertiblePair> convertiblePairs;
+    
+    private EnumWithIdConverterFactory enumWithIdConverterFactory = new EnumWithIdConverterFactory();
 
     /**
      * Format the typeDescriptor for logging
@@ -48,6 +52,7 @@ public class WebGenericConverter implements GenericConverter {
     public WebGenericConverter() {
         convertiblePairs = new HashSet<>();
         convertiblePairs.add(new ConvertiblePair(String.class, BaseJsonModel.class));
+        convertiblePairs.add(new ConvertiblePair(String.class, EnumWithId.class));
         convertiblePairs.add(new ConvertiblePair(String.class, List.class));
         convertiblePairs.add(new ConvertiblePair(String.class, Set.class));
     }
@@ -67,18 +72,22 @@ public class WebGenericConverter implements GenericConverter {
                     getDataType(targetType));
         }
 
+        Object ret = null;
+        if (targetType.isCollection()) {
+            if (targetType.getName().equals(List.class.getName())) {
+                ret = new ArrayList();
+            } else if (targetType.getName().equals(Set.class.getName())) {
+                ret = new HashSet();
+            } else {
+                throw new IllegalStateException("Unsupported collection type " + targetType.getName());
+            }
+        }
+
         if (targetType.isAssignableTo(TypeDescriptor.valueOf(String.class)) || targetType
                 .isAssignableTo(TypeDescriptor.collection(Collection.class, TypeDescriptor.valueOf(String.class)))) {
             LOG.trace("Proceeding with conversion of String ... ");
-            Object ret = null;
+            
             if (targetType.isCollection()) {
-                if (targetType.getName().equals(List.class.getName())) {
-                    ret = new ArrayList();
-                } else if (targetType.getName().equals(Set.class.getName())) {
-                    ret = new HashSet();
-                } else {
-                    throw new IllegalStateException("Unsupported collection type " + targetType.getName());
-                }
 
                 if (sourceType.isArray() || sourceType.isCollection()) {
                     for (Object obj : (Iterable<Object>) source) {
@@ -101,15 +110,8 @@ public class WebGenericConverter implements GenericConverter {
         if (targetType.isAssignableTo(TypeDescriptor.valueOf(Integer.class)) || targetType
                 .isAssignableTo(TypeDescriptor.collection(Collection.class, TypeDescriptor.valueOf(Integer.class)))) {
             LOG.trace("Proceeding with conversion of Integer ... ");
-            Object ret = null;
+
             if (targetType.isCollection()) {
-                if (targetType.getName().equals(List.class.getName())) {
-                    ret = new ArrayList();
-                } else if (targetType.getName().equals(Set.class.getName())) {
-                    ret = new HashSet();
-                } else {
-                    throw new IllegalStateException("Unsupported collection type " + targetType.getName());
-                }
 
                 if (sourceType.isArray() || sourceType.isCollection()) {
                     for (Object obj : (Iterable<Object>) source) {
@@ -132,15 +134,8 @@ public class WebGenericConverter implements GenericConverter {
         if (targetType.isAssignableTo(TypeDescriptor.valueOf(Long.class)) || targetType
                 .isAssignableTo(TypeDescriptor.collection(Collection.class, TypeDescriptor.valueOf(Long.class)))) {
             LOG.trace("Proceeding with conversion of Long ... ");
-            Object ret = null;
+
             if (targetType.isCollection()) {
-                if (targetType.getName().equals(List.class.getName())) {
-                    ret = new ArrayList();
-                } else if (targetType.getName().equals(Set.class.getName())) {
-                    ret = new HashSet();
-                } else {
-                    throw new IllegalStateException("Unsupported collection type " + targetType.getName());
-                }
 
                 if (sourceType.isArray() || sourceType.isCollection()) {
                     for (Object obj : (Iterable<Object>) source) {
@@ -160,6 +155,34 @@ public class WebGenericConverter implements GenericConverter {
             return ret;
         }
 
+        if (targetType.isAssignableTo(TypeDescriptor.valueOf(EnumWithId.class)) || targetType
+                .isAssignableTo(TypeDescriptor.collection(Collection.class, TypeDescriptor.valueOf(EnumWithId.class)))) {
+            LOG.trace("Proceeding with conversion of EnumWithId ... ");
+            
+            if (targetType.isCollection()) {
+                Converter<String, ? extends EnumWithId> converter = enumWithIdConverterFactory.getConverter((Class<? extends EnumWithId>) targetType.getElementTypeDescriptor().getType());
+
+                if (sourceType.isArray() || sourceType.isCollection()) {
+                    for (Object obj : (Iterable<Object>) source) {
+                        ((Collection) ret).add(converter.convert((String) obj));
+                    }
+                } else {
+                    for (String str : ((String) source).split(",")) {
+                        str = str.trim();
+                        if (str.isEmpty()) {
+                            continue;
+                        }
+                        ((Collection) ret).add(converter.convert(str));
+                    }
+                }
+            } else {
+                Converter<String, ? extends EnumWithId> converter = enumWithIdConverterFactory.getConverter((Class<? extends EnumWithId>) targetType.getType());
+                ret = converter.convert((String) source);
+            }
+
+            return ret;
+        }
+        
         if (!targetType.isAssignableTo(TypeDescriptor.valueOf(BaseJsonModel.class)) && !targetType.isAssignableTo(
                 TypeDescriptor.collection(Collection.class, TypeDescriptor.valueOf(BaseJsonModel.class)))) {
             throw new IllegalStateException(
@@ -171,15 +194,7 @@ public class WebGenericConverter implements GenericConverter {
 
         LOG.debug("Attempting to convert {} from {} to {}", source, sourceType.getName(), targetType.getName());
 
-        Object ret;
         if (targetType.isCollection()) {
-            if (targetType.getName().equals(List.class.getName())) {
-                ret = new ArrayList();
-            } else if (targetType.getName().equals(Set.class.getName())) {
-                ret = new HashSet();
-            } else {
-                throw new IllegalStateException("Unsupported collection type " + targetType.getName());
-            }
 
             if (sourceType.isArray() || sourceType.isCollection()) {
                 if (source != null) {

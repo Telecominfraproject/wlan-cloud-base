@@ -101,5 +101,9 @@ public class OriginalEnumExample implements EnumWithId {
         return id == other.id;
     }   
 
+    @Override
+    public String toString() {
+        return name;
+    }
 
 }

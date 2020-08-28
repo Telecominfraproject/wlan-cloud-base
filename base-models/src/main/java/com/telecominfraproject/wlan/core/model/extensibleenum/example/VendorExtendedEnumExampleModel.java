@@ -56,6 +56,12 @@ public class VendorExtendedEnumExampleModel extends BaseJsonModel{
         System.out.println("t2d = "+ t2d);
         System.out.println("t3d = "+ t3d);
 
+        System.out.println("=======================");
+
+        System.out.println("OriginalEnumExample.VALUE_A = "+ OriginalEnumExample.VALUE_A);
+        System.out.println("ExtendedEnumExample.VALUE_A = "+ ExtendedEnumExample.VALUE_A);
+        System.out.println("ExtendedEnumExample.VENDOR_VALUE_A = "+ ExtendedEnumExample.VENDOR_VALUE_A);
+
     }
 
 }
