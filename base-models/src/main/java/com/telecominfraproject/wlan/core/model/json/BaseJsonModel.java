@@ -17,9 +17,11 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -76,11 +78,12 @@ import com.telecominfraproject.wlan.server.exceptions.SerializationException;
 public abstract class BaseJsonModel implements Cloneable, Serializable {
     
     private static final long serialVersionUID = -1343089800191978867L;
-    public static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final ObjectWriter PRETTY_WRITTER;
+    private static ObjectMapper MAPPER = new ObjectMapper();
+    private static ObjectWriter PRETTY_WRITTER;
+    private static Set<String> knownSubtypeNames = Collections.synchronizedSet(new HashSet<>());
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseJsonModel.class);
-
+    
     static {
         registerAllSubtypes(MAPPER);
         PRETTY_WRITTER = MAPPER.writer().withDefaultPrettyPrinter();
@@ -228,6 +231,11 @@ public abstract class BaseJsonModel implements Cloneable, Serializable {
         return System.getProperty("tip.wlan.vendorTopLevelPackages", "");
     }
     
+    /**
+     * Creates a Reflections object that scans classpath urls that contain 'com.telecominfraproject.wlan' packages
+     * and vendor-specific top level packages (as defined by the system property tip.wlan.vendorTopLevelPackages), use the default scanners
+     * @return {@link Reflections}
+     */
     public static Reflections getReflections() {
         //scan urls that contain 'com.telecominfraproject.wlan' and vendor-specific top level packages, use the default scanners
 
@@ -441,8 +449,18 @@ public abstract class BaseJsonModel implements Cloneable, Serializable {
 
     }
     
-    public static void refreshRegisteredSubtypes() {
+    /**
+     * This method replaces internal ObjectMapper with a new instance and registers all subtypes with that new instance.
+     * <br><b>Note</b>: this method only re-registers subtypes on a single internal MAPPER, it does not affect any other ObjectMappers, like the ones used in 
+     * com.telecominfraproject.wlan.core.server.webconfig.WebConfig.extendMessageConverters(List<HttpMessageConverter<?>>) 
+     * and in com.telecominfraproject.wlan.core.client.RestTemplatePostConfiguration. As such, this method is useful only in the local unit tests.
+     * <br> <br>In production and in the remote unit tests that are meant to use vendor extensions the system property tip.wlan.vendorTopLevelPackages 
+     * must be set as early in the code as possible (in a static initializer of the class that has the process main method, or in the static initializer of a test suite) so that BaseJsonModel knows about the vendor extensions before the first use of any of the {@link ObjectMapper} instances.
+     */
+    public static synchronized void refreshRegisteredSubtypes() {
+        MAPPER = new ObjectMapper();
         registerAllSubtypes(MAPPER);
+        PRETTY_WRITTER = MAPPER.writer().withDefaultPrettyPrinter();
     }
     
     public static void registerAllSubtypes(ObjectMapper objectMapper){
@@ -456,6 +474,9 @@ public abstract class BaseJsonModel implements Cloneable, Serializable {
 
         for(Class<? extends BaseJsonModel> c : modelClasses){
             objectMapper.registerSubtypes(new NamedType(c, c.getSimpleName()));
+            if(c!=null && c.getSimpleName()!=null) {
+                knownSubtypeNames.add(c.getSimpleName());
+            }
         }
 
     }
@@ -687,5 +708,13 @@ public abstract class BaseJsonModel implements Cloneable, Serializable {
         } catch (JsonProcessingException e) {
             throw new SerializationException(e);
         }
+    }
+
+    /**
+     * @param simpleClassName
+     * @return true is this BaseJsonModel class has incoming simpleClassName registered as one of the subtypes  
+     */
+    public static boolean knowsClass(String simpleClassName) {
+        return knownSubtypeNames.contains(simpleClassName);
     }
 }
