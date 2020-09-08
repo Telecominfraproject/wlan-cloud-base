@@ -57,12 +57,18 @@ public class WebtokenAuthWebSecurityConfig extends WebSecurityConfig {
     @Bean
     @Profile(value = { "webtoken_auth", "client_certificate_and_webtoken_auth" })
     public WebtokenAuthenticationProvider webtokenAuthenticationProvider(RestOperations restTemplate, Environment env, RestHttpClientConfig restHttpClientConfig){
+
+        String introspectTokenApiProtocol = env.getProperty("tip.wlan.introspectTokenApi.protocol", 
+                "https"
+                );
+
         String introspectTokenApiHost = env.getProperty("tip.wlan.introspectTokenApi.host", 
                 "localhost:9070"
                 );
         String introspectTokenApiClientToken = env.getProperty("tip.wlan.introspectTokenApi.clientToken", 
                 "token_placeholder");
-        
+
+
         restHttpClientConfig.skipPreemptiveAuthentication(new HttpHost(introspectTokenApiHost, -1, "https"));
         
         if(introspectTokenApiHost.contains(":")){
@@ -71,7 +77,7 @@ public class WebtokenAuthWebSecurityConfig extends WebSecurityConfig {
             restHttpClientConfig.skipPreemptiveAuthentication(new HttpHost(host, port, "https"));
         }
         
-        WebtokenAuthenticationProvider ret = new WebtokenAuthenticationProvider(restTemplate, introspectTokenApiHost, introspectTokenApiClientToken);
+        WebtokenAuthenticationProvider ret = new WebtokenAuthenticationProvider(restTemplate, introspectTokenApiProtocol, introspectTokenApiHost, introspectTokenApiClientToken);
 
         return ret;
     } 

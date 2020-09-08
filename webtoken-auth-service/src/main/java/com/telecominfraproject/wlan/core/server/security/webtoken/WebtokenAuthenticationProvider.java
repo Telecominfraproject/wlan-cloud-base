@@ -35,9 +35,9 @@ public class WebtokenAuthenticationProvider implements AuthenticationProvider, I
 
     private final HttpHeaders headers = new HttpHeaders();
 
-    public WebtokenAuthenticationProvider(RestOperations restTemplate, String introspectTokenApiHost, String introspectTokenApiClientToken) {
+    public WebtokenAuthenticationProvider(RestOperations restTemplate, String introspectTokenApiProtocol, String introspectTokenApiHost, String introspectTokenApiClientToken) {
         this.restTemplate = restTemplate;
-        this.introspectTokenApiEndPoint = "https://" + introspectTokenApiHost
+        this.introspectTokenApiEndPoint = introspectTokenApiProtocol +"://" + introspectTokenApiHost
                 + "/management/v1/oauth2/introspecttoken";
         this.introspectTokenApiClientToken = introspectTokenApiClientToken;
 
