@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.telecominfraproject.wlan.core.model.extensibleenum.EnumWithId;
 
 /**
@@ -78,6 +79,16 @@ public class EquipmentType implements EnumWithId {
     public String getName() {
         return name;
     }
+    
+    @JsonIgnore
+    public String name() {
+        return name;
+    }
+
+    @JsonIgnore
+    public static EquipmentType[] values() {
+        return new ArrayList<>(ELEMENTS.values()).toArray(new EquipmentType[0]);
+    }
 
     public static EquipmentType getById(int enumId){
         return ELEMENTS.get(enumId);
@@ -92,7 +103,6 @@ public class EquipmentType implements EnumWithId {
         
         return ret;
     }
-
 
     public static List<EquipmentType> getValues() {
         return new ArrayList<>(ELEMENTS.values());
