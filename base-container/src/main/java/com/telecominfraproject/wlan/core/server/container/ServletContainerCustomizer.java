@@ -33,6 +33,12 @@ public abstract class ServletContainerCustomizer implements WebServerFactoryCust
     @Bean ConnectorProperties connectorProperties(){
         return new ConnectorPropertiesImpl(appContext.getEnvironment());
     }
+    
+    @Bean 
+    CommitProperties commitProperties(){
+        return new CommitProperties();
+    }
+    
 
     private static final Logger LOG = LoggerFactory.getLogger(ServletContainerCustomizer.class);
         

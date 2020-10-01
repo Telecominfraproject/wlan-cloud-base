@@ -13,7 +13,13 @@ public class PingResponse extends BaseJsonModel {
     private long currentTime;
     private String applicationName;
     private String hostName;
-    
+
+	private String commitID;
+	private String commitDate;
+	private String projectVersion;
+	
+	
+	
     protected PingResponse()
     {
         super();
@@ -23,7 +29,14 @@ public class PingResponse extends BaseJsonModel {
         this.startupTime = startupTime;
         this.currentTime = currentTime;
         this.applicationName = applicationName;
-        this.hostName = hostName;
+        this.hostName = hostName;       
+    }
+    
+    public PingResponse(long startupTime, long currentTime, String applicationName, String hostName, String commitID, String commitDate, String projectVersion){
+        this(startupTime, currentTime, applicationName, hostName);
+        this.commitID = commitID;
+        this.commitDate = commitDate;
+        this.projectVersion = projectVersion;        
     }
     
     public long getStartupTime() {
@@ -39,5 +52,18 @@ public class PingResponse extends BaseJsonModel {
     public String getHostName() {
         return hostName;
     }
+        
+    public String getCommitID() {
+        return commitID;        
+    }
+    
+    public String getCommitDate() {
+        return commitDate;        
+    }
+    
+    public String getProjectVersion() {
+        return projectVersion;        
+    }
+    
     
 }
