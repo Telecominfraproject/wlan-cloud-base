@@ -1,40 +1,44 @@
 package com.telecominfraproject.wlan.core.server.container;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CommitProperties {
+    private static final Logger LOG = LoggerFactory.getLogger(CommitProperties.class);
+
 	private static final String PROP_FILE = "commit.properties";
-	private final InputStream inputStream;
 	private final Properties prop = new Properties();
+	private final String date;
+	private final String commitId;
+	private final String version;
 
 	public CommitProperties() {
-		this.inputStream = getClass().getClassLoader().getResourceAsStream(PROP_FILE);
+        loadStream(prop);
+		this.date = prop.getProperty("date", "");
+		this.commitId = prop.getProperty("commitId", "");
+		this.version = prop.getProperty("projectVersion", "");
 	}
 
 	public String getCommitDate() {
-		return getProperty("date");
+		return date;
 	}
 
 	public String getCommitID() {
-		return getProperty("commitId");
+		return commitId;
 	}
 
 	public String getProjectVersion() {
-		return getProperty("projectVersion");
+		return version;
 	}
 
-	private String getProperty(final String property) {
-		String result = "";
-		if (inputStream != null) {
-			try {
+	private void loadStream(final Properties prop) {
+		try (final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(PROP_FILE)) {
 				prop.load(inputStream);
-				return prop.getProperty(property, "");
-			} catch (IOException e) {
-
-			}
+		} catch (final Exception e) {
+			LOG.info("Properties file not present");			
 		}
-		return result;
 	}
 }
