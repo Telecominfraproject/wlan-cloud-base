@@ -17,14 +17,21 @@ public class ConnectorPropertiesImpl implements ConnectorProperties {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConnectorProperties.class);
 
-    private final int externalPort;
+    //host and port on which this server listens for internal API requests
     private final int internalPort;
-    private final InetAddress externalIpAddress;
+    private final String internalHostName;
     private final InetAddress internalIpAddress;
 
+    //host and port on which this server listens for API requests from the outside world
+    private final int externalPort;
     private final String externalHostName;
-    private final String internalHostName;
+    private final InetAddress externalIpAddress;
     
+    //host and port which this server advertises to clients so that they can send API requests from the outside world, could be a load-balancer host and port, or a kubernetes-remapped host/port
+    private final int externallyVisiblePort;
+    private final String externallyVisibleHostName;
+    private final InetAddress externallyVisibleIpAddress;
+
     public ConnectorPropertiesImpl(Environment environment){
         
         int _externalPort = Integer.parseInt(environment.getProperty("server.port").trim());
@@ -72,26 +79,46 @@ public class ConnectorPropertiesImpl implements ConnectorProperties {
             _internalHostName = _internalIpAddress.getCanonicalHostName();
         }
 
+
+        //Populate externally-visible properties, if any
+        int _externallyVisiblePort = Integer.parseInt(environment.getProperty("tip.wlan.externallyVisiblePort", "0").trim());
+        if(_externallyVisiblePort == 0) {
+            _externallyVisiblePort = _externalPort;
+        }
+        
+        String _externallyVisibleHostName = environment.getProperty("tip.wlan.externallyVisibleHostName");
+        if(_externallyVisibleHostName == null || _externallyVisibleHostName.trim().isEmpty()) {
+            _externallyVisibleHostName = _externalHostName;
+        }
+        
+        InetAddress _externallyVisibleIpAddress;
+        String externallyVisibleIpAddrStr = environment.getProperty("tip.wlan.externallyVisibleIpAddress");
+        if(externallyVisibleIpAddrStr == null) {
+            _externallyVisibleIpAddress = _externalIpAddress;
+        } else {
+            try {
+                _externallyVisibleIpAddress = InetAddress.getByName(externallyVisibleIpAddrStr.trim());
+            } catch (UnknownHostException e) {
+                throw new ConfigurationException("Cannot get externally visible address of the system", e);
+            }
+        }
+        
         
         this.externalIpAddress = _externalIpAddress;
         this.externalHostName = _externalHostName;
         this.externalPort = _externalPort;
+
         this.internalIpAddress = _internalIpAddress;
         this.internalHostName = _internalHostName;
         this.internalPort = _internalPort;
 
+        this.externallyVisibleIpAddress = _externallyVisibleIpAddress;
+        this.externallyVisibleHostName = _externallyVisibleHostName;
+        this.externallyVisiblePort = _externallyVisiblePort;
+
         LOG.info("connectorProperties {}", this);
     }
     
-    public ConnectorPropertiesImpl(String externalHostName, InetAddress externalIpAddress, int externalPort, 
-            String internalHostName, InetAddress internalIpAddress, int internalPort) {
-        this.externalIpAddress = externalIpAddress;
-        this.externalHostName = externalHostName;
-        this.externalPort = externalPort;
-        this.internalIpAddress = internalIpAddress;
-        this.internalHostName = internalHostName;
-        this.internalPort = internalPort;
-    }
 
     public int getExternalPort() {
         return externalPort;
@@ -117,24 +144,24 @@ public class ConnectorPropertiesImpl implements ConnectorProperties {
         return internalHostName;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("ConnectorProperties [externalHostName=");
-        builder.append(externalHostName);
-        builder.append(", externalIpAddress=");
-        builder.append(externalIpAddress);
-        builder.append(", externalPort=");
-        builder.append(externalPort);
-        builder.append(", internalHostName=");
-        builder.append(internalHostName);
-        builder.append(", internalIpAddress=");
-        builder.append(internalIpAddress);
-        builder.append(", internalPort=");
-        builder.append(internalPort);
-        builder.append("]");
-        return builder.toString();
+    public int getExternallyVisiblePort() {
+        return externallyVisiblePort;
     }
 
+    public String getExternallyVisibleHostName() {
+        return externallyVisibleHostName;
+    }
+
+    public InetAddress getExternallyVisibleIpAddress() {
+        return externallyVisibleIpAddress;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "ConnectorPropertiesImpl [internalPort=%s, internalHostName=%s, internalIpAddress=%s, externalPort=%s, externalHostName=%s, externalIpAddress=%s, externallyVisiblePort=%s, externallyVisibleHostName=%s, externallyVisibleIpAddress=%s]",
+                internalPort, internalHostName, internalIpAddress, externalPort, externalHostName, externalIpAddress,
+                externallyVisiblePort, externallyVisibleHostName, externallyVisibleIpAddress);
+    }
     
 }
