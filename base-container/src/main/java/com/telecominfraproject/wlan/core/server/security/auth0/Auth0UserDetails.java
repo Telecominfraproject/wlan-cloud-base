@@ -29,15 +29,19 @@ public class Auth0UserDetails implements UserDetails, AuthProviderInfo {
     private boolean emailVerified = false;
     private Collection<GrantedAuthority> authorities = null;
     private final AccessType accessType;
+    private final String EMAIL_CLAIM = "email";
+    private final String EMAIL_VERIFIED_CLAIM = "email_verified";
+    private final String NICKNAME_CLAIM = "nickname";
+    private final String ROLES_CLAIM = "roles";
 
     private static final Log LOGGER = LogFactory.getLog(Auth0UserDetails.class);
 
     public Auth0UserDetails(DecodedJWT jwt, AccessType accessType) {
         this.accessType = accessType;
-        if (!jwt.getClaim("email").isNull()) {
-            this.username = jwt.getClaim("email").asString();
-        } else if (!jwt.getClaim("nickname").isNull()) {
-            this.username = jwt.getClaim("nickname").asString();
+        if (!jwt.getClaim(EMAIL_CLAIM).isNull()) {
+            this.username = jwt.getClaim(EMAIL_CLAIM).asString();
+        } else if (!jwt.getClaim(NICKNAME_CLAIM).isNull()) {
+            this.username = jwt.getClaim(NICKNAME_CLAIM).asString();
         } else if (jwt.getId() != null) {
             this.username = jwt.getId();
         } else if (jwt.getSubject() != null) {
@@ -46,16 +50,16 @@ public class Auth0UserDetails implements UserDetails, AuthProviderInfo {
             this.username = "UNKNOWN_USER";
         }
 
-        if (!jwt.getClaim("email").isNull()) {
-            this.emailVerified = Boolean.valueOf(jwt.getClaim("email_verified").toString());
+        if (!jwt.getClaim(EMAIL_CLAIM).isNull()) {
+            this.emailVerified = Boolean.valueOf(jwt.getClaim(EMAIL_VERIFIED_CLAIM).toString());
         }
 
         // set authorities
         authorities = new ArrayList<>();
-        if (!jwt.getClaim("roles").isNull()) {
+        if (!jwt.getClaim(ROLES_CLAIM).isNull()) {
             ArrayList<String> roles = null;
             try {
-                roles = (ArrayList<String>) jwt.getClaim("roles").asList(String.class);
+                roles = (ArrayList<String>) jwt.getClaim(ROLES_CLAIM).asList(String.class);
                 for (String role : roles) {
                     authorities.add(new SimpleGrantedAuthority(role));
                 }
