@@ -871,18 +871,18 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected Auth0AuthenticationProvider createAuth0AuthenticationProvider(int providerIndex) throws Exception {
         String clientId;
         String clientSecret;
-        String securedRoute;
+        String issuer;
         String accessTypeValue;
         if (0 == providerIndex) {
             clientId = environment.getProperty("tip.wlan.auth0.clientId", DEFAULT_AUTH0_PROPERTY);
             clientSecret = environment.getProperty("tip.wlan.auth0.clientSecret", DEFAULT_AUTH0_PROPERTY);
-            securedRoute = environment.getProperty("tip.wlan.auth0.securedRoute", DEFAULT_AUTH0_PROPERTY);
+            issuer = environment.getProperty("tip.wlan.auth0.issuerUri", DEFAULT_AUTH0_PROPERTY);
             accessTypeValue = environment.getProperty("tip.wlan.auth0.accessType",
                     getDefaultAccessType(providerIndex));
         } else {
             clientId = environment.getProperty("tip.wlan.auth0.clientId" + providerIndex);
             clientSecret = environment.getProperty("tip.wlan.auth0.clientSecret" + providerIndex);
-            securedRoute = environment.getProperty("tip.wlan.auth0.securedRoute" + providerIndex,
+            issuer = environment.getProperty("tip.wlan.auth0.issuer" + providerIndex,
                     DEFAULT_AUTH0_PROPERTY);
             accessTypeValue = environment.getProperty("tip.wlan.auth0.accessType" + providerIndex,
                     getDefaultAccessType(providerIndex));
@@ -896,7 +896,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             Auth0AuthenticationProvider auth0Provider = new Auth0AuthenticationProvider(accessType);
             auth0Provider.setClientId(clientId);
             auth0Provider.setClientSecret(clientSecret);
-            auth0Provider.setSecuredRoute(securedRoute);
+            auth0Provider.setIssuer(issuer);
             auth0Provider.afterPropertiesSet();
             LOG.info("Loaded configuration for auth0 provider {}", providerIndex);
             return auth0Provider;

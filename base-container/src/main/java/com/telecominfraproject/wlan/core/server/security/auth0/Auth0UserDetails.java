@@ -2,7 +2,6 @@ package com.telecominfraproject.wlan.core.server.security.auth0;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.telecominfraproject.wlan.core.server.security.AccessType;
 import com.telecominfraproject.wlan.core.server.security.AuthProviderInfo;
 
@@ -24,7 +24,7 @@ public class Auth0UserDetails implements UserDetails, AuthProviderInfo {
 
     private static final long serialVersionUID = 2058797193125711681L;
 
-    private Map<String, Object> details;
+    private DecodedJWT details;
     private String username;
     private boolean emailVerified = false;
     private Collection<GrantedAuthority> authorities = null;
@@ -32,34 +32,34 @@ public class Auth0UserDetails implements UserDetails, AuthProviderInfo {
 
     private static final Log LOGGER = LogFactory.getLog(Auth0UserDetails.class);
 
-    @SuppressWarnings("unchecked")
-    public Auth0UserDetails(Map<String, Object> map, AccessType accessType) {
+    public Auth0UserDetails(DecodedJWT jwt, AccessType accessType) {
         this.accessType = accessType;
-        if (map.containsKey("email")) {
-            this.username = map.get("email").toString();
-        } else if (map.containsKey("username")) {
-            this.username = map.get("username").toString();
-        } else if (map.containsKey("user_id")) {
-            this.username = map.get("user_id").toString();
+        if (!jwt.getClaim("email").isNull()) {
+            this.username = jwt.getClaim("email").asString();
+        } else if (!jwt.getClaim("nickname").isNull()) {
+            this.username = jwt.getClaim("nickname").asString();
+        } else if (jwt.getId() != null) {
+            this.username = jwt.getId();
+        } else if (jwt.getSubject() != null) {
+            this.username = jwt.getSubject();
         } else {
             this.username = "UNKNOWN_USER";
         }
 
-        if (map.containsKey("email")) {
-            this.emailVerified = Boolean.valueOf(map.get("email_verified").toString());
+        if (!jwt.getClaim("email").isNull()) {
+            this.emailVerified = Boolean.valueOf(jwt.getClaim("email_verified").toString());
         }
 
         // set authorities
         authorities = new ArrayList<>();
-        if (map.containsKey("roles")) {
+        if (!jwt.getClaim("roles").isNull()) {
             ArrayList<String> roles = null;
             try {
-                roles = (ArrayList<String>) map.get("roles");
+                roles = (ArrayList<String>) jwt.getClaim("roles").asList(String.class);
                 for (String role : roles) {
                     authorities.add(new SimpleGrantedAuthority(role));
                 }
             } catch (java.lang.ClassCastException e) {
-                // e.printStackTrace();
                 LOGGER.error("Error in casting the roles object", e);
             }
         }
@@ -69,7 +69,7 @@ public class Auth0UserDetails implements UserDetails, AuthProviderInfo {
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         }
 
-        this.details = map;
+        this.details = jwt;
 
     }
 
@@ -128,7 +128,11 @@ public class Auth0UserDetails implements UserDetails, AuthProviderInfo {
      *         otherwise
      */
     public Object getAuth0Attribute(String attributeName) {
-        return details.get(attributeName);
+        if (details.getClaim(attributeName).isNull()) {
+        	LOGGER.debug("No attribute was found : " + attributeName);
+        	return null;
+        }
+        return details.getClaim(attributeName);
     }
 
     @Override

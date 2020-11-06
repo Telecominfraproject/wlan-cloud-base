@@ -1,21 +1,23 @@
 package com.telecominfraproject.wlan.core.server.security.auth0.impl;
 
 import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
+import java.security.interfaces.RSAPublicKey;
+import java.util.Date;
 import java.util.Map;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
-import com.auth0.jwt.Algorithm;
-import com.auth0.jwt.ClaimSet;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwk.Jwk;
+import com.auth0.jwk.JwkException;
+import com.auth0.jwk.JwkProvider;
+import com.auth0.jwk.UrlJwkProvider;
+import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.JwtSigner;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.telecominfraproject.wlan.core.server.security.auth0.Auth0TokenHelper;
@@ -26,20 +28,20 @@ public class Auth0TokenHelperImpl implements Auth0TokenHelper<Object>, Initializ
 	
 	private String clientSecret = null;
 	private String clientId = null;
+	private String issuer = null;
 
 	@Override
 	public String generateToken(Object object, int expiration) {
 
-		String payload, token;
+		String token;
 		try {
-		
-			JwtSigner jwtSigner = new JwtSigner();
-			payload = new  ObjectMapper().writeValueAsString(object);
-
-		    ClaimSet claimSet = new ClaimSet();
-		    claimSet.setExp(expiration); // expire in 1 year
-		    
-		    token = jwtSigner.encode(Algorithm.HS256, payload, "payload", new String(Base64.decodeBase64(clientSecret)), claimSet);
+			
+			Algorithm hsEncoded = Algorithm.HMAC256(clientSecret);
+			token = JWT.create()
+					.withIssuer(issuer)
+					.withExpiresAt(new Date(expiration))
+					.withClaim("payload", new ObjectMapper().writeValueAsString(object))
+					.sign(hsEncoded);
 		
 		} catch (JsonProcessingException e) {
 			throw new Auth0RuntimeException(e);
@@ -53,28 +55,39 @@ public class Auth0TokenHelperImpl implements Auth0TokenHelper<Object>, Initializ
 
 	@Override
 	public Object decodeToken(String token) {
-
-		JWTVerifier jwtVerifier = new JWTVerifier(clientSecret, clientId);
-
 		
-		Map<String, Object> verify;
+		JwkProvider provider = new UrlJwkProvider(issuer);
+		
 		try {
+			DecodedJWT jwt = JWT.decode(token);
+	        String alg = jwt.getAlgorithm();
+	        // Gets kid from jwt token
+	        Jwk jwk = provider.get(jwt.getKeyId());
+	        
+	        Algorithm algorithm;
+	        if (alg == "RS256") {
+	        	// create RS256 key decoder
+	        	algorithm = Algorithm.RSA256((RSAPublicKey) jwk.getPublicKey(), null);
+	        } else {
+	        	// create HS256 key decoder
+	        	algorithm = Algorithm.HMAC256(clientSecret);
+	        }
+	        
+	        JWTVerifier verifier = JWT.require(algorithm)
+	        		.withIssuer(issuer)
+	        		.build();
 
-			verify = jwtVerifier.verify(token);
-			String payload = (String) verify.get("$");
+			jwt = verifier.verify(token);
+			String payload = (String) jwt.getPayload();
 			@SuppressWarnings("unchecked")
 			Map<String, String> map = new ObjectMapper().readValue(payload, Map.class);
 			return map;
 
-		} catch (InvalidKeyException e) {
-			throw new Auth0RuntimeException(e);
-		} catch (NoSuchAlgorithmException e) {
-			throw new Auth0RuntimeException(e);
 		} catch (IllegalStateException e) {
 			throw new Auth0RuntimeException(e);
-		} catch (SignatureException e) {
-			throw new Auth0RuntimeException(e);
 		} catch (IOException e) {
+			throw new Auth0RuntimeException(e);
+		} catch (JwkException e) {
 			throw new Auth0RuntimeException(e);
 		}
 		
