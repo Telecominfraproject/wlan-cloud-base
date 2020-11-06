@@ -1,6 +1,7 @@
 package com.telecominfraproject.wlan.core.server.security.auth0;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,9 +13,12 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.util.ResourceUtils;
 
 import com.auth0.jwk.Jwk;
 import com.auth0.jwk.JwkException;
@@ -49,7 +53,11 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
     private String issuer = null;
     private final AccessType accessType;
     private static final AuthenticationException AUTH_ERROR = new Auth0TokenException("Authentication error occured");
-
+    private static final String DEFAULT_JWKS_LOCATION = "classpath:jwks.json";
+    
+    @Autowired
+    private Environment environment;
+    
     public Auth0AuthenticationProvider(AccessType accessType) {
         this.accessType = accessType;
     }
@@ -117,9 +125,11 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
     }
     
     private Jwk getJwk(String keyId) {
-        try {
-        	InputStream is = getClass().getClassLoader().getResourceAsStream("jwks.json");
-        	String jwksSource = readFromInputStream(is);
+        try {      	
+        	String jwksSource = getJwksString();
+        	if (jwksSource == null) {
+            	throw new FileNotFoundException("jwks could not be found");
+            }
         	
         	List<Jwk> jwks = Lists.newArrayList();
         	@SuppressWarnings("unchecked")
@@ -144,13 +154,37 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
 		} catch (JsonProcessingException e) {
 			LOG.error("JsonProcessingException thrown while decoding JWT token", e);
             throw AUTH_ERROR;
+		} catch (FileNotFoundException e) {
+			LOG.error("FileNotFoundException thrown while decoding JWT token", e);
+            throw AUTH_ERROR;
 		}
         
         return null;
     }
     
+    private String getJwksString() {
+    	String jwksLocation = (environment == null) ? 
+    			System.getProperty("tip.wlan.auth0.jwks", DEFAULT_JWKS_LOCATION) : 
+    				environment.getProperty("tip.wlan.auth0.jwks", DEFAULT_JWKS_LOCATION);
+    	LOG.debug("Loading jwks from {}", jwksLocation);		
+    	String ret = null;
+    	
+    	try {
+	    	Object jwksObj = ResourceUtils.getURL(jwksLocation).getContent();
+	    	if (jwksObj instanceof String) {
+	    		ret = (String) jwksObj;
+	    	} else if (jwksObj instanceof InputStream) {
+	    		ret = readFromInputStream((InputStream) jwksObj);
+	    	}
+    	} catch (Exception e) {
+    		LOG.error("Exception thrown while getting jwks", e);
+            throw AUTH_ERROR;
+    	}
+	  return ret;
+	}
+    
     private String readFromInputStream(InputStream inputStream) {
-	    StringBuilder resultStringBuilder = new StringBuilder();
+    	StringBuilder resultStringBuilder = new StringBuilder();
 	    try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
 	        String line;
 	        while ((line = br.readLine()) != null) {
@@ -160,8 +194,8 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
 	    	LOG.error("IOException thrown while getting jwks", e);
             throw AUTH_ERROR;
 	    }
-	  return resultStringBuilder.toString();
-	}
+	    return resultStringBuilder.toString();
+    }
 
     public String getClientSecret() {
         return clientSecret;

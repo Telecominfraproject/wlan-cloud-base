@@ -29,10 +29,10 @@ public class Auth0UserDetails implements UserDetails, AuthProviderInfo {
     private boolean emailVerified = false;
     private Collection<GrantedAuthority> authorities = null;
     private final AccessType accessType;
-    private final String EMAIL_CLAIM = "email";
-    private final String EMAIL_VERIFIED_CLAIM = "email_verified";
-    private final String NICKNAME_CLAIM = "nickname";
-    private final String ROLES_CLAIM = "roles";
+    private static final String EMAIL_CLAIM = "email";
+    private static final String EMAIL_VERIFIED_CLAIM = "email_verified";
+    private static final String NICKNAME_CLAIM = "nickname";
+    private static final String ROLES_CLAIM = "roles";
 
     private static final Log LOGGER = LogFactory.getLog(Auth0UserDetails.class);
 
