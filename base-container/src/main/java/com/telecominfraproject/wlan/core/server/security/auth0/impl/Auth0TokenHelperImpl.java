@@ -54,8 +54,6 @@ public class Auth0TokenHelperImpl implements Auth0TokenHelper<Object>, Initializ
 		
 		} catch (JsonProcessingException e) {
 			throw new Auth0RuntimeException(e);
-		} catch (Exception e) {
-			throw new Auth0RuntimeException(e);
 		}
 		
 		return token;
@@ -94,11 +92,7 @@ public class Auth0TokenHelperImpl implements Auth0TokenHelper<Object>, Initializ
 			Map<String, String> map = new ObjectMapper().readValue(payload, Map.class);
 			return map;
 
-		} catch (IllegalStateException e) {
-			throw new Auth0RuntimeException(e);
-		} catch (IOException e) {
-			throw new Auth0RuntimeException(e);
-		} catch (JwkException e) {
+		} catch (IllegalStateException|IOException|JwkException e) {
 			throw new Auth0RuntimeException(e);
 		}
 		
