@@ -89,7 +89,7 @@ public class Auth0TokenHelperImpl implements Auth0TokenHelper<Object>, Initializ
             		.build();
             
             jwt = verifier.verify(token);
-			String payload = (String) jwt.getPayload();
+			String payload = jwt.getPayload();
 			@SuppressWarnings("unchecked")
 			Map<String, String> map = new ObjectMapper().readValue(payload, Map.class);
 			return map;

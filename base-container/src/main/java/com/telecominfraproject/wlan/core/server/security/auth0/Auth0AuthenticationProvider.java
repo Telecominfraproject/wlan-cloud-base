@@ -92,7 +92,7 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
             return authentication;
 
         } catch (JWTDecodeException e) {
-            LOG.error("JWTVerificationException thrown while decoding JWT token", e);
+            LOG.error("JWTDecodeException thrown while decoding JWT token", e);
             throw AUTH_ERROR;
         } catch (JWTVerificationException e) {
             LOG.error("JWTVerificationException thrown while decoding JWT token", e);
