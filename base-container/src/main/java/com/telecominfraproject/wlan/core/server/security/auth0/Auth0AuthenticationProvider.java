@@ -78,7 +78,7 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
             if (jwk == null) {
             	throw new JwkException("jwk could not be found");
             }
-            
+
             Algorithm algorithm;
             if (alg.equals("RS256")) {
             	// create RS256 key decoder
@@ -138,16 +138,20 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
             for (Map<String, Object> values : keys) {
                 jwks.add(Jwk.fromValues(values));
             }
+            
             if (keyId == null && jwks.size() == 1) {
                 return jwks.get(0);
             }
+            
             if (keyId != null) {
                 for (Jwk jwk : jwks) {
                     if (keyId.equals(jwk.getId())) {
+                    	// Can only contain 1 matching jwk
                         return jwk;
                     }
                 }
             }
+            
         } catch (JsonMappingException e) {
         	LOG.error("JsonMappingException thrown while decoding JWT token", e);
             throw AUTH_ERROR;
@@ -171,15 +175,16 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
     	
     	try {
 	    	Object jwksObj = ResourceUtils.getURL(jwksLocation).getContent();
-	    	if (jwksObj instanceof String) {
-	    		ret = (String) jwksObj;
-	    	} else if (jwksObj instanceof InputStream) {
+	    	if (jwksObj instanceof InputStream) {
 	    		ret = readFromInputStream((InputStream) jwksObj);
 	    	}
-    	} catch (Exception e) {
-    		LOG.error("Exception thrown while getting jwks", e);
+    	} catch (FileNotFoundException e) {
+    		LOG.error("FileNotFoundException thrown while getting jwks", e);
             throw AUTH_ERROR;
-    	}
+    	} catch (IOException e) {
+    		LOG.error("IOException thrown while getting jwks", e);
+            throw AUTH_ERROR;
+		}
 	  return ret;
 	}
     

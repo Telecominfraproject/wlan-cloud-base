@@ -1,6 +1,7 @@
 package com.telecominfraproject.wlan.core.server.security.auth0.impl;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.util.Assert;
+import org.springframework.util.ResourceUtils;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -34,9 +36,9 @@ public class Auth0TokenHelperImpl implements Auth0TokenHelper<Object>, Initializ
 	
 	private ObjectMapper mapper = new ObjectMapper();
     private static final AuthenticationException AUTH_ERROR = new Auth0TokenException("Authentication error occured");
+    private static final String DEFAULT_JWKS_LOCATION = "classpath:jwks.json";
 	
 	private String clientSecret = null;
-	private String clientId = null;
 	private String issuer = null;
 
 	@Override
@@ -69,15 +71,18 @@ public class Auth0TokenHelperImpl implements Auth0TokenHelper<Object>, Initializ
             
             // Get jwks file
             Jwk jwk = getJwk(jwt.getKeyId());
+            
             if (jwk == null) {
             	throw new JwkException("jwk could not be found");
             }
             
             Algorithm algorithm;
             if (alg.equals("RS256")) {
+            	
             	// create RS256 key decoder
             	algorithm = Algorithm.RSA256((RSAPublicKey) jwk.getPublicKey(), null);
             } else {
+            	
             	// create HS256 key decoder
             	algorithm = Algorithm.HMAC256(clientSecret);
             }
@@ -102,13 +107,13 @@ public class Auth0TokenHelperImpl implements Auth0TokenHelper<Object>, Initializ
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(clientSecret, "The client secret is not set for " + this.getClass());
-		Assert.notNull(clientId, "The client id is not set for " + this.getClass());
 	}
 	
 	private Jwk getJwk(String keyId) {
         try {
-        	InputStream is = getClass().getClassLoader().getResourceAsStream("jwks.json");
-        	String jwksSource = readFromInputStream(is);
+        	String jwksLocation = System.getProperty("tip.wlan.auth0.jwks", DEFAULT_JWKS_LOCATION);
+        	Object jwksObj = ResourceUtils.getURL(jwksLocation).getContent();
+        	String jwksSource = readFromInputStream((InputStream) jwksObj);
         	
         	List<Jwk> jwks = Lists.newArrayList();
         	@SuppressWarnings("unchecked")
@@ -117,9 +122,11 @@ public class Auth0TokenHelperImpl implements Auth0TokenHelper<Object>, Initializ
             for (Map<String, Object> values : keys) {
                 jwks.add(Jwk.fromValues(values));
             }
+            
             if (keyId == null && jwks.size() == 1) {
                 return jwks.get(0);
             }
+            
             if (keyId != null) {
                 for (Jwk jwk : jwks) {
                     if (keyId.equals(jwk.getId())) {
@@ -132,6 +139,12 @@ public class Auth0TokenHelperImpl implements Auth0TokenHelper<Object>, Initializ
             throw AUTH_ERROR;
 		} catch (JsonProcessingException e) {
 			Logger.error("JsonProcessingException thrown while decoding JWT token", e);
+            throw AUTH_ERROR;
+		} catch (FileNotFoundException e) {
+			Logger.error("FileNotFoundException thrown while decoding JWT token", e);
+            throw AUTH_ERROR;
+		} catch (IOException e) {
+			Logger.error("IOException thrown while decoding JWT token", e);
             throw AUTH_ERROR;
 		}
         
@@ -158,14 +171,6 @@ public class Auth0TokenHelperImpl implements Auth0TokenHelper<Object>, Initializ
 
 	public void setClientSecret(String clientSecret) {
 		this.clientSecret = clientSecret;
-	}
-
-	public String getClientId() {
-		return clientId;
-	}
-
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
 	}
 
 }
