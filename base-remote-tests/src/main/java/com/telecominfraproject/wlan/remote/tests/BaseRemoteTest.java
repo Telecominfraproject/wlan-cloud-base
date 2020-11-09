@@ -1,6 +1,7 @@
 package com.telecominfraproject.wlan.remote.tests;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -28,6 +29,8 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.SimpleTransactionStatus;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.telecominfraproject.wlan.server.RemoteTestServer;
 
@@ -139,20 +142,36 @@ public abstract class BaseRemoteTest {
                 @Override
                 public void rollback(TransactionStatus status) throws TransactionException {
                     LOG.info("Simulating Rollback for {}", status);
+                    if (TransactionSynchronizationManager.isSynchronizationActive()) {
+                        TransactionSynchronizationManager.clearSynchronization();
+                    }
                 }
 
                 @Override
                 public void commit(TransactionStatus status) throws TransactionException {
                     LOG.info("Simulating Commit for {}", status);
+                    if (TransactionSynchronizationManager.isSynchronizationActive()) {
+                        List<TransactionSynchronization> synchronizations = TransactionSynchronizationManager
+                                .getSynchronizations();
+                        if (synchronizations != null) {
+                            for (TransactionSynchronization synchronization : synchronizations) {
+                                synchronization.afterCommit();
+                            }
+                        }
+
+                        TransactionSynchronizationManager.clearSynchronization();
+                    }
                 }
 
                 @Override
                 public TransactionStatus getTransaction(TransactionDefinition definition) throws TransactionException {
                     LOG.info("Simulating getTransaction for {}", definition);
+                    if (!TransactionSynchronizationManager.isSynchronizationActive()) {
+                        TransactionSynchronizationManager.initSynchronization();
+                    }
                     TransactionStatus ts = new SimpleTransactionStatus();
                     return ts;
                 }
-
             };
 
             return ptm;
