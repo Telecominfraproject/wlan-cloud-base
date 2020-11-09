@@ -873,19 +873,21 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         String clientSecret;
         String issuer;
         String accessTypeValue;
+        String jwksLocation;
         if (0 == providerIndex) {
             clientId = environment.getProperty("tip.wlan.auth0.clientId", DEFAULT_AUTH0_PROPERTY);
             clientSecret = environment.getProperty("tip.wlan.auth0.clientSecret", DEFAULT_AUTH0_PROPERTY);
             issuer = environment.getProperty("tip.wlan.auth0.issuerUri", DEFAULT_AUTH0_PROPERTY);
             accessTypeValue = environment.getProperty("tip.wlan.auth0.accessType",
                     getDefaultAccessType(providerIndex));
+            jwksLocation = environment.getProperty("tip.wlan.auth0.jwksLocation", DEFAULT_AUTH0_PROPERTY);
         } else {
             clientId = environment.getProperty("tip.wlan.auth0.clientId" + providerIndex);
             clientSecret = environment.getProperty("tip.wlan.auth0.clientSecret" + providerIndex);
-            issuer = environment.getProperty("tip.wlan.auth0.issuer" + providerIndex,
-                    DEFAULT_AUTH0_PROPERTY);
+            issuer = environment.getProperty("tip.wlan.auth0.issuer" + providerIndex);
             accessTypeValue = environment.getProperty("tip.wlan.auth0.accessType" + providerIndex,
                     getDefaultAccessType(providerIndex));
+            jwksLocation = environment.getProperty("tip.wlan.auth0.jwksLocation" + providerIndex);
         }
         if (null == clientId) {
             return null;
@@ -897,6 +899,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             auth0Provider.setClientId(clientId);
             auth0Provider.setClientSecret(clientSecret);
             auth0Provider.setIssuer(issuer);
+            auth0Provider.setJwksLocation(jwksLocation);
             auth0Provider.afterPropertiesSet();
             LOG.info("Loaded configuration for auth0 provider {}", providerIndex);
             return auth0Provider;

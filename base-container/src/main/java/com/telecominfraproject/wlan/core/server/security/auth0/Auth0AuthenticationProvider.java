@@ -13,8 +13,6 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -51,12 +49,9 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
     private String clientSecret = null;
     private String clientId = null;
     private String issuer = null;
+    private String jwksLocation = null;
     private final AccessType accessType;
     private static final AuthenticationException AUTH_ERROR = new Auth0TokenException("Authentication error occured");
-    private static final String DEFAULT_JWKS_LOCATION = "classpath:jwks.json";
-    
-    @Autowired
-    private Environment environment;
     
     public Auth0AuthenticationProvider(AccessType accessType) {
         this.accessType = accessType;
@@ -167,9 +162,6 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
     }
     
     private String getJwksString() {
-    	String jwksLocation = (environment == null) ? 
-    			System.getProperty("tip.wlan.auth0.jwks", DEFAULT_JWKS_LOCATION) : 
-    				environment.getProperty("tip.wlan.auth0.jwks", DEFAULT_JWKS_LOCATION);
     	LOG.debug("Loading jwks from {}", jwksLocation);		
     	String ret = null;
     	
@@ -224,6 +216,14 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
     
     public void setIssuer(String issuer) {
     	this.issuer = issuer;
+    }
+    
+    public String getJwksLocation() {
+    	return jwksLocation;
+    }
+    
+    public void setJwksLocation(String jwksLocation) {
+    	this.jwksLocation = jwksLocation;
     }
 
     /**
