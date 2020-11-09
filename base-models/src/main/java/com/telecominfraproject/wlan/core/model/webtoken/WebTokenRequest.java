@@ -13,6 +13,7 @@ public class WebTokenRequest extends BaseJsonModel {
     private String grantType;
     private String userId;
     private String password;
+    private String refreshToken;
     private String scope;
     
     public String getGrantType() {
@@ -39,5 +40,11 @@ public class WebTokenRequest extends BaseJsonModel {
     public void setScope(String scope) {
         this.scope = scope;
     }
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
     
 }
