@@ -13,9 +13,11 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
+			<groupId>com.telecominfraproject.wlan</groupId>
+			<artifactId>base-tx-tests</artifactId>
+            <version>${tip-wlan-cloud.release.version}</version>
 		</dependency>
+        
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

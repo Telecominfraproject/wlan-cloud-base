@@ -47,6 +47,7 @@
                                 <module>../base-hierarchical-datastore</module>
                                 <module>../base-jdbc</module>
                                 <module>../base-jdbc-tests</module>
+                                <module>../base-tx-tests</module>
                                 <module>../base-cassandra</module>
                                 <module>../base-cassandra-tests</module>
                                 <module>../base-job</module>

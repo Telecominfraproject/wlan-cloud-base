@@ -32,6 +32,7 @@ import org.springframework.transaction.support.SimpleTransactionStatus;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+import com.telecominfraproject.wlan.core.server.tx.test.TxTestConfig;
 import com.telecominfraproject.wlan.server.RemoteTestServer;
 
 /**
@@ -75,6 +76,7 @@ import com.telecominfraproject.wlan.server.RemoteTestServer;
                 "tip.wlan.csrf-enabled=false" })
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @Import(value = {
+        TxTestConfig.class
 })
 public abstract class BaseRemoteTest {
 
@@ -129,53 +131,6 @@ public abstract class BaseRemoteTest {
     @Configuration
     // @PropertySource({ "classpath:persistence-${envTarget:dev}.properties" })
     public static class Config {
-
-        @Bean
-        @Primary
-        public PlatformTransactionManager transactionManager() {
-            PlatformTransactionManager ptm = new PlatformTransactionManager() {
-
-                {
-                    LOG.info("*** Using simulated PlatformTransactionManager");
-                }
-
-                @Override
-                public void rollback(TransactionStatus status) throws TransactionException {
-                    LOG.info("Simulating Rollback for {}", status);
-                    if (TransactionSynchronizationManager.isSynchronizationActive()) {
-                        TransactionSynchronizationManager.clearSynchronization();
-                    }
-                }
-
-                @Override
-                public void commit(TransactionStatus status) throws TransactionException {
-                    LOG.info("Simulating Commit for {}", status);
-                    if (TransactionSynchronizationManager.isSynchronizationActive()) {
-                        List<TransactionSynchronization> synchronizations = TransactionSynchronizationManager
-                                .getSynchronizations();
-                        if (synchronizations != null) {
-                            for (TransactionSynchronization synchronization : synchronizations) {
-                                synchronization.afterCommit();
-                            }
-                        }
-
-                        TransactionSynchronizationManager.clearSynchronization();
-                    }
-                }
-
-                @Override
-                public TransactionStatus getTransaction(TransactionDefinition definition) throws TransactionException {
-                    LOG.info("Simulating getTransaction for {}", definition);
-                    if (!TransactionSynchronizationManager.isSynchronizationActive()) {
-                        TransactionSynchronizationManager.initSynchronization();
-                    }
-                    TransactionStatus ts = new SimpleTransactionStatus();
-                    return ts;
-                }
-            };
-
-            return ptm;
-        }
 
     }
 
