@@ -17,29 +17,49 @@ import com.telecominfraproject.wlan.core.model.json.JsonDeserializationUtils;
  */
 public enum PortalUserRole {
     /**
-     * Public user
+     * Public user - Read Only
      */
     Public(0, 0),
     /**
-     * Customer
+     * Customer - Read Write
      */
     CustomerIT(1, 10),
     /**
-     * MSP
+     * MSP - Read Write
      */
     ManagedServiceProvider(2, 20),
     /**
-     * Service Distributor
+     * Service Distributor - Read Write
      */
     Distributor(3, 30),
     /**
-     * Technical Support
+     * Technical Support - Read Write
      */
     TechSupport(4, 40),
     /**
-     * Super User
+     * Super User - Read Write
      */
     SuperUser(Integer.MAX_VALUE, Integer.MAX_VALUE),
+    /**
+     * Customer - Read Only
+     */
+    CustomerIT_RO(5, 5),
+    /**
+     * MSP - Read Only
+     */
+    ManagedServiceProvider_RO(6, 15),
+    /**
+     * Service Distributor - Read Only
+     */
+    Distributor_RO(7, 25),
+    /**
+     * Technical Support - Read Only
+     */
+    TechSupport_RO(8, 35),
+    /**
+     * Super User - Read Only
+     */
+    SuperUser_RO(Integer.MAX_VALUE - 1, Integer.MAX_VALUE - 5),    
     /**
      * Unknown
      */
