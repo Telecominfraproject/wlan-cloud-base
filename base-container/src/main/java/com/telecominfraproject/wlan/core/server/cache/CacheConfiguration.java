@@ -5,12 +5,11 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.BeanFactoryAnnotationUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,7 +22,7 @@ public class CacheConfiguration {
     private static final Logger LOG = LoggerFactory.getLogger(CacheConfiguration.class);
 
     @Autowired
-	AnnotationConfigApplicationContext applicationContext;
+	ApplicationContext applicationContext;
 
     @Bean
 	@Primary
@@ -87,8 +86,7 @@ public class CacheConfiguration {
 	}
 
 	public Cache getCache(String cacheName, String cacheManagerQualifier) {
-		CacheManager cm = BeanFactoryAnnotationUtils.qualifiedBeanOfType(applicationContext.getBeanFactory(),
-				CacheManager.class, cacheManagerQualifier);
+    	CacheManager cm = applicationContext.getBeansOfType(CacheManager.class).get(cacheManagerQualifier);
 		return cm.getCache(cacheName);
 
 	}
