@@ -9,6 +9,7 @@ public enum SecurityType
     OPEN,
     RADIUS,
     PSK,
+    SAE,
     
     UNSUPPORTED;
     
