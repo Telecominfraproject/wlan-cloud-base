@@ -35,7 +35,7 @@ public class NoSSLContainerCustomizer extends ServletContainerCustomizer {
                 @Override
                 public void customize(Connector connector) {
                     connector.setAttribute(ConnectorType.CONNECTOR_ATTRIBUTE_NAME, ConnectorType.externalConnector);
-                    connector.setAttribute("maxThreads", Integer.parseInt(appContext.getEnvironment().getProperty("maxHttpThreads", "100")));
+                    connector.setAttribute("maxThreads", Integer.parseInt(appContext.getEnvironment().getProperty("tip.wlan.maxHttpThreads", "100")));
                     
                     enableCompression(connector);
 

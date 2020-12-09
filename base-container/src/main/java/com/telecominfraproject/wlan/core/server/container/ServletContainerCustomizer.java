@@ -179,7 +179,7 @@ public abstract class ServletContainerCustomizer implements WebServerFactoryCust
             connector.setAttribute("useServerCipherSuitesOrder", bValue);
         }
         
-        connector.setAttribute("maxThreads", Integer.parseInt(appContext.getEnvironment().getProperty("maxHttpThreads", "100")));
+        connector.setAttribute("maxThreads", Integer.parseInt(appContext.getEnvironment().getProperty("tip.wlan.maxHttpThreads", "100")));
         
         LOG.info("Configured https connector for port {} with {} threads", connector.getPort(), connector.getAttribute("maxThreads"));
     }
