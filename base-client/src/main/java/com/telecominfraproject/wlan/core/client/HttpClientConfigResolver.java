@@ -50,6 +50,22 @@ public class HttpClientConfigResolver {
                 ret = HttpClientConfig.fromString(StreamUtils.copyToString((InputStream) configContent, StandardCharsets.UTF_8),
                         HttpClientConfig.class);
             }
+            
+            if(environment!=null){
+                //override values for maxConnectionsTotal and maxConnectionsPerRoute using environment variables, if provided 
+                if(environment.getProperty("tip.wlan.httpClientConfig.maxConnectionsTotal") != null) {
+                    int maxConnectionsTotal = Integer.parseInt(environment.getProperty("tip.wlan.httpClientConfig.maxConnectionsTotal"));
+                    ret.setMaxConnectionsTotal(maxConnectionsTotal);
+                    LOG.info("Overriding http client configuration maxConnectionsTotal {}", maxConnectionsTotal);
+                }
+                
+                if(environment.getProperty("tip.wlan.httpClientConfig.maxConnectionsPerRoute") != null) {
+                    int maxConnectionsPerRoute = Integer.parseInt(environment.getProperty("tip.wlan.httpClientConfig.maxConnectionsPerRoute"));
+                    ret.setMaxConnectionsPerRoute(maxConnectionsPerRoute);
+                    LOG.info("Overriding http client configuration maxConnectionsPerRoute {}", maxConnectionsPerRoute);
+                }
+            }
+            
             LOG.info("Got http client configuration from {}", configLocation);
             return ret;
         } catch (Exception e) {
