@@ -32,24 +32,4 @@ public class VendorExtendedEquipmentTypeModel extends BaseJsonModel{
         this.dataType = dataType;
     }
 
-    public static void main(String[] args) {
-        VendorExtendedEquipmentTypeModel t1 = new VendorExtendedEquipmentTypeModel("t1", EquipmentType.AP);
-        VendorExtendedEquipmentTypeModel t2 = new VendorExtendedEquipmentTypeModel("t2", VendorExtendedEquipmentType.AP);
-        VendorExtendedEquipmentTypeModel t3 = new VendorExtendedEquipmentTypeModel("t3", VendorExtendedEquipmentType.VENDOR_EQ_B);
-        
-        System.out.println("t1  = "+ t1);
-        System.out.println("t2  = "+ t2);
-        System.out.println("t3  = "+ t3);
-        
-        VendorExtendedEquipmentTypeModel t1d = BaseJsonModel.fromString(t1.toString(), VendorExtendedEquipmentTypeModel.class);  
-        VendorExtendedEquipmentTypeModel t2d = BaseJsonModel.fromString(t2.toString(), VendorExtendedEquipmentTypeModel.class);  
-        VendorExtendedEquipmentTypeModel t3d = BaseJsonModel.fromString(t3.toString(), VendorExtendedEquipmentTypeModel.class);
-
-        System.out.println("=======================");
-        
-        System.out.println("t1d = "+ t1d);
-        System.out.println("t2d = "+ t2d);
-        System.out.println("t3d = "+ t3d);
-
-    }
 }
