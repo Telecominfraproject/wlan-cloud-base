@@ -38,4 +38,15 @@ public class SourceSelectionSteering extends AbstractSource<RadioBestApSettings>
         return false;
     }
     
+    @Override
+    public SourceSelectionSteering clone() {
+        SourceSelectionSteering ret = (SourceSelectionSteering) super.clone();
+        
+        if(this.value!=null) {
+            ret.value = this.value.clone();
+        }
+        
+        return ret;
+    }
+
 }

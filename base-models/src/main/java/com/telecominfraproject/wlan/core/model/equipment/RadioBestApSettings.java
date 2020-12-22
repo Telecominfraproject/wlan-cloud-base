@@ -104,4 +104,8 @@ public class RadioBestApSettings extends BaseJsonModel
         return false;
     }
 
+    @Override
+    public RadioBestApSettings clone() {
+        return (RadioBestApSettings) super.clone();
+    }
 }

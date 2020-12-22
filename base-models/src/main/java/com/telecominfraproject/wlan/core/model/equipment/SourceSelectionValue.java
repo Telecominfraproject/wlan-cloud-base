@@ -47,4 +47,10 @@ public class SourceSelectionValue extends AbstractSource<Integer>{
         return false;
     }
 
+    @Override
+    public SourceSelectionValue clone() {
+        SourceSelectionValue ret = (SourceSelectionValue) super.clone();
+        return ret;
+    }
+
 }
