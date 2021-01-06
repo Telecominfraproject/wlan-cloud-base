@@ -878,14 +878,14 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             accessTypeValue = environment.getProperty("tip.wlan.auth0.accessType",
                     getDefaultAccessType(providerIndex));
             jwksLocation = environment.getProperty("tip.wlan.auth0.jwksLocation", DEFAULT_AUTH0_PROPERTY);
-            claimsUrl = environment.getProperty("tip.wlan.auth0.callbackUrl"); // See Auth0UserDetails
+            claimsUrl = environment.getProperty("tip.wlan.auth0.claimsUrl"); // See Auth0UserDetails
         } else {
             clientSecret = environment.getProperty("tip.wlan.auth0.clientSecret" + providerIndex);
             issuer = environment.getProperty("tip.wlan.auth0.issuerUri" + providerIndex);
             accessTypeValue = environment.getProperty("tip.wlan.auth0.accessType" + providerIndex,
                     getDefaultAccessType(providerIndex));
             jwksLocation = environment.getProperty("tip.wlan.auth0.jwksLocation" + providerIndex);
-            claimsUrl = environment.getProperty("tip.wlan.auth0.callbackUrl" + providerIndex);
+            claimsUrl = environment.getProperty("tip.wlan.auth0.claimsUrl" + providerIndex);
         }
         // Be default, use HS256 decoding which requires clientSecret
         if (null == clientSecret) {
