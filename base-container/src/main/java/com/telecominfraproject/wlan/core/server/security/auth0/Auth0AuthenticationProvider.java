@@ -115,7 +115,7 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
 
     public void afterPropertiesSet() throws Exception {
         if ((clientSecret == null) || (issuer == null)) {
-            throw new ConfigurationException("Client secret, client id, or issuer URI is not set for Auth0AuthenticationProvider");
+            throw new ConfigurationException("Client secret or issuer URI is not set for Auth0AuthenticationProvider");
         }
     }
     
