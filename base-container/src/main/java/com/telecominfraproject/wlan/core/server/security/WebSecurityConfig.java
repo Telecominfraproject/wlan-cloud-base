@@ -36,6 +36,7 @@ import org.springframework.security.config.annotation.web.configurers.Expression
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserCache;
@@ -65,6 +66,7 @@ import org.springframework.security.web.header.HeaderWriter;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import com.telecominfraproject.wlan.core.model.role.PortalUserRole;
 import com.telecominfraproject.wlan.core.server.container.ConnectorProperties;
 import com.telecominfraproject.wlan.core.server.security.auth0.Auth0AuthenticationEntryPoint;
 import com.telecominfraproject.wlan.core.server.security.auth0.Auth0AuthenticationFilter;
@@ -87,6 +89,9 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(WebSecurityConfig.class);
     public static final String AUTH_CACHE_NAME = "auth_details_cache";
     
+    public static final SimpleGrantedAuthority CUSTOMER_EQUIPMENT_AUTHORITY = new SimpleGrantedAuthority("ROLE_CUSTOMER_EQUIPMENT");
+    public static final SimpleGrantedAuthority API_AUTHORITY = new SimpleGrantedAuthority("ROLE_API");
+    
     /**
      * Maximum number of auth0 provider
      */
@@ -100,10 +105,13 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public UserDetailsService userDetailsService() {
+    	List<SimpleGrantedAuthority> authorities = PortalUserRole.getAllAuthorities();
+    	authorities.add(CUSTOMER_EQUIPMENT_AUTHORITY);
+    	authorities.add(API_AUTHORITY);
         UserDetailsService uds = new InMemoryUserDetailsManager(
                 Arrays.asList(new UserDetails[] { new User(environment.getProperty("tip.wlan.serviceUser", "user"),
                         environment.getProperty("tip.wlan.servicePassword", "password"), true, true, true, true,
-                        Authority.values()), }));
+                        authorities)}));
 
         return uds;
     }
@@ -752,7 +760,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             public PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails buildDetails(HttpServletRequest context) {
                 List<GrantedAuthority> userGas = new ArrayList<>();
 
-                userGas.add(Authority.CUSTOMER_EQUIPMENT_AUTHORITY);
+                userGas.add(CUSTOMER_EQUIPMENT_AUTHORITY);
 
                 PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails result = new PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails(
                         context, userGas);
@@ -873,11 +881,11 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             claimsUrl = environment.getProperty("tip.wlan.auth0.callbackUrl"); // See Auth0UserDetails
         } else {
             clientSecret = environment.getProperty("tip.wlan.auth0.clientSecret" + providerIndex);
-            issuer = environment.getProperty("tip.wlan.auth0.issuer" + providerIndex);
+            issuer = environment.getProperty("tip.wlan.auth0.issuerUri" + providerIndex);
             accessTypeValue = environment.getProperty("tip.wlan.auth0.accessType" + providerIndex,
                     getDefaultAccessType(providerIndex));
             jwksLocation = environment.getProperty("tip.wlan.auth0.jwksLocation" + providerIndex);
-            claimsUrl = environment.getProperty("tip.wlan.auth0.claimsUrl" + providerIndex);
+            claimsUrl = environment.getProperty("tip.wlan.auth0.callbackUrl" + providerIndex);
         }
         // Be default, use HS256 decoding which requires clientSecret
         if (null == clientSecret) {

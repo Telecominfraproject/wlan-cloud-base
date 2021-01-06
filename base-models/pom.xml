@@ -45,6 +45,11 @@
 			<artifactId>base62</artifactId>
 			<version>${seruco.base62.version}</version>
 		</dependency>
+		
+		<dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+   	</dependency>
 
 	</dependencies>
 

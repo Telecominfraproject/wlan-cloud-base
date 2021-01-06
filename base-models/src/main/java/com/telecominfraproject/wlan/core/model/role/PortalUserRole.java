@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -119,6 +120,7 @@ public class PortalUserRole implements EnumWithId {
     public static final String SYSTEM_IDENTIFIER = "System";
 
     private final int permissionLevel;
+    private final SimpleGrantedAuthority authority;
 
     private final int id;
     private final String name;
@@ -132,6 +134,7 @@ public class PortalUserRole implements EnumWithId {
             this.id = id;
             this.name = name;
             this.permissionLevel = permissionLevel;
+            this.authority = new SimpleGrantedAuthority(name);
 
             ELEMENTS_BY_NAME.values().forEach(s -> {
                 if(s.getName().equals(name)) {
@@ -158,6 +161,10 @@ public class PortalUserRole implements EnumWithId {
     
     public String getName() {
         return name;
+    }
+    
+    public SimpleGrantedAuthority getAuthority() { 
+    	return authority;
     }
 
     @Override
@@ -209,6 +216,13 @@ public class PortalUserRole implements EnumWithId {
 
     public static List<PortalUserRole> getValues() {
         return new ArrayList<>(ELEMENTS.values());
+    }
+    
+    public static List<SimpleGrantedAuthority> getAllAuthorities() {
+    	List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+    	ELEMENTS.values().forEach(y -> authorities.add(y.getAuthority()));
+    	
+    	return authorities;
     }
     
     public static boolean isUnsupported(PortalUserRole value) {

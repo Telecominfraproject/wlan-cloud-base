@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.telecominfraproject.wlan.core.model.role.PortalUserRole;
 import com.telecominfraproject.wlan.core.model.webtoken.IntrospectWebTokenResult;
 import com.telecominfraproject.wlan.core.server.security.AccessType;
 import com.telecominfraproject.wlan.core.server.security.AuthProviderInfo;
-import com.telecominfraproject.wlan.core.server.security.Authority;
 
 /**
  * Implementation of UserDetails in compliance with the decoded object returned
@@ -42,7 +42,7 @@ public class WebtokenUserDetails implements UserDetails, AuthProviderInfo {
 
         // set authorities
         authorities = new ArrayList<>();
-        authorities.add(Authority.TechSupport);
+        authorities.add(PortalUserRole.TechSupport.getAuthority());
         
     }
 
