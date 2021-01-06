@@ -2,6 +2,7 @@ package com.telecominfraproject.wlan.core.server.security.auth0;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,12 +11,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.telecominfraproject.wlan.core.model.role.PortalUserRole;
 import com.telecominfraproject.wlan.core.server.security.AccessType;
 import com.telecominfraproject.wlan.core.server.security.AuthProviderInfo;
 
 /**
  * Implementation of UserDetails in compliance with the decoded object returned
  * by the Auth0 JWT
+ * 
+ * claimsNamespace is used to allow for OIDC compliance of custom claims in JWT.
  * 
  * @author Daniel Teixeira
  *
@@ -35,13 +39,32 @@ public class Auth0UserDetails implements UserDetails, AuthProviderInfo {
     private static final String ROLES_CLAIM = "roles";
 
     private static final Log LOGGER = LogFactory.getLog(Auth0UserDetails.class);
-
+    
     public Auth0UserDetails(DecodedJWT jwt, AccessType accessType) {
+    	this(jwt, accessType, null);
+    }
+
+	public Auth0UserDetails(DecodedJWT jwt, AccessType accessType, String claimsNamespace) {
         this.accessType = accessType;
-        if (!jwt.getClaim(EMAIL_CLAIM).isNull()) {
-            this.username = jwt.getClaim(EMAIL_CLAIM).asString();
-        } else if (!jwt.getClaim(NICKNAME_CLAIM).isNull()) {
-            this.username = jwt.getClaim(NICKNAME_CLAIM).asString();
+        String emailClaim;
+        String emailVerifiedClaim;
+        String nicknameClaim;
+        String rolesClaim;
+        if (claimsNamespace != null) {
+        	emailClaim = claimsNamespace + EMAIL_CLAIM;
+        	emailVerifiedClaim = claimsNamespace + EMAIL_VERIFIED_CLAIM;
+        	nicknameClaim = claimsNamespace + NICKNAME_CLAIM;
+        	rolesClaim = claimsNamespace + ROLES_CLAIM;
+        } else {
+        	emailClaim = EMAIL_CLAIM;
+        	emailVerifiedClaim = EMAIL_VERIFIED_CLAIM;
+        	nicknameClaim = NICKNAME_CLAIM;
+        	rolesClaim = ROLES_CLAIM;
+        }
+        if (!jwt.getClaim(emailClaim).isNull()) {
+            this.username = jwt.getClaim(emailClaim).asString();
+        } else if (!jwt.getClaim(nicknameClaim).isNull()) {
+            this.username = jwt.getClaim(nicknameClaim).asString();
         } else if (jwt.getId() != null) {
             this.username = jwt.getId();
         } else if (jwt.getSubject() != null) {
@@ -50,16 +73,16 @@ public class Auth0UserDetails implements UserDetails, AuthProviderInfo {
             this.username = "UNKNOWN_USER";
         }
 
-        if (!jwt.getClaim(EMAIL_CLAIM).isNull()) {
-            this.emailVerified = Boolean.valueOf(jwt.getClaim(EMAIL_VERIFIED_CLAIM).toString());
+        if (!jwt.getClaim(emailClaim).isNull()) {
+            this.emailVerified = Boolean.valueOf(jwt.getClaim(emailVerifiedClaim).toString());
         }
 
         // set authorities
         authorities = new ArrayList<>();
-        if (!jwt.getClaim(ROLES_CLAIM).isNull()) {
-            ArrayList<String> roles = null;
+    	if (!jwt.getClaim(rolesClaim).isNull()) {
+            List<String> roles = null;
             try {
-                roles = (ArrayList<String>) jwt.getClaim(ROLES_CLAIM).asList(String.class);
+				roles = jwt.getClaim(rolesClaim).asList(String.class);
                 for (String role : roles) {
                     authorities.add(new SimpleGrantedAuthority(role));
                 }
@@ -68,9 +91,9 @@ public class Auth0UserDetails implements UserDetails, AuthProviderInfo {
             }
         }
 
-        // By default if nothing is added
+        // By default, set to CustomerIT authority if nothing is added
         if (authorities.isEmpty()) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            authorities.add(PortalUserRole.CustomerIT.getAuthority());
         }
 
         this.details = jwt;
