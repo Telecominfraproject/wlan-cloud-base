@@ -34,7 +34,7 @@ import com.telecominfraproject.wlan.core.server.security.AccessType;
 import com.telecominfraproject.wlan.server.exceptions.ConfigurationException;
 
 /**
- * Class that verifies the JWT token and in case of beeing valid, it will set
+ * Class that verifies the JWT token and in case of being valid, it will set
  * the userdetails in the authentication object
  * 
  * @author Daniel Teixeira
@@ -47,9 +47,9 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
     private ObjectMapper mapper = new ObjectMapper();
 
     private String clientSecret = null;
-    private String clientId = null;
     private String issuer = null;
     private String jwksLocation = null;
+    private String claimsUrl = null;
     private final AccessType accessType;
     private static final AuthenticationException AUTH_ERROR = new Auth0TokenException("Authentication error occured");
     
@@ -90,7 +90,7 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
             jwt = verifier.verify(token);
             LOG.trace("Decoded JWT token {}", jwt);
             tokenAuth.setAuthenticated(true);
-            tokenAuth.setPrincipal(new Auth0UserDetails(jwt, this.accessType));
+            tokenAuth.setPrincipal(new Auth0UserDetails(jwt, this.accessType, claimsUrl));
             tokenAuth.setDetails(jwt);
             return authentication;
 
@@ -114,7 +114,7 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
     }
 
     public void afterPropertiesSet() throws Exception {
-        if ((clientSecret == null) || (clientId == null) || (issuer == null)) {
+        if ((clientSecret == null) || (issuer == null)) {
             throw new ConfigurationException("Client secret, client id, or issuer URI is not set for Auth0AuthenticationProvider");
         }
     }
@@ -202,14 +202,6 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
         this.clientSecret = clientSecret;
     }
 
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-    
     public String getIssuer() {
     	return issuer;
     }
@@ -226,7 +218,15 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
     	this.jwksLocation = jwksLocation;
     }
 
-    /**
+    public String getClaimsUrl() {
+		return claimsUrl;
+	}
+
+	public void setClaimsUrl(String claimsUrl) {
+		this.claimsUrl = claimsUrl;
+	}
+
+	/**
      * Use to encode raw secret to Base 64 URL safe string
      * 
      * @param args

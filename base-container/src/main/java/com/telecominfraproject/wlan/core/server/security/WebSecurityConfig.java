@@ -88,10 +88,9 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(WebSecurityConfig.class);
     public static final String AUTH_CACHE_NAME = "auth_details_cache";
 
-    public static final SimpleGrantedAuthority USER_AUTHORITY = new SimpleGrantedAuthority("ROLE_USER");
-    public static final SimpleGrantedAuthority MSP_AUTHORITY = new SimpleGrantedAuthority("ROLE_MSP");
-    public static final SimpleGrantedAuthority SERVICE_PROVIDER_AUTHORITY = new SimpleGrantedAuthority("ROLE_SERVICE_PROVIDER");
-    public static final SimpleGrantedAuthority TECH_SUPPORT_AUTHORITY = new SimpleGrantedAuthority("ROLE_TECH_SUPPORT");
+    public static final SimpleGrantedAuthority USER_AUTHORITY = Authority.CustomerIT;
+    public static final SimpleGrantedAuthority MSP_AUTHORITY = Authority.ManagedServiceProvider;
+    public static final SimpleGrantedAuthority TECH_SUPPORT_AUTHORITY = Authority.TechSupport;
     public static final SimpleGrantedAuthority CUSTOMER_EQUIPMENT_AUTHORITY = new SimpleGrantedAuthority("ROLE_CUSTOMER_EQUIPMENT");
     public static final SimpleGrantedAuthority API_AUTHORITY = new SimpleGrantedAuthority("ROLE_API");
 
@@ -113,7 +112,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 Arrays.asList(new UserDetails[] { new User(environment.getProperty("tip.wlan.serviceUser", "user"),
                         environment.getProperty("tip.wlan.servicePassword", "password"), true, true, true, true,
                         Arrays.asList(new SimpleGrantedAuthority[] { USER_AUTHORITY, MSP_AUTHORITY,
-                                SERVICE_PROVIDER_AUTHORITY, TECH_SUPPORT_AUTHORITY, API_AUTHORITY })), }));
+                                TECH_SUPPORT_AUTHORITY, CUSTOMER_EQUIPMENT_AUTHORITY, API_AUTHORITY })), }));
 
         return uds;
     }
@@ -865,41 +864,42 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * 
      * @param providerIndex
      * @param defaultProperties
-     * @return null if clientId is not set.
+     * @return null if clientSecret is not set.
      * @throws Exception
      */
     protected Auth0AuthenticationProvider createAuth0AuthenticationProvider(int providerIndex) throws Exception {
-        String clientId;
         String clientSecret;
         String issuer;
         String accessTypeValue;
         String jwksLocation;
+        String claimsUrl;
         if (0 == providerIndex) {
-            clientId = environment.getProperty("tip.wlan.auth0.clientId", DEFAULT_AUTH0_PROPERTY);
             clientSecret = environment.getProperty("tip.wlan.auth0.clientSecret", DEFAULT_AUTH0_PROPERTY);
             issuer = environment.getProperty("tip.wlan.auth0.issuerUri", DEFAULT_AUTH0_PROPERTY);
             accessTypeValue = environment.getProperty("tip.wlan.auth0.accessType",
                     getDefaultAccessType(providerIndex));
             jwksLocation = environment.getProperty("tip.wlan.auth0.jwksLocation", DEFAULT_AUTH0_PROPERTY);
+            claimsUrl = environment.getProperty("tip.wlan.auth0.callbackUrl"); // See Auth0UserDetails
         } else {
-            clientId = environment.getProperty("tip.wlan.auth0.clientId" + providerIndex);
             clientSecret = environment.getProperty("tip.wlan.auth0.clientSecret" + providerIndex);
             issuer = environment.getProperty("tip.wlan.auth0.issuer" + providerIndex);
             accessTypeValue = environment.getProperty("tip.wlan.auth0.accessType" + providerIndex,
                     getDefaultAccessType(providerIndex));
             jwksLocation = environment.getProperty("tip.wlan.auth0.jwksLocation" + providerIndex);
+            claimsUrl = environment.getProperty("tip.wlan.auth0.claimsUrl" + providerIndex);
         }
-        if (null == clientId) {
+        // Be default, use HS256 decoding which requires clientSecret
+        if (null == clientSecret) {
             return null;
         }
         
         try {
             AccessType accessType = AccessType.valueOf(accessTypeValue);
             Auth0AuthenticationProvider auth0Provider = new Auth0AuthenticationProvider(accessType);
-            auth0Provider.setClientId(clientId);
             auth0Provider.setClientSecret(clientSecret);
             auth0Provider.setIssuer(issuer);
             auth0Provider.setJwksLocation(jwksLocation);
+            auth0Provider.setClaimsUrl(claimsUrl);
             auth0Provider.afterPropertiesSet();
             LOG.info("Loaded configuration for auth0 provider {}", providerIndex);
             return auth0Provider;
