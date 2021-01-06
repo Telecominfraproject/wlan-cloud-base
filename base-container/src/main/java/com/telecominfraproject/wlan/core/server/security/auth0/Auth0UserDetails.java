@@ -14,6 +14,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.telecominfraproject.wlan.core.model.role.PortalUserRole;
 import com.telecominfraproject.wlan.core.server.security.AccessType;
 import com.telecominfraproject.wlan.core.server.security.AuthProviderInfo;
+import com.telecominfraproject.wlan.core.server.security.Authority;
 
 /**
  * Implementation of UserDetails in compliance with the decoded object returned
@@ -91,7 +92,7 @@ public class Auth0UserDetails implements UserDetails, AuthProviderInfo {
 
         // By default, set to CustomerIT authority if nothing is added
         if (authorities.isEmpty()) {
-            authorities.add(new SimpleGrantedAuthority(PortalUserRole.CustomerIT.getName()));
+            authorities.add(Authority.CustomerIT);
         }
 
         this.details = jwt;
