@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.telecominfraproject.wlan.core.model.webtoken.IntrospectWebTokenResult;
 import com.telecominfraproject.wlan.core.server.security.AccessType;
 import com.telecominfraproject.wlan.core.server.security.AuthProviderInfo;
-import com.telecominfraproject.wlan.core.server.security.WebSecurityConfig;
+import com.telecominfraproject.wlan.core.server.security.Authority;
 
 /**
  * Implementation of UserDetails in compliance with the decoded object returned
@@ -42,7 +42,7 @@ public class WebtokenUserDetails implements UserDetails, AuthProviderInfo {
 
         // set authorities
         authorities = new ArrayList<>();
-        authorities.add(WebSecurityConfig.TECH_SUPPORT_AUTHORITY);
+        authorities.add(Authority.TechSupport);
         
     }
 

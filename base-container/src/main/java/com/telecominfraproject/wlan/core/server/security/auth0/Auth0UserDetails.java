@@ -11,7 +11,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.telecominfraproject.wlan.core.model.role.PortalUserRole;
 import com.telecominfraproject.wlan.core.server.security.AccessType;
 import com.telecominfraproject.wlan.core.server.security.AuthProviderInfo;
 import com.telecominfraproject.wlan.core.server.security.Authority;

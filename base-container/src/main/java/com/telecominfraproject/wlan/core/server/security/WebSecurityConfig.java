@@ -36,7 +36,6 @@ import org.springframework.security.config.annotation.web.configurers.Expression
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserCache;
@@ -87,13 +86,6 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final Logger LOG = LoggerFactory.getLogger(WebSecurityConfig.class);
     public static final String AUTH_CACHE_NAME = "auth_details_cache";
-
-    public static final SimpleGrantedAuthority USER_AUTHORITY = Authority.CustomerIT;
-    public static final SimpleGrantedAuthority MSP_AUTHORITY = Authority.ManagedServiceProvider;
-    public static final SimpleGrantedAuthority TECH_SUPPORT_AUTHORITY = Authority.TechSupport;
-    public static final SimpleGrantedAuthority CUSTOMER_EQUIPMENT_AUTHORITY = new SimpleGrantedAuthority("ROLE_CUSTOMER_EQUIPMENT");
-    public static final SimpleGrantedAuthority API_AUTHORITY = new SimpleGrantedAuthority("ROLE_API");
-
     
     /**
      * Maximum number of auth0 provider
@@ -111,8 +103,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetailsService uds = new InMemoryUserDetailsManager(
                 Arrays.asList(new UserDetails[] { new User(environment.getProperty("tip.wlan.serviceUser", "user"),
                         environment.getProperty("tip.wlan.servicePassword", "password"), true, true, true, true,
-                        Arrays.asList(new SimpleGrantedAuthority[] { USER_AUTHORITY, MSP_AUTHORITY,
-                                TECH_SUPPORT_AUTHORITY, CUSTOMER_EQUIPMENT_AUTHORITY, API_AUTHORITY })), }));
+                        Authority.values()), }));
 
         return uds;
     }
@@ -761,7 +752,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             public PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails buildDetails(HttpServletRequest context) {
                 List<GrantedAuthority> userGas = new ArrayList<>();
 
-                userGas.add(CUSTOMER_EQUIPMENT_AUTHORITY);
+                userGas.add(Authority.CUSTOMER_EQUIPMENT_AUTHORITY);
 
                 PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails result = new PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails(
                         context, userGas);

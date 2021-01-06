@@ -1,5 +1,8 @@
 package com.telecominfraproject.wlan.core.server.security;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.telecominfraproject.wlan.core.model.role.PortalUserRole;
@@ -13,7 +16,7 @@ import com.telecominfraproject.wlan.core.model.role.PortalUserRole;
  * @author rlee
  */
 public class Authority {
-    
+
     public static final SimpleGrantedAuthority Public = new SimpleGrantedAuthority(PortalUserRole.Public.getName());
     public static final SimpleGrantedAuthority CustomerIT = new SimpleGrantedAuthority(PortalUserRole.CustomerIT.getName());
     public static final SimpleGrantedAuthority CustomerIT_RO = new SimpleGrantedAuthority(PortalUserRole.CustomerIT_RO.getName());
@@ -26,5 +29,14 @@ public class Authority {
     public static final SimpleGrantedAuthority SuperUser = new SimpleGrantedAuthority(PortalUserRole.SuperUser.getName());
     public static final SimpleGrantedAuthority SuperUser_RO = new SimpleGrantedAuthority(PortalUserRole.SuperUser_RO.getName());
     public static final SimpleGrantedAuthority Unknown = new SimpleGrantedAuthority(PortalUserRole.Unknown.getName());
+    
+    public static final SimpleGrantedAuthority CUSTOMER_EQUIPMENT_AUTHORITY = new SimpleGrantedAuthority("ROLE_CUSTOMER_EQUIPMENT");
+    public static final SimpleGrantedAuthority API_AUTHORITY = new SimpleGrantedAuthority("ROLE_API");
+    
+    public static List<SimpleGrantedAuthority> values() {
+        return Arrays.asList(Public, CustomerIT, CustomerIT_RO, ManagedServiceProvider, ManagedServiceProvider_RO,
+        		Distributor, Distributor_RO, TechSupport, TechSupport_RO, SuperUser, SuperUser_RO,
+        		CUSTOMER_EQUIPMENT_AUTHORITY, API_AUTHORITY);
+    }
 
 }
