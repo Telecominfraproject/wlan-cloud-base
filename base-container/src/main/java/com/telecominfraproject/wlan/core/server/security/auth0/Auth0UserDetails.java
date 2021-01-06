@@ -19,6 +19,8 @@ import com.telecominfraproject.wlan.core.server.security.AuthProviderInfo;
  * Implementation of UserDetails in compliance with the decoded object returned
  * by the Auth0 JWT
  * 
+ * claimsNamespace is used to allow for OIDC compliance of custom claims in JWT.
+ * 
  * @author Daniel Teixeira
  *
  */
@@ -42,17 +44,17 @@ public class Auth0UserDetails implements UserDetails, AuthProviderInfo {
     	this(jwt, accessType, null);
     }
 
-	public Auth0UserDetails(DecodedJWT jwt, AccessType accessType, String claimsUrl) {
+	public Auth0UserDetails(DecodedJWT jwt, AccessType accessType, String claimsNamespace) {
         this.accessType = accessType;
         String emailClaim;
         String emailVerifiedClaim;
         String nicknameClaim;
         String rolesClaim;
-        if (claimsUrl != null) {
-        	emailClaim = claimsUrl + ":" + EMAIL_CLAIM;
-        	emailVerifiedClaim = claimsUrl + ":" + EMAIL_VERIFIED_CLAIM;
-        	nicknameClaim = claimsUrl + ":" + NICKNAME_CLAIM;
-        	rolesClaim = claimsUrl + ":" + ROLES_CLAIM;
+        if (claimsNamespace != null) {
+        	emailClaim = claimsNamespace + EMAIL_CLAIM;
+        	emailVerifiedClaim = claimsNamespace + EMAIL_VERIFIED_CLAIM;
+        	nicknameClaim = claimsNamespace + NICKNAME_CLAIM;
+        	rolesClaim = claimsNamespace + ROLES_CLAIM;
         } else {
         	emailClaim = EMAIL_CLAIM;
         	emailVerifiedClaim = EMAIL_VERIFIED_CLAIM;

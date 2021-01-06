@@ -871,21 +871,21 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         String issuer;
         String accessTypeValue;
         String jwksLocation;
-        String claimsUrl;
+        String claimsNamespace;
         if (0 == providerIndex) {
             clientSecret = environment.getProperty("tip.wlan.auth0.clientSecret", DEFAULT_AUTH0_PROPERTY);
             issuer = environment.getProperty("tip.wlan.auth0.issuerUri", DEFAULT_AUTH0_PROPERTY);
             accessTypeValue = environment.getProperty("tip.wlan.auth0.accessType",
                     getDefaultAccessType(providerIndex));
             jwksLocation = environment.getProperty("tip.wlan.auth0.jwksLocation", DEFAULT_AUTH0_PROPERTY);
-            claimsUrl = environment.getProperty("tip.wlan.auth0.claimsUrl"); // See Auth0UserDetails
+            claimsNamespace = environment.getProperty("tip.wlan.auth0.claimsNamespace"); // See Auth0UserDetails
         } else {
             clientSecret = environment.getProperty("tip.wlan.auth0.clientSecret" + providerIndex);
             issuer = environment.getProperty("tip.wlan.auth0.issuerUri" + providerIndex);
             accessTypeValue = environment.getProperty("tip.wlan.auth0.accessType" + providerIndex,
                     getDefaultAccessType(providerIndex));
             jwksLocation = environment.getProperty("tip.wlan.auth0.jwksLocation" + providerIndex);
-            claimsUrl = environment.getProperty("tip.wlan.auth0.claimsUrl" + providerIndex);
+            claimsNamespace = environment.getProperty("tip.wlan.auth0.claimsNamespace" + providerIndex);
         }
         // Be default, use HS256 decoding which requires clientSecret
         if (null == clientSecret) {
@@ -898,7 +898,7 @@ public abstract class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             auth0Provider.setClientSecret(clientSecret);
             auth0Provider.setIssuer(issuer);
             auth0Provider.setJwksLocation(jwksLocation);
-            auth0Provider.setClaimsUrl(claimsUrl);
+            auth0Provider.setClaimsNamespace(claimsNamespace);
             auth0Provider.afterPropertiesSet();
             LOG.info("Loaded configuration for auth0 provider {}", providerIndex);
             return auth0Provider;

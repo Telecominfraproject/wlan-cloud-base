@@ -49,7 +49,7 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
     private String clientSecret = null;
     private String issuer = null;
     private String jwksLocation = null;
-    private String claimsUrl = null;
+    private String claimsNamespace = null;
     private final AccessType accessType;
     private static final AuthenticationException AUTH_ERROR = new Auth0TokenException("Authentication error occured");
     
@@ -90,7 +90,7 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
             jwt = verifier.verify(token);
             LOG.trace("Decoded JWT token {}", jwt);
             tokenAuth.setAuthenticated(true);
-            tokenAuth.setPrincipal(new Auth0UserDetails(jwt, this.accessType, claimsUrl));
+            tokenAuth.setPrincipal(new Auth0UserDetails(jwt, this.accessType, claimsNamespace));
             tokenAuth.setDetails(jwt);
             return authentication;
 
@@ -218,12 +218,12 @@ public class Auth0AuthenticationProvider implements AuthenticationProvider, Init
     	this.jwksLocation = jwksLocation;
     }
 
-    public String getClaimsUrl() {
-		return claimsUrl;
+    public String getClaimsNamespace() {
+		return claimsNamespace;
 	}
 
-	public void setClaimsUrl(String claimsUrl) {
-		this.claimsUrl = claimsUrl;
+	public void setClaimsNamespace(String claimsNamespace) {
+		this.claimsNamespace = claimsNamespace;
 	}
 
 	/**
