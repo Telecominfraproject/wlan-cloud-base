@@ -89,6 +89,11 @@ public abstract class BaseJsonModel implements Cloneable, Serializable {
         PRETTY_WRITTER = MAPPER.writer().withDefaultPrettyPrinter();
     }
     
+    
+    public static ObjectMapper getMapper() {
+        return MAPPER;
+    }
+
     /**
      * For NoSQL databases we do not use synthetic keys, but they are still part of the object model.
      * This method allows us to calculate a value of synthetic key from two long elements, for example equipmentId and timestamp.
