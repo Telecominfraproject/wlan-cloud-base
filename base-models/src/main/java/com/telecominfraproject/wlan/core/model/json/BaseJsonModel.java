@@ -404,7 +404,48 @@ public abstract class BaseJsonModel implements Cloneable, Serializable {
        return listFromString(jsonPayload, clazz);
     }
     
-    public static void main(String[] args) {
+    public static void main_1(String[] args) {
+        String plainStr = "{\"model_type\":\"CustomerDetails\",\"autoProvisioning\":{\"model_type\":\"EquipmentAutoProvisioningSettings\",\"enabled\":true,\"locationId\":8,\"equipmentProfileIdPerModel\":{\"TIP_AP\":5,\"ECW5410\":6,\"ECW5211\":6,\"AP2220\":6,\"EA8300-CA\":5,\"EA8300\":5,\"default\":5}},\"bannedChannels\":[]}";
+        String encZipStr = "504b03041400080808006b513c5200000000000000000000000001000000615d4f3d0bc23010fd2f375768ab15c9166a870e4240c141445273d5409ad4f62288f4bf9b561d74ba77efde07f784c62934277ab4080c72df936bb05b23496d7a88407a72a27377dd6b67b5bd007bfe5a8a9bd76d8396f89f728b44618c216865655001a3ce6304c69d250551199855b87e1382bbd6064b25b0db8c1d63d9ae14272e80651114f93e5b2431b0e51ba74932612ed234fdd07c358fe359cedf86699ba0c25a7a43010f430495b416557e1d4778931d8ec30b504b0708be151e61b70000000a010000504b010214001400080808006b513c52be151e61b70000000a01000001000000000000000000000000000000000061504b050600000000010001002f000000e60000000000";
+            
+        decodePostgresGzipBytea(encZipStr);
+        encodePostgresGzipBytea(plainStr);
+
+    }
+    
+    public static void encodePostgresGzipBytea(String plainStr) {
+
+        byte[] bytes = BaseJsonModel.toZippedBytesFromString(plainStr);
+        
+        StringBuilder encZipStr = new StringBuilder(bytes.length * 2);   
+
+        String oneByteStr;
+        int unsignedByte;
+        for(int i = 0; i<bytes.length; i++) {
+            unsignedByte = 0x00ff & bytes[i];
+            oneByteStr = Integer.toHexString(unsignedByte);
+            if(oneByteStr.length()<2) {
+                oneByteStr = "0" + oneByteStr;
+            } 
+            encZipStr.append( oneByteStr );
+        }
+        
+        System.out.println(encZipStr.toString());
+    }
+
+
+    public static void decodePostgresGzipBytea(String encZipStr) {
+       
+        byte[] bytes = new byte[encZipStr.length()/2];
+        
+        for(int i = 0; i+2<encZipStr.length(); i+=2) {
+            bytes[i/2] = (byte) Integer.parseUnsignedInt(encZipStr, i, i+2, 16);
+        }
+        
+        System.out.println(BaseJsonModel.fromZippedBytesAsString(bytes));
+    }
+    
+    public static void main_syntheticKey(String[] args) {
         long one = 1;
         long maxEncodable = 0x3FFFFFL;
         
