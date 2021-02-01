@@ -6,18 +6,16 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.format.FormatterRegistry;
-import org.springframework.http.MediaType;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.telecominfraproject.wlan.core.model.json.BaseJsonModel;
 
@@ -28,9 +26,14 @@ import com.telecominfraproject.wlan.core.model.json.BaseJsonModel;
 @Configuration
 //@EnableWebMvc - DTOP: do not use this, it will break mapping for index.html file
 // see http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-developing-web-applications.html#boot-features-spring-mvc-auto-configuration
-public class WebConfig extends WebMvcConfigurerAdapter {
+public class WebConfig implements WebMvcConfigurer {
 
-    @Autowired private Environment environment;
+    @Autowired 
+    private Environment environment;
+    @Autowired
+    private ByteArrayHttpMessageConverter byteArrayHttpMessageConverter;
+    
+
     private static final Logger LOG = LoggerFactory.getLogger(WebConfig.class);
     private static final String WEB_RESOURCE_PROP = "tip.wlan.webResources";
 
@@ -54,8 +57,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
             resourceHandlerRegistration.setCachePeriod(Integer.getInteger("tip.wlan.webResources.cachePeriodSec", 0));
         }
 
-
-        super.addResourceHandlers(registry);
     }
 
     @Override
@@ -91,26 +92,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(byteArrayHttpMessageConverter());
-    }
-
-    /**
-     * Create byte array http message converter
-     * @return
-     */
-    @Bean
-    public ByteArrayHttpMessageConverter byteArrayHttpMessageConverter() {
-        ByteArrayHttpMessageConverter arrayHttpMessageConverter = new ByteArrayHttpMessageConverter();
-        arrayHttpMessageConverter.setSupportedMediaTypes(getSupportedMediaTypes());
-        return arrayHttpMessageConverter;
-    }
-
-    private List<MediaType> getSupportedMediaTypes() {
-        List<MediaType> list = new ArrayList<>();
-        list.add(MediaType.APPLICATION_OCTET_STREAM);
-        list.add(MediaType.IMAGE_JPEG);
-        list.add(MediaType.IMAGE_PNG);
-        return list;
+        converters.add(byteArrayHttpMessageConverter);
     }
 
 }
