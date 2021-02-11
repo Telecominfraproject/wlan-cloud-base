@@ -24,7 +24,8 @@ public class Base64UrlByteArrayDeserializer extends JsonDeserializer<byte[]> {
         // we only support base64 encoded String
         if (token == JsonToken.VALUE_STRING) {
             try {
-                return p.getBinaryValue(Base64Variants.MODIFIED_FOR_URL);
+                String text = p.getText();
+                return Base64Variants.MODIFIED_FOR_URL.decode(text.replace(' ', '-').replace('+', '-').replace('/', '_').replace("=", ""));
             } catch (JsonParseException e) {
                 String msg = e.getOriginalMessage();
                 if (msg.contains("base64")) {
