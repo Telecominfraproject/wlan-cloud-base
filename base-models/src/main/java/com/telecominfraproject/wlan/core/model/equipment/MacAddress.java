@@ -4,9 +4,11 @@ import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.telecominfraproject.wlan.core.model.equipment.MacAddress;
 import com.telecominfraproject.wlan.core.model.json.BaseJsonModel;
+import com.telecominfraproject.wlan.core.model.serializers.Base64UrlByteArrayDeserializer;
+import com.telecominfraproject.wlan.core.model.serializers.Base64UrlByteArraySerializer;
 
 @JsonSerialize()
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -40,10 +42,12 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
                 (byte) ((valueAsLong >> 8) & 0xff), (byte) (valueAsLong & 0xff) });
     }
 
+    @JsonDeserialize(using = Base64UrlByteArrayDeserializer.class)
     public void setAddress(byte[] address) {
         this.address = address;
     }
 
+    @JsonSerialize(using = Base64UrlByteArraySerializer.class)
     public byte[] getAddress() {
         return this.address;
     }
