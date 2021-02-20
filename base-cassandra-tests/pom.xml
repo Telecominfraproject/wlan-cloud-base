@@ -15,7 +15,7 @@
 		<dependency>
 			<groupId>com.telecominfraproject.wlan</groupId>
 			<artifactId>base-cassandra</artifactId>
-			<version>${tip-wlan-cloud.release.version}</version>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
