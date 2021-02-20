@@ -178,7 +178,13 @@ public abstract class ServletContainerCustomizer implements WebServerFactoryCust
             LOG.debug("setting SSL useServerCipherSuitesOrder to {}", bValue);
             connector.setAttribute("useServerCipherSuitesOrder", bValue);
         }
-        
+
+        strValue = getSslProperty(environment, "sslEnabledProtocols", sslPropPrefix);
+        if (null != strValue) {
+            LOG.debug("setting SSL EnabledProtocols to {}", strValue);
+            connector.setProperty("enabledProtocols", strValue);
+        }
+
         connector.setAttribute("maxThreads", Integer.parseInt(appContext.getEnvironment().getProperty("tip.wlan.maxHttpThreads", "100")));
         
         LOG.info("Configured https connector for port {} with {} threads", connector.getPort(), connector.getAttribute("maxThreads"));
