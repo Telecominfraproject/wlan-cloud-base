@@ -242,11 +242,12 @@ public class StartServoMetricsCollector implements CommandLineRunner {
                 MetricObserver transformElasticSearch = new CounterToRateMetricTransform(
                         elasticSearchObserver, aggregationHeartbeatMultiplier * samplingIntervalMs, TimeUnit.MILLISECONDS);
                 observers.add(transformElasticSearch);
+                LOG.info("ElasticSearch metrics collection is ON");
             }catch(UnknownHostException e){
                 LOG.error("Cannot initialize ElasticSearch client", e);
             }
         } else {
-            LOG.info("ElasticSearch metrics collection is OFF");
+            LOG.debug("ElasticSearch metrics collection is OFF");
         }
     }
 }

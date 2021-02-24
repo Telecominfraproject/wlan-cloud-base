@@ -24,9 +24,15 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.concurrent.ListenableFuture;
 
+import com.netflix.servo.DefaultMonitorRegistry;
 import com.netflix.servo.annotations.DataSourceType;
 import com.netflix.servo.annotations.Monitor;
-import com.netflix.servo.monitor.Monitors;
+import com.netflix.servo.monitor.BasicCounter;
+import com.netflix.servo.monitor.Counter;
+import com.netflix.servo.monitor.MonitorConfig;
+import com.netflix.servo.monitor.NumberGauge;
+import com.netflix.servo.tag.TagList;
+import com.telecominfraproject.wlan.cloudmetrics.CloudMetricsTags;
 import com.telecominfraproject.wlan.core.server.async.example.AsyncCallerExample;
 import com.telecominfraproject.wlan.core.server.async.example.AsyncExample;
 
@@ -51,18 +57,31 @@ public class AsyncConfiguration implements AsyncConfigurer {
     private static final Logger LOG = LoggerFactory.getLogger(AsyncConfiguration.class);
     
     @Autowired private Environment environment;
-    
-    @Monitor(name="TotalAsyncThreads", type=DataSourceType.GAUGE)
-    private static final AtomicInteger totalAsyncThreads = new AtomicInteger(0);
 
-    @Monitor(name="TotalTasksExecuted", type=DataSourceType.COUNTER)
-    private static final AtomicInteger totalTasksExecuted = new AtomicInteger(0);
-    
-    @Monitor(name = "TotalTasksRejected", type = DataSourceType.COUNTER)
-    private static final AtomicInteger totalTasksRejected = new AtomicInteger(0);
+    private final TagList tags = CloudMetricsTags.commonTags;
+
+    final Counter totalTasksExecuted = new BasicCounter(MonitorConfig.builder("async-totalTasksExecuted").withTags(tags).build());
+    final Counter totalTasksRejected = new BasicCounter(MonitorConfig.builder("async-totalTasksRejected").withTags(tags).build());
+
+    private static final AtomicInteger totalAsyncThreads = new AtomicInteger(0);
+    private final NumberGauge totalAsyncThreadsGauge = new NumberGauge(
+            MonitorConfig.builder("async-totalAsyncThreads").withTags(tags).build(), totalAsyncThreads);
+
 
     @Monitor(name="TasksInTheQueue", type=DataSourceType.GAUGE)
     private static final AtomicInteger tasksInTheQueue = new AtomicInteger(0);
+    private final NumberGauge tasksInTheQueueGauge = new NumberGauge(
+            MonitorConfig.builder("async-tasksInTheQueue").withTags(tags).build(), tasksInTheQueue);
+    
+    // dtop: use anonymous constructor to ensure that the following code always
+    // get executed,
+    // even when somebody adds another constructor in here
+    {
+        DefaultMonitorRegistry.getInstance().register(totalTasksExecuted);
+        DefaultMonitorRegistry.getInstance().register(totalTasksRejected);
+        DefaultMonitorRegistry.getInstance().register(totalAsyncThreadsGauge);
+        DefaultMonitorRegistry.getInstance().register(tasksInTheQueueGauge);
+    } 
     
     static interface RunnableBlockingQueueInSpringClassloaderInterface extends BlockingQueue<Runnable> {
     }
@@ -266,7 +285,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
             }
             @Override
             public void execute(Runnable task) {
-                totalTasksExecuted.incrementAndGet();
+                totalTasksExecuted.increment();
                 super.execute(task);
             }
             
@@ -274,10 +293,10 @@ public class AsyncConfiguration implements AsyncConfigurer {
             public Future<?> submit(Runnable task) {
                 try {
                     Future<?> result = super.submit(task);
-                    totalTasksExecuted.incrementAndGet();
+                    totalTasksExecuted.increment();
                     return result;
                 } catch (TaskRejectedException exp) {
-                    totalTasksRejected.incrementAndGet();
+                    totalTasksRejected.increment();
                     throw exp;
                 }
             }
@@ -286,10 +305,10 @@ public class AsyncConfiguration implements AsyncConfigurer {
             public <T> Future<T> submit(Callable<T> task) {
                 try {
                     Future<T> result = super.submit(task);
-                    totalTasksExecuted.incrementAndGet();
+                    totalTasksExecuted.increment();
                     return result;
                 } catch (TaskRejectedException exp) {
-                    totalTasksRejected.incrementAndGet();
+                    totalTasksRejected.increment();
                     throw exp;
                 }
             }
@@ -298,10 +317,10 @@ public class AsyncConfiguration implements AsyncConfigurer {
             public ListenableFuture<?> submitListenable(Runnable task) {
                 try {
                     ListenableFuture<?> result = super.submitListenable(task);
-                    totalTasksExecuted.incrementAndGet();
+                    totalTasksExecuted.increment();
                     return result;
                 } catch (TaskRejectedException exp) {
-                    totalTasksRejected.incrementAndGet();
+                    totalTasksRejected.increment();
                     throw exp;
                 }
             }
@@ -310,10 +329,10 @@ public class AsyncConfiguration implements AsyncConfigurer {
             public <T> ListenableFuture<T> submitListenable(Callable<T> task) {
                 try {
                     ListenableFuture<T> result = super.submitListenable(task);
-                    totalTasksExecuted.incrementAndGet();
+                    totalTasksExecuted.increment();
                     return result;
                 } catch (TaskRejectedException exp) {
-                    totalTasksRejected.incrementAndGet();
+                    totalTasksRejected.increment();
                     throw exp;
                 }
             }
@@ -346,7 +365,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
         RejectedExecutionHandler rejectedExecutionHandler = new RejectedExecutionHandler() {
             @Override
             public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-                totalTasksRejected.incrementAndGet();
+                totalTasksRejected.increment();
                 defaultRejectionHandler.rejectedExecution(r, executor);
             }
         };
@@ -355,8 +374,6 @@ public class AsyncConfiguration implements AsyncConfigurer {
 
         LOG.info("Configuring {} with CorePoolSize={} MaxPoolSize={} QueueCapacity={}", 
                 executor.getThreadNamePrefix(), executor.getCorePoolSize(), executor.getMaxPoolSize(), queueCapacity);
-        
-        Monitors.registerObject(AsyncConfiguration.class.getSimpleName(), this);
         
         return executor;
     }

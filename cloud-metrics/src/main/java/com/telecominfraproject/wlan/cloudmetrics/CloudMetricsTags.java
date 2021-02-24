@@ -26,11 +26,19 @@ public class CloudMetricsTags {
     public static final String localIpV4 = getPropertyAsString("container.localipv4", UNDEFINED_STR);
     
 
-    public static final TagList commonTags = new BasicTagList(Arrays.asList(
-            new BasicTag("InstanceId", instanceId),
-            new BasicTag("local-ipv4", localIpV4),
-            new BasicTag("cloudTag", buildCloudTag())
-         ));
+    public static final TagList commonTags;
+    
+    static {
+        if(Boolean.parseBoolean(getPropertyAsString("tip.wlan.cloudMetricTags.enabled", "false"))) {
+            commonTags = new BasicTagList(Arrays.asList(
+                new BasicTag("InstanceId", instanceId),
+                new BasicTag("local-ipv4", localIpV4),
+                new BasicTag("cloudTag", buildCloudTag())
+             ));
+        } else {
+            commonTags = BasicTagList.EMPTY;
+        }
+    }
     
     private static String buildCloudTag(){
         return role + "-" + stack + "-" + deployment;

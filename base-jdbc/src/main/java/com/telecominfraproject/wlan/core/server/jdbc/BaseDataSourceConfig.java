@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 import java.util.concurrent.Callable;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sql.DataSource;
 
@@ -21,11 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
 import com.netflix.servo.DefaultMonitorRegistry;
-import com.netflix.servo.annotations.DataSourceType;
-import com.netflix.servo.annotations.Monitor;
+import com.netflix.servo.monitor.BasicCounter;
 import com.netflix.servo.monitor.BasicGauge;
+import com.netflix.servo.monitor.Counter;
 import com.netflix.servo.monitor.MonitorConfig;
-import com.netflix.servo.monitor.Monitors;
 import com.netflix.servo.tag.TagList;
 import com.telecominfraproject.wlan.cloudmetrics.CloudMetricsTags;
 import com.telecominfraproject.wlan.server.exceptions.ConfigurationException;
@@ -39,8 +37,14 @@ public abstract class BaseDataSourceConfig {
     @Autowired
     private Environment environment;
 
-    @Monitor(name = "getConnection", type = DataSourceType.COUNTER)
-    private final AtomicInteger getConnectionExecuted = new AtomicInteger(0);
+    final Counter getConnectionExecuted = new BasicCounter(MonitorConfig.builder("jdbc-getConnection").withTags(tags).build());
+
+    // dtop: use anonymous constructor to ensure that the following code always
+    // get executed,
+    // even when somebody adds another constructor in here
+    {
+        DefaultMonitorRegistry.getInstance().register(getConnectionExecuted);
+    }    
 
     static interface DataSourceInSpringClassloaderInterface extends DataSource {
     }
@@ -71,7 +75,7 @@ public abstract class BaseDataSourceConfig {
         }
 
         public Connection getConnection() throws SQLException {
-            getConnectionExecuted.incrementAndGet();
+            getConnectionExecuted.increment();
             return dataSource.getConnection();
         }
 
@@ -80,7 +84,7 @@ public abstract class BaseDataSourceConfig {
         }
 
         public Connection getConnection(String username, String password) throws SQLException {
-            getConnectionExecuted.incrementAndGet();
+            getConnectionExecuted.increment();
             return dataSource.getConnection(username, password);
         }
 
@@ -138,8 +142,6 @@ public abstract class BaseDataSourceConfig {
         // correct classloader
         String datasourceId = getDataSourceName();
         DataSourceInSpringClassloader wrappedObj = new DataSourceInSpringClassloader(datasourceId, poolDataSource);
-
-        Monitors.registerObject(datasourceId, this);
 
         BasicGauge<Integer> numberOfActiveJDBCConnections = new BasicGauge<>(
                 MonitorConfig.builder(getDataSourceName() + "-numberOfActiveJDBCConnections").withTags(tags).build(),

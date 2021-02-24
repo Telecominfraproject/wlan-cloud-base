@@ -9,6 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.netflix.servo.DefaultMonitorRegistry;
+import com.netflix.servo.monitor.BasicCounter;
+import com.netflix.servo.monitor.Counter;
+import com.netflix.servo.monitor.MonitorConfig;
+import com.netflix.servo.tag.TagList;
+import com.telecominfraproject.wlan.cloudmetrics.CloudMetricsTags;
 import com.telecominfraproject.wlan.core.model.streams.QueuedStreamMessage;
 
 /**
@@ -21,10 +27,21 @@ public class StreamMessageDispatcher {
 
     private static final Logger LOG = LoggerFactory.getLogger(StreamMessageDispatcher.class);
 
+    private final TagList tags = CloudMetricsTags.commonTags;
+
+    final Counter messagesProcessed = new BasicCounter(MonitorConfig.builder("stream-processors-messagesProcessed").withTags(tags).build());
+
 	//autowire all available stream processors
 	@Autowired(required = false)	
 	List<StreamProcessor> streamProcessors;
 	
+    // dtop: use anonymous constructor to ensure that the following code always
+    // get executed,
+    // even when somebody adds another constructor in here
+    {
+        DefaultMonitorRegistry.getInstance().register(messagesProcessed);
+    } 
+
 	@PostConstruct
 	private void postConstruct() {
 		if(streamProcessors!=null && !streamProcessors.isEmpty()) {
@@ -46,7 +63,7 @@ public class StreamMessageDispatcher {
 		}
 		
 		LOG.trace("Pushing message to stream processors {}", message);
-		
+		messagesProcessed.increment();
 		streamProcessors.forEach(sp -> sp.push(message));
 	}
 }

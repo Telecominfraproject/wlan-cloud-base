@@ -61,7 +61,9 @@ public class BaseCassandraDataSource {
 			sessionBuilder.withConfigLoader(DriverConfigLoader.fromClasspath("cassandra-application"));
 		}
 
-		CqlSession session =sessionBuilder.build();
+		CqlSession session = sessionBuilder.build();
+		
+		session = new CqlSessionWithMetrics(session);
 		
 		return session;
 	}
