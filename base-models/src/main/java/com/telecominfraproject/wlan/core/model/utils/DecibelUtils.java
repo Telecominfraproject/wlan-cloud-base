@@ -1,5 +1,7 @@
 package com.telecominfraproject.wlan.core.model.utils;
 
+import java.util.Collection;
+
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 
 
@@ -19,6 +21,10 @@ public class DecibelUtils
         return avgDbVal10;
     }
 
+    public static double getAverageDecibel(Collection<Integer> decibels) 
+    {
+    	return getAverageDecibel(decibels.stream().mapToInt(i -> i).toArray());
+    }
     
     public static double getDecibelStandardDeviation(int[] decibels)
     {
