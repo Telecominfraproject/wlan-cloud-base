@@ -23,7 +23,10 @@ public class DecibelUtils
 
     public static double getAverageDecibel(Collection<Integer> decibels) 
     {
-    	return getAverageDecibel(decibels.stream().mapToInt(i -> i).toArray());
+    	if (decibels != null && !decibels.isEmpty()) {
+    		return getAverageDecibel(decibels.stream().mapToInt(i -> i).toArray());
+    	}
+    	return 0.0;
     }
     
     public static double getDecibelStandardDeviation(int[] decibels)
