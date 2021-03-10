@@ -40,8 +40,11 @@ public class DecibelUtils
     		} 
     	} 
     	
-    	double avgDbVal10 = 10 * Math.log10(aggregation/count); 
-    	return avgDbVal10; 
+    	if (count == 0) {
+    		return 0.0; 
+    	}else {
+    		return 10 * Math.log10(aggregation/count);
+    	}
     }
     
     public static double getDecibelStandardDeviation(int[] decibels)
