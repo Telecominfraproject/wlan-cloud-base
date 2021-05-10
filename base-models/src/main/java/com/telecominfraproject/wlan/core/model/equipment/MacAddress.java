@@ -163,6 +163,10 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
 
     
     private static byte[] stringToByteArray(String str) {
+        if (str == null)
+        {
+            return null;
+        }
         byte[] ret = new byte[6];
 
         String octets[] = str.split(":");
