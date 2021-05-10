@@ -5,6 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNotNull;
 
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -13,8 +15,6 @@ import java.util.Map;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.telecominfraproject.wlan.core.model.equipment.MacAddress;
 
 public class MacAddressTest {
     private static final Logger LOG = LoggerFactory.getLogger(MacAddressTest.class);
@@ -144,6 +144,96 @@ public class MacAddressTest {
 
         assertEquals(first, equalToFirst);
         assertNotEquals(first, notEqualToFirst);
+    }
+    
+    @Test
+    public void testSetAddress() {
+        MacAddress nullCheck = new MacAddress();
+        nullCheck.setAddress(null);
+        assertNotNull(nullCheck.getAddress());
+        
+        MacAddress realValue = new MacAddress();
+        realValue.setAddress(new byte[] { 1, 2, 3, 4, 5, 6 });
+        assertNotNull(realValue.getAddress());
+    }
+    
+    @Test
+    public void testGetAddressAsLong()
+    {
+        MacAddress macAddress = new MacAddress("00:2a:f7:7a:1e:a0");
+        assertNotNull(macAddress.getAddressAsLong());
+        
+        MacAddress otherMacAddress = new MacAddress(new byte[] { 1, 2, 3, 4, 5});
+        assertNull(otherMacAddress.getAddressAsLong());
+    }
+    
+    @Test
+    public void testGetAddressAsString() {
+        MacAddress macAddress = new MacAddress("00:2a:f7:7a:1e:a0");
+        assertNotNull(macAddress.getAddressAsString());
+    }
+    
+    @Test
+    public void testGetAsLowerCaseString() {
+        MacAddress macAddress = new MacAddress("00:2a:f7:7a:1e:a0");
+        macAddress.getAsLowerCaseString().toCharArray();
+    }
+    
+    @Test
+    public void testHashCode()
+    {
+        MacAddress macAddress = new MacAddress("00:2a:f7:7a:1e:a0");
+        macAddress.hashCode();
+    }
+    
+    @Test
+    public void testStringToByteArray()
+    {
+        MacAddress macAddress = new MacAddress();
+        macAddress.setAddressAsString(null);
+        assertNotNull(macAddress.getAddress());
+        
+        macAddress.setAddressAsString("00:2a:f7:7a:1e:a0");
+        assertNotNull(macAddress.getAddress());
+        
+        try {
+            macAddress.setAddressAsString("00:2a:f7:7a:1e:a0:b0:f1");
+            fail("expected exception.");
+        } catch (IllegalArgumentException e)
+        {
+            //expected it
+        }
+        try {
+            macAddress.setAddressAsString("00:2a:f7:7a:1esdafsat:a0");
+            fail("expected exception.");
+        } catch (IllegalArgumentException e)
+        {
+            //expected it
+        }
+    }
+    
+    @Test
+    public void testOuiFromLowerCaseString()
+    {
+        assertNotNull(MacAddress.ouiFromLowerCaseString("00:2a:f7:7a:1e:a0", true));
+        assertNotNull(MacAddress.ouiFromLowerCaseString("00:2a:f7:7a:1e:a0", false));
+    }
+    
+    @Test
+    public void testToOuiString()
+    {
+        MacAddress macAddress = new MacAddress("00:2a:f7:7a:1e:a0");
+        assertNotNull(macAddress.toOuiString());
+        
+        MacAddress nullCheck = new MacAddress();
+        nullCheck.setAddressAsString(null);
+        assertNull(nullCheck.toOuiString());
+    }
+    
+    @Test
+    public void testConvertMacStringToLongValue()
+    {
+        assertNotNull(MacAddress.convertMacStringToLongValue("00:2a:f7:7a:1e:a0"));
     }
 
 }

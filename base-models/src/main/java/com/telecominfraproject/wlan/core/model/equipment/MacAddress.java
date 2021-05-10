@@ -44,11 +44,11 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
 
     @JsonDeserialize(using = Base64UrlByteArrayDeserializer.class)
     public void setAddress(byte[] address) {
+        this.address = address;
         if (address == null)
         {
             this.address = new byte[0];
         }
-        this.address = address;
     }
 
     @JsonSerialize(using = Base64UrlByteArraySerializer.class)
@@ -229,7 +229,7 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
     }
     
     public String toOuiString() {
-        if(address == null) {
+        if(address == null || address.length == 0) {
             return null;
         }
         var sb = new StringBuilder(6);
