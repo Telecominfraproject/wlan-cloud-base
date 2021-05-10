@@ -176,14 +176,15 @@ public class MacAddressTest {
     @Test
     public void testGetAsLowerCaseString() {
         MacAddress macAddress = new MacAddress("00:2a:f7:7a:1e:a0");
-        macAddress.getAsLowerCaseString().toCharArray();
+        assertNotNull(macAddress.getAsLowerCaseString().toCharArray());
     }
     
     @Test
     public void testHashCode()
     {
         MacAddress macAddress = new MacAddress("00:2a:f7:7a:1e:a0");
-        macAddress.hashCode();
+        
+        assertTrue(macAddress.hashCode() != 0);
     }
     
     @Test
