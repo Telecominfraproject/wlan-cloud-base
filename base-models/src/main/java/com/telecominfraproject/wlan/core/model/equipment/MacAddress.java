@@ -293,6 +293,10 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
      */
     public static Long convertMacStringToLongValue(String macStr) {
         byte[] bval = stringToByteArray(macStr);
+        if (bval == null)
+        {
+            return null;
+        }
 
         if (bval.length >= 6) {
             long mac = 0;
