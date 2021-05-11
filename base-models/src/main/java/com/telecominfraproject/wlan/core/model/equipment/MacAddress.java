@@ -45,10 +45,6 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
     @JsonDeserialize(using = Base64UrlByteArrayDeserializer.class)
     public void setAddress(byte[] address) {
         this.address = address;
-        if (address == null)
-        {
-            this.address = new byte[0];
-        }
     }
 
     @JsonSerialize(using = Base64UrlByteArraySerializer.class)
@@ -169,7 +165,7 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
     private static byte[] stringToByteArray(String str) {
         if (str == null)
         {
-            return new byte[0];
+            return null;
         }
         var ret = new byte[6];
 
@@ -296,6 +292,12 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
      * @return
      */
     public static Long convertMacStringToLongValue(String macStr) {
+        
+        if (macStr == null)
+        {
+            return null;
+        }
+        
         byte[] bval = stringToByteArray(macStr);
 
         if (bval.length >= 6) {

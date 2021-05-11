@@ -150,7 +150,7 @@ public class MacAddressTest {
     public void testSetAddress() {
         MacAddress nullCheck = new MacAddress();
         nullCheck.setAddress(null);
-        assertNotNull(nullCheck.getAddress());
+        assertNull(nullCheck.getAddress());
         
         MacAddress realValue = new MacAddress();
         realValue.setAddress(new byte[] { 1, 2, 3, 4, 5, 6 });
@@ -184,7 +184,7 @@ public class MacAddressTest {
     {
         MacAddress macAddress = new MacAddress("00:2a:f7:7a:1e:a0");
         
-        assertTrue(macAddress.hashCode() != 0);
+        assertNotEquals(macAddress.hashCode(), 0);
     }
     
     @Test
@@ -192,7 +192,7 @@ public class MacAddressTest {
     {
         MacAddress macAddress = new MacAddress();
         macAddress.setAddressAsString(null);
-        assertNotNull(macAddress.getAddress());
+        assertNull(macAddress.getAddress());
         
         macAddress.setAddressAsString("00:2a:f7:7a:1e:a0");
         assertNotNull(macAddress.getAddress());
@@ -235,6 +235,7 @@ public class MacAddressTest {
     public void testConvertMacStringToLongValue()
     {
         assertNotNull(MacAddress.convertMacStringToLongValue("00:2a:f7:7a:1e:a0"));
+        assertNull(MacAddress.convertMacStringToLongValue(null));
     }
 
 }
