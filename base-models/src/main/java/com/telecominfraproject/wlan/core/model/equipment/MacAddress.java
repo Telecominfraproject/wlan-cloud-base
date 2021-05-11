@@ -58,7 +58,7 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
         if(address.length >= 6)
         {
             long mac = 0;
-            for (int i = 0; i < 6; i++) {
+            for (var i = 0; i < 6; i++) {
                 long t = (address[i] & 0xffL) << ((5 - i) * 8);
                 mac |= t;
             }
@@ -73,7 +73,7 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
     }
     
     public String getAddressAsString() {
-        StringBuilder sb = new StringBuilder(124);
+        var sb = new StringBuilder(124);
         
         if(address != null)
         {
@@ -89,7 +89,7 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
 
     @JsonIgnore
     public String getAsLowerCaseString() {
-        StringBuilder sb = new StringBuilder(124);
+        var sb = new StringBuilder(124);
         for (byte single : address) {
             sb.append(String.format("%02x", single));
         }
@@ -131,8 +131,8 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
 
     @Override
    public int hashCode() {
-      final int prime = 31;
-      int result = 1;
+      final var prime = 31;
+      var result = 1;
       result = prime * result + Arrays.hashCode(address);
       return result;
    }
@@ -163,12 +163,16 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
 
     
     private static byte[] stringToByteArray(String str) {
-        byte[] ret = new byte[6];
+        if (str == null)
+        {
+            return null;
+        }
+        var ret = new byte[6];
 
         String octets[] = str.split(":");
         if(octets.length == 1 && octets[0].length() == str.length() && str.length()<=12) {
             // hex string without colon
-            for(int i = 0; i< str.length(); i+=2) {
+            for(var i = 0; i< str.length(); i+=2) {
                 Integer hex = Integer.parseInt(str.substring(i, i==str.length()-1?i+1:i+2), 16);               
                 ret[i/2] = hex.byteValue();
             }
@@ -178,7 +182,7 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
         }
         else {
             try {
-                for (int i = 0; i < octets.length; i++) {
+                for (var i = 0; i < octets.length; i++) {
                     Integer hex = Integer.parseInt(octets[i], 16);
                     ret[i] = hex.byteValue();
                 }
@@ -210,8 +214,8 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
         else
         {
             String[] value = lowercaseValue.split(":");
-            StringBuilder sb = new StringBuilder(6);
-            for(int i=0; i<3; i++)
+            var sb = new StringBuilder(6);
+            for(var i=0; i<3; i++)
             {
                 sb.append(value[i].toLowerCase());
             }
@@ -221,11 +225,11 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
     }
     
     public String toOuiString() {
-        if(address == null) {
+        if(address == null || address.length == 0) {
             return null;
         }
-        StringBuilder sb = new StringBuilder(6);
-        for (int i = 0; i< 3; i++) {
+        var sb = new StringBuilder(6);
+        for (var i = 0; i< 3; i++) {
             sb.append(String.format("%02x", address[i]));
         }
         return sb.toString();
@@ -288,11 +292,17 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
      * @return
      */
     public static Long convertMacStringToLongValue(String macStr) {
+        
+        if (macStr == null)
+        {
+            return null;
+        }
+        
         byte[] bval = stringToByteArray(macStr);
 
         if (bval.length >= 6) {
             long mac = 0;
-            for (int i = 0; i < 6; i++) {
+            for (var i = 0; i < 6; i++) {
                 long t = (bval[i] & 0xffL) << ((5 - i) * 8);
                 mac |= t;
             }
