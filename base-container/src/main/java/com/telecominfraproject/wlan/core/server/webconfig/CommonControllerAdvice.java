@@ -20,7 +20,7 @@ import com.telecominfraproject.wlan.core.model.json.JsonSerializedException;
 /**
  * @author dtoptygin
  */
-@ControllerAdvice(basePackages = "com.telecominfraproject")
+@ControllerAdvice
 public class CommonControllerAdvice {
 
     private static final Logger LOG = LoggerFactory.getLogger(CommonControllerAdvice.class);
