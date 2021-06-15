@@ -8,6 +8,7 @@ import org.springframework.core.task.TaskRejectedException;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResponseErrorHandler;
 
@@ -38,7 +39,7 @@ public class ExceptionPropagatingErrorHandler extends DefaultResponseErrorHandle
     public void handleError(ClientHttpResponse response) throws IOException {
         try {
             super.handleError(response);
-        } catch (HttpServerErrorException e) {
+        } catch (HttpServerErrorException | HttpClientErrorException e) {
             // look in the response object, and if it contains any of the
             // exceptions we recognize - throw that exception instead of the
             // HttpServerErrorException
