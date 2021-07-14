@@ -82,9 +82,10 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
             }
 
             sb.setLength(sb.length() - 1);
+            return sb.toString();
         }
         
-        return sb.toString();
+        return null;
     }
 
     @JsonIgnore
@@ -163,7 +164,7 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
 
     
     private static byte[] stringToByteArray(String str) {
-        if (str == null)
+        if (str == null || str.equals(""))
         {
             return null;
         }
@@ -300,7 +301,7 @@ public class MacAddress extends BaseJsonModel implements Comparable<MacAddress>
         
         byte[] bval = stringToByteArray(macStr);
 
-        if (bval.length >= 6) {
+        if (bval != null && bval.length >= 6) {
             long mac = 0;
             for (var i = 0; i < 6; i++) {
                 long t = (bval[i] & 0xffL) << ((5 - i) * 8);
