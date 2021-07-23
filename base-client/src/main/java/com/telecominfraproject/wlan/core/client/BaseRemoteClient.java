@@ -1,7 +1,5 @@
 package com.telecominfraproject.wlan.core.client;
 
-import java.nio.charset.StandardCharsets;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +20,8 @@ public abstract class BaseRemoteClient {
     protected HttpHeaders headers = new HttpHeaders();
 
     {
-        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+        // Note: APPLICATION_JSON_UTF8 is deprecated
+        headers.setContentType(MediaType.APPLICATION_JSON);
         //Accept-Encoding: gzip,deflate
         headers.set("Accept-Encoding", "gzip,deflate");
     }
