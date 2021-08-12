@@ -5,7 +5,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestOperations;
-import org.springframework.web.client.RestTemplate;
 
 import com.telecominfraproject.wlan.server.exceptions.ConfigurationException;
 
