@@ -5,6 +5,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestOperations;
+import org.springframework.web.client.RestTemplate;
 
 import com.telecominfraproject.wlan.server.exceptions.ConfigurationException;
 
@@ -28,13 +29,7 @@ public abstract class BaseRemoteClient {
     
     @Autowired
     private void setRestTemplate(RestOperations restTemplate) {
-        //build user-friendly metrics Id - remove $$EnhancedByCGlib... at the end of the class name
-        String metricsId = this.getClass().getSimpleName();
-        int idx = metricsId.indexOf('$');
-        if(idx>0){
-            metricsId = metricsId.substring(0, idx);
-        }
-        this.restTemplate = new RestOperationsWithMetrics(restTemplate, metricsId);
+        this.restTemplate = restTemplate;
     }
     
     protected String getBaseUrlFromEnvironment(String urlPropName, String defaultUrlPropName) {

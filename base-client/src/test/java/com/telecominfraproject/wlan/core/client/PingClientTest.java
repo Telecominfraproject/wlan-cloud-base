@@ -8,7 +8,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.client.RestOperations;
+import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 
@@ -18,7 +18,7 @@ public class PingClientTest {
 
     PingClient pingClient = mock(PingClient.class, CALLS_REAL_METHODS);
 
-    RestOperations restTemplate = mock(RestOperationsWithMetrics.class);
+    RestTemplate restTemplate = mock(RestTemplate.class);
 
     Environment env = mock(Environment.class);
 
