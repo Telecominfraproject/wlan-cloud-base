@@ -28,13 +28,7 @@ public abstract class BaseRemoteClient {
     
     @Autowired
     private void setRestTemplate(RestOperations restTemplate) {
-        //build user-friendly metrics Id - remove $$EnhancedByCGlib... at the end of the class name
-        String metricsId = this.getClass().getSimpleName();
-        int idx = metricsId.indexOf('$');
-        if(idx>0){
-            metricsId = metricsId.substring(0, idx);
-        }
-        this.restTemplate = new RestOperationsWithMetrics(restTemplate, metricsId);
+        this.restTemplate = restTemplate;
     }
     
     protected String getBaseUrlFromEnvironment(String urlPropName, String defaultUrlPropName) {
