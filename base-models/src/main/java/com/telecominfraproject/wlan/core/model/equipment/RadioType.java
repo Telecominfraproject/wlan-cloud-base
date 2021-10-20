@@ -73,5 +73,19 @@ public enum RadioType {
         return false;
     }
 
-    
+    public static String getRadioDisplayString(RadioType radioType) {
+        // This display format matches UI
+        switch (radioType) {
+            case is2dot4GHz:
+                return "2.4GHz";
+            case is5GHz:
+                return "5GHz";
+            case is5GHzU:
+                return "5GHz (U)";
+            case is5GHzL:
+                return "5GHz (L)";
+            default:
+                return radioType.name();
+        }
+    }
 }
