@@ -2,9 +2,9 @@ package com.telecominfraproject.wlan.hazelcast.client.clu;
 
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
+import com.hazelcast.config.security.UsernamePasswordIdentityConfig;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IMap;
-import com.hazelcast.spi.properties.GroupProperty;
+import com.hazelcast.map.IMap;
 
 public class SetProvisionedCapacity {  
     
@@ -21,16 +21,14 @@ public class SetProvisionedCapacity {
 
         
         ClientConfig clientConfig = new ClientConfig();
-        clientConfig.setProperty(GroupProperty.LOGGING_TYPE.getName(), "slf4j");
-        clientConfig.setProperty(GroupProperty.PHONE_HOME_ENABLED.getName(), "false");
         
-        clientConfig.getGroupConfig().setName(clusterName).setPassword(password);
+        clientConfig.getSecurityConfig().setUsernamePasswordIdentityConfig(new UsernamePasswordIdentityConfig(clusterName, password));
         clientConfig.getNetworkConfig().addAddress(addr);
 
         //see http://docs.hazelcast.org/docs/3.6/manual/html-single/index.html#java-client-operation-modes
         // here we're using "dumb" client that connects only to a single node of the cluster
         clientConfig.getNetworkConfig().setSmartRouting(false);
-        clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
+        //clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
 
         HazelcastInstance client = HazelcastClient.newHazelcastClient(clientConfig);
                 

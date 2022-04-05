@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 
 import com.hazelcast.client.config.ClientConfig;
+import com.hazelcast.config.security.UsernamePasswordIdentityConfig;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.spi.properties.GroupProperty;
 import com.telecominfraproject.wlan.core.model.utils.SystemAndEnvPropertyResolver;
 
 /**
@@ -142,10 +142,11 @@ public class HazelcastClientConfiguration {
     @Bean
     public HazelcastInstance hazelcastClientUnicast() {
         ClientConfig clientConfig = new ClientConfig();
-        clientConfig.setProperty(GroupProperty.LOGGING_TYPE.getName(), "slf4j");
-        clientConfig.setProperty(GroupProperty.PHONE_HOME_ENABLED.getName(), "false");
+//        clientConfig.setProperty(GroupProperty.LOGGING_TYPE.getName(), "slf4j");
+//        clientConfig.setProperty(GroupProperty.PHONE_HOME_ENABLED.getName(), "false");
 
-        clientConfig.getGroupConfig().setName(groupName).setPassword(groupPassword);
+        clientConfig.getSecurityConfig().setUsernamePasswordIdentityConfig(new UsernamePasswordIdentityConfig(groupName, groupPassword));
+        
         for (String addrStr : nodeAddressesStr.split(",")) {
             clientConfig.getNetworkConfig().addAddress(addrStr);
         }
@@ -156,7 +157,7 @@ public class HazelcastClientConfiguration {
         clientConfig.getNetworkConfig().setSmartRouting(false);
         // the client will attempt to re-connect to the cluster forever if
         // cluster is not available
-        clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
+        //clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
 
         HazelcastInstance client = new ReConnectingHazelcastClient(clientConfig, reconnectTimeSec);
 

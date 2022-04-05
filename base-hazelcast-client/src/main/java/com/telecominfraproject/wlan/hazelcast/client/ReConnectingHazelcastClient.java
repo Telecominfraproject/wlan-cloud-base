@@ -1,47 +1,42 @@
 package com.telecominfraproject.wlan.hazelcast.client;
 
 import java.util.Collection;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hazelcast.cardinality.CardinalityEstimator;
+import com.hazelcast.client.ClientService;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
+import com.hazelcast.cluster.Cluster;
+import com.hazelcast.cluster.Endpoint;
+import com.hazelcast.collection.IList;
+import com.hazelcast.collection.IQueue;
+import com.hazelcast.collection.ISet;
 import com.hazelcast.config.Config;
-import com.hazelcast.core.ClientService;
-import com.hazelcast.core.Cluster;
 import com.hazelcast.core.DistributedObject;
 import com.hazelcast.core.DistributedObjectListener;
-import com.hazelcast.core.Endpoint;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IAtomicLong;
-import com.hazelcast.core.IAtomicReference;
 import com.hazelcast.core.ICacheManager;
-import com.hazelcast.core.ICountDownLatch;
 import com.hazelcast.core.IExecutorService;
-import com.hazelcast.core.IList;
-import com.hazelcast.core.ILock;
-import com.hazelcast.core.IMap;
-import com.hazelcast.core.IQueue;
-import com.hazelcast.core.ISemaphore;
-import com.hazelcast.core.ISet;
-import com.hazelcast.core.ITopic;
-import com.hazelcast.core.IdGenerator;
 import com.hazelcast.core.LifecycleService;
-import com.hazelcast.core.MultiMap;
-import com.hazelcast.core.PartitionService;
-import com.hazelcast.core.ReplicatedMap;
 import com.hazelcast.cp.CPSubsystem;
 import com.hazelcast.crdt.pncounter.PNCounter;
 import com.hazelcast.durableexecutor.DurableExecutorService;
 import com.hazelcast.flakeidgen.FlakeIdGenerator;
 import com.hazelcast.logging.LoggingService;
-import com.hazelcast.mapreduce.JobTracker;
-import com.hazelcast.quorum.QuorumService;
+import com.hazelcast.map.IMap;
+import com.hazelcast.multimap.MultiMap;
+import com.hazelcast.partition.PartitionService;
+import com.hazelcast.replicatedmap.ReplicatedMap;
 import com.hazelcast.ringbuffer.Ringbuffer;
 import com.hazelcast.scheduledexecutor.IScheduledExecutorService;
+import com.hazelcast.splitbrainprotection.SplitBrainProtectionService;
+import com.hazelcast.sql.SqlService;
+import com.hazelcast.topic.ITopic;
 import com.hazelcast.transaction.HazelcastXAResource;
 import com.hazelcast.transaction.TransactionContext;
 import com.hazelcast.transaction.TransactionException;
@@ -150,224 +145,157 @@ public class ReConnectingHazelcastClient implements HazelcastInstance {
         }
         return this.client;
     }
-    
-    @Override
+
     public String getName() {
         return getClient().getName();
     }
 
-    @Override
     public <E> IQueue<E> getQueue(String name) {
         return getClient().getQueue(name);
     }
 
-    @Override
     public <E> ITopic<E> getTopic(String name) {
         return getClient().getTopic(name);
     }
 
-    @Override
     public <E> ISet<E> getSet(String name) {
         return getClient().getSet(name);
     }
 
-    @Override
     public <E> IList<E> getList(String name) {
         return getClient().getList(name);
     }
 
-    @Override
     public <K, V> IMap<K, V> getMap(String name) {
         return getClient().getMap(name);
     }
 
-    @Override
     public <K, V> ReplicatedMap<K, V> getReplicatedMap(String name) {
         return getClient().getReplicatedMap(name);
     }
 
-    @Override
-    public JobTracker getJobTracker(String name) {
-        return getClient().getJobTracker(name);
-    }
-
-    @Override
     public <K, V> MultiMap<K, V> getMultiMap(String name) {
         return getClient().getMultiMap(name);
     }
 
-    @Override
-    public ILock getLock(String key) {
-        return getClient().getLock(key);
-    }
-
-    @Override
     public <E> Ringbuffer<E> getRingbuffer(String name) {
         return getClient().getRingbuffer(name);
     }
 
-    @Override
     public <E> ITopic<E> getReliableTopic(String name) {
         return getClient().getReliableTopic(name);
     }
 
-    @Override
     public Cluster getCluster() {
         return getClient().getCluster();
     }
 
-    @Override
     public Endpoint getLocalEndpoint() {
         return getClient().getLocalEndpoint();
     }
 
-    @Override
     public IExecutorService getExecutorService(String name) {
         return getClient().getExecutorService(name);
     }
 
-    @Override
-    public <T> T executeTransaction(TransactionalTask<T> task) throws TransactionException {
-        return getClient().executeTransaction(task);
-    }
-
-    @Override
-    public <T> T executeTransaction(TransactionOptions options, TransactionalTask<T> task) throws TransactionException {
-        return getClient().executeTransaction(options, task);
-    }
-
-    @Override
-    public TransactionContext newTransactionContext() {
-        return getClient().newTransactionContext();
-    }
-
-    @Override
-    public TransactionContext newTransactionContext(TransactionOptions options) {
-        return getClient().newTransactionContext(options);
-    }
-
-    @Override
-    public IdGenerator getIdGenerator(String name) {
-        return getClient().getIdGenerator(name);
-    }
-
-    @Override
-    public IAtomicLong getAtomicLong(String name) {
-        return getClient().getAtomicLong(name);
-    }
-
-    @Override
-    public <E> IAtomicReference<E> getAtomicReference(String name) {
-        return getClient().getAtomicReference(name);
-    }
-
-    @Override
-    public ICountDownLatch getCountDownLatch(String name) {
-        return getClient().getCountDownLatch(name);
-    }
-
-    @Override
-    public ISemaphore getSemaphore(String name) {
-        return getClient().getSemaphore(name);
-    }
-
-    @Override
-    public Collection<DistributedObject> getDistributedObjects() {
-        return getClient().getDistributedObjects();
-    }
-
-    @Override
-    public String addDistributedObjectListener(DistributedObjectListener distributedObjectListener) {
-        return getClient().addDistributedObjectListener(distributedObjectListener);
-    }
-
-    @Override
-    public boolean removeDistributedObjectListener(String registrationId) {
-        return getClient().removeDistributedObjectListener(registrationId);
-    }
-
-    @Override
-    public Config getConfig() {
-        return getClient().getConfig();
-    }
-
-    @Override
-    public PartitionService getPartitionService() {
-        return getClient().getPartitionService();
-    }
-
-    @Override
-    public QuorumService getQuorumService() {
-        return getClient().getQuorumService();
-    }
-
-    @Override
-    public ClientService getClientService() {
-        return getClient().getClientService();
-    }
-
-    @Override
-    public LoggingService getLoggingService() {
-        return getClient().getLoggingService();
-    }
-
-    @Override
-    public LifecycleService getLifecycleService() {
-        return getClient().getLifecycleService();
-    }
-
-    @Override
-    public <T extends DistributedObject> T getDistributedObject(String serviceName, String name) {
-        return getClient().getDistributedObject(serviceName, name);
-    }
-
-    @Override
-    public ConcurrentMap<String, Object> getUserContext() {
-        return getClient().getUserContext();
-    }
-
-    @Override
-    public HazelcastXAResource getXAResource() {
-        return getClient().getXAResource();
-    }
-
-    @Override
-    public void shutdown() {
-        getClient().shutdown();
-    }
-
-    @Override
     public DurableExecutorService getDurableExecutorService(String name) {
         return getClient().getDurableExecutorService(name);
     }
 
-    @Override
+    public <T> T executeTransaction(TransactionalTask<T> task) throws TransactionException {
+        return getClient().executeTransaction(task);
+    }
+
+    public <T> T executeTransaction(TransactionOptions options, TransactionalTask<T> task) throws TransactionException {
+        return getClient().executeTransaction(options, task);
+    }
+
+    public TransactionContext newTransactionContext() {
+        return getClient().newTransactionContext();
+    }
+
+    public TransactionContext newTransactionContext(TransactionOptions options) {
+        return getClient().newTransactionContext(options);
+    }
+
+    public FlakeIdGenerator getFlakeIdGenerator(String name) {
+        return getClient().getFlakeIdGenerator(name);
+    }
+
+    public Collection<DistributedObject> getDistributedObjects() {
+        return getClient().getDistributedObjects();
+    }
+
+    public UUID addDistributedObjectListener(DistributedObjectListener distributedObjectListener) {
+        return getClient().addDistributedObjectListener(distributedObjectListener);
+    }
+
+    public boolean removeDistributedObjectListener(UUID registrationId) {
+        return getClient().removeDistributedObjectListener(registrationId);
+    }
+
+    public Config getConfig() {
+        return getClient().getConfig();
+    }
+
+    public PartitionService getPartitionService() {
+        return getClient().getPartitionService();
+    }
+
+    public SplitBrainProtectionService getSplitBrainProtectionService() {
+        return getClient().getSplitBrainProtectionService();
+    }
+
+    public ClientService getClientService() {
+        return getClient().getClientService();
+    }
+
+    public LoggingService getLoggingService() {
+        return getClient().getLoggingService();
+    }
+
+    public LifecycleService getLifecycleService() {
+        return getClient().getLifecycleService();
+    }
+
+    public <T extends DistributedObject> T getDistributedObject(String serviceName, String name) {
+        return getClient().getDistributedObject(serviceName, name);
+    }
+
+    public ConcurrentMap<String, Object> getUserContext() {
+        return getClient().getUserContext();
+    }
+
+    public HazelcastXAResource getXAResource() {
+        return getClient().getXAResource();
+    }
+
     public ICacheManager getCacheManager() {
         return getClient().getCacheManager();
     }
 
-    @Override
     public CardinalityEstimator getCardinalityEstimator(String name) {
         return getClient().getCardinalityEstimator(name);
     }
 
-    @Override
+    public PNCounter getPNCounter(String name) {
+        return getClient().getPNCounter(name);
+    }
+
     public IScheduledExecutorService getScheduledExecutorService(String name) {
         return getClient().getScheduledExecutorService(name);
     }
 
-    @Override
-    public PNCounter getPNCounter(String name) {    	
-    	return getClient().getPNCounter(name);
-    }
-    
-    @Override
     public CPSubsystem getCPSubsystem() {
-    	return getClient().getCPSubsystem();
+        return getClient().getCPSubsystem();
+    }
+
+    public SqlService getSql() {
+        return getClient().getSql();
+    }
+
+    public void shutdown() {
+        getClient().shutdown();
     }
     
-    @Override
-    public FlakeIdGenerator getFlakeIdGenerator(String name) {
-    	return getClient().getFlakeIdGenerator(name);
-    }
 }

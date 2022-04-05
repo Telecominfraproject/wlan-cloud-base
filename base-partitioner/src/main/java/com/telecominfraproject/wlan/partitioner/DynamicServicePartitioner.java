@@ -9,8 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.ILock;
-import com.hazelcast.core.IMap;
+import com.hazelcast.cp.CPSubsystem;
+import com.hazelcast.cp.lock.FencedLock;
+import com.hazelcast.map.IMap;
 import com.telecominfraproject.wlan.core.model.json.BaseJsonModel;
 
 /**
@@ -65,7 +66,9 @@ public class DynamicServicePartitioner implements ServicePartitionerInterface {
         IMap<String, byte[]> partitionerMap = hazelcastInstance.getMap(mapName);
 
         // lock the whole partitionerMap while refresh is happening
-        ILock mapLock = hazelcastInstance.getLock("lock_" + mapName);
+        // see https://docs.hazelcast.com/imdg/4.2/migration-guides
+        CPSubsystem cpSubsystem = hazelcastInstance.getCPSubsystem();
+        FencedLock mapLock = cpSubsystem.getLock("lock_" + mapName);
         mapLock.lock();
 
         try {

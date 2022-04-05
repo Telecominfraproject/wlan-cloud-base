@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -16,15 +16,16 @@ import org.slf4j.LoggerFactory;
 
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
+import com.hazelcast.collection.IQueue;
 import com.hazelcast.collection.impl.queue.QueueService;
+import com.hazelcast.config.security.UsernamePasswordIdentityConfig;
 import com.hazelcast.core.DistributedObject;
 import com.hazelcast.core.DistributedObjectEvent;
 import com.hazelcast.core.DistributedObjectListener;
 import com.hazelcast.core.EntryEvent;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IMap;
-import com.hazelcast.core.IQueue;
-import com.hazelcast.core.IdGenerator;
+import com.hazelcast.flakeidgen.FlakeIdGenerator;
+import com.hazelcast.map.IMap;
 import com.hazelcast.map.listener.EntryAddedListener;
 import com.hazelcast.map.listener.EntryEvictedListener;
 import com.hazelcast.map.listener.EntryRemovedListener;
@@ -35,7 +36,8 @@ public class TestClient {
 
     public static void main_1(String[] args) throws IOException {
         ClientConfig clientConfig = new ClientConfig();
-        clientConfig.getGroupConfig().setName("wc-dev").setPassword("wc-dev-pass");
+        clientConfig.getSecurityConfig().setUsernamePasswordIdentityConfig(new UsernamePasswordIdentityConfig("wc-dev", "wc-dev-pass"));
+
         clientConfig.getNetworkConfig().addAddress("127.0.0.1:5900");
         clientConfig.getNetworkConfig().addAddress("127.0.0.1:5901");
         clientConfig.getNetworkConfig().addAddress("127.0.0.1:5902");
@@ -53,7 +55,7 @@ public class TestClient {
             System.out.println("metricsMap["+ entry.getKey() +"]: " +entry.getValue());
         }
 
-        IdGenerator testIdGenerator = client.getIdGenerator("id_generator_created_from_client");
+        FlakeIdGenerator testIdGenerator = client.getFlakeIdGenerator("id_generator_created_from_client");
         
         Map<Long, String> mapCreatedFromClient = client.getMap( "map_created_from_client" );
         System.out.println("mapCreatedFromClient: " + mapCreatedFromClient);
@@ -120,7 +122,8 @@ public class TestClient {
     
     public static void main_2(String[] args) throws InterruptedException {
         ClientConfig clientConfig = new ClientConfig();
-        clientConfig.getGroupConfig().setName(clusterName).setPassword(password);
+        clientConfig.getSecurityConfig().setUsernamePasswordIdentityConfig(new UsernamePasswordIdentityConfig(clusterName, password));
+
         clientConfig.getNetworkConfig().addAddress(addr);
         clientConfig.getNetworkConfig().addAddress("127.0.0.1:5901");
         clientConfig.getNetworkConfig().addAddress("127.0.0.1:5902");
@@ -239,7 +242,7 @@ public class TestClient {
 
     public static void main_3(String[] args) throws InterruptedException, ExecutionException {
         ClientConfig clientConfig = new ClientConfig();
-        clientConfig.getGroupConfig().setName(clusterName).setPassword(password);
+        clientConfig.getSecurityConfig().setUsernamePasswordIdentityConfig(new UsernamePasswordIdentityConfig(clusterName, password));
         clientConfig.getNetworkConfig().addAddress(addr);
 //        clientConfig.getNetworkConfig().addAddress("127.0.0.1:5901");
 //        clientConfig.getNetworkConfig().addAddress("127.0.0.1:5902");
@@ -247,7 +250,7 @@ public class TestClient {
         //see http://docs.hazelcast.org/docs/3.6/manual/html-single/index.html#java-client-operation-modes
         // here we're using "dumb" client that connects only to a single node of the cluster
         clientConfig.getNetworkConfig().setSmartRouting(false);
-        clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
+        //clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
 
         //HazelcastInstance client = HazelcastClient.newHazelcastClient(clientConfig);
         HazelcastInstance client = new ReConnectingHazelcastClient(clientConfig, 20);
@@ -259,7 +262,7 @@ public class TestClient {
         
         if(Boolean.getBoolean("populateMapBeforeTest")){
             @SuppressWarnings("rawtypes")
-			List<Future> futures = new ArrayList<>(1000);
+			List<CompletionStage<String>> futures = new ArrayList<>(1000);
 
             //populate map with entries        
             for(int i=0; i<1000000; i++){
@@ -280,12 +283,12 @@ public class TestClient {
 //                    }
 //                }
 
-                futures.add(client.getMap("testMap").putAsync("t_" + Integer.toString(fI), Integer.toString(fI)));
+                futures.add(client.<String, String>getMap("testMap").putAsync("t_" + Integer.toString(fI), Integer.toString(fI)));
 
                 //wait for a batch of futures to complete
                 if(futures.size()>=990){
-                    for(Future<?> f: futures){
-                        f.get();
+                    for(CompletionStage<String> f: futures){
+                        f.toCompletableFuture().get();
                     }
                     
                     futures.clear();
@@ -293,8 +296,8 @@ public class TestClient {
                 
             }
 
-            for(Future<?> f: futures){
-                f.get();
+            for(CompletionStage<String> f: futures){
+                f.toCompletableFuture().get();
             }
 
             end = System.currentTimeMillis();
@@ -323,7 +326,7 @@ public class TestClient {
             evenCount = 0;
             Predicate<String, String> predicate = new SamplePredicate();
             
-            for(Map.Entry<?, ?> entry: client.getMap( "testMap" ).entrySet(predicate )){
+            for(Map.Entry<String, String> entry: client.<String, String>getMap( "testMap" ).entrySet(predicate )){
                 evenCount++;
             }
             
@@ -355,13 +358,13 @@ public class TestClient {
 
         
         ClientConfig clientConfig = new ClientConfig();
-        clientConfig.getGroupConfig().setName(clusterName).setPassword(password);
+        clientConfig.getSecurityConfig().setUsernamePasswordIdentityConfig(new UsernamePasswordIdentityConfig(clusterName, password));
         clientConfig.getNetworkConfig().addAddress(addr);
 
         //see http://docs.hazelcast.org/docs/3.6/manual/html-single/index.html#java-client-operation-modes
         // here we're using "dumb" client that connects only to a single node of the cluster
         clientConfig.getNetworkConfig().setSmartRouting(false);
-        clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
+        //clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
 
         HazelcastInstance client = HazelcastClient.newHazelcastClient(clientConfig);
                 
@@ -386,13 +389,13 @@ public class TestClient {
     public static void main_5(String[] args) {
                 
         ClientConfig clientConfig = new ClientConfig();
-        clientConfig.getGroupConfig().setName(clusterName).setPassword(password);
+        clientConfig.getSecurityConfig().setUsernamePasswordIdentityConfig(new UsernamePasswordIdentityConfig(clusterName, password));
         clientConfig.getNetworkConfig().addAddress(addr);
 
         //see http://docs.hazelcast.org/docs/3.6/manual/html-single/index.html#java-client-operation-modes
         // here we're using "dumb" client that connects only to a single node of the cluster
         clientConfig.getNetworkConfig().setSmartRouting(false);
-        clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
+        //clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
 
         HazelcastInstance client = HazelcastClient.newHazelcastClient(clientConfig);
                 
@@ -426,13 +429,13 @@ public class TestClient {
     public static void main_6(String[] args) {
         
         ClientConfig clientConfig = new ClientConfig();
-        clientConfig.getGroupConfig().setName(clusterName).setPassword(password);
+        clientConfig.getSecurityConfig().setUsernamePasswordIdentityConfig(new UsernamePasswordIdentityConfig(clusterName, password));
         clientConfig.getNetworkConfig().addAddress(addr);
 
         //see http://docs.hazelcast.org/docs/3.6/manual/html-single/index.html#java-client-operation-modes
         // here we're using "dumb" client that connects only to a single node of the cluster
         clientConfig.getNetworkConfig().setSmartRouting(false);
-        clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
+        //clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
 
         HazelcastInstance client = HazelcastClient.newHazelcastClient(clientConfig);
                 
@@ -464,13 +467,13 @@ public class TestClient {
     public static void main_7(String[] args) {
         
         ClientConfig clientConfig = new ClientConfig();
-        clientConfig.getGroupConfig().setName(clusterName).setPassword(password);
+        clientConfig.getSecurityConfig().setUsernamePasswordIdentityConfig(new UsernamePasswordIdentityConfig(clusterName, password));
         clientConfig.getNetworkConfig().addAddress(addr);
 
         //see http://docs.hazelcast.org/docs/3.6/manual/html-single/index.html#java-client-operation-modes
         // here we're using "dumb" client that connects only to a single node of the cluster
         clientConfig.getNetworkConfig().setSmartRouting(false);
-        clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
+        //clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
 
         HazelcastInstance client = HazelcastClient.newHazelcastClient(clientConfig);
                 
@@ -523,13 +526,13 @@ public class TestClient {
     public static void main(String[] args) {
         
         ClientConfig clientConfig = new ClientConfig();
-        clientConfig.getGroupConfig().setName(clusterName).setPassword(password);
+        clientConfig.getSecurityConfig().setUsernamePasswordIdentityConfig(new UsernamePasswordIdentityConfig(clusterName, password));
         clientConfig.getNetworkConfig().addAddress(addr);
 
         //see http://docs.hazelcast.org/docs/3.6/manual/html-single/index.html#java-client-operation-modes
         // here we're using "dumb" client that connects only to a single node of the cluster
         clientConfig.getNetworkConfig().setSmartRouting(false);
-        clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
+        //clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
 
         HazelcastInstance hazelcastClient = HazelcastClient.newHazelcastClient(clientConfig);
 
@@ -598,13 +601,13 @@ public class TestClient {
     public static void main_9(String[] args) throws InterruptedException {
         
         ClientConfig clientConfig = new ClientConfig();
-        clientConfig.getGroupConfig().setName(clusterName).setPassword(password);
+        clientConfig.getSecurityConfig().setUsernamePasswordIdentityConfig(new UsernamePasswordIdentityConfig(clusterName, password));
         clientConfig.getNetworkConfig().addAddress(addr);
 
         //see http://docs.hazelcast.org/docs/3.6/manual/html-single/index.html#java-client-operation-modes
         // here we're using "dumb" client that connects only to a single node of the cluster
         clientConfig.getNetworkConfig().setSmartRouting(false);
-        clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
+        //clientConfig.getNetworkConfig().setConnectionAttemptLimit(0);
 
         HazelcastInstance hazelcastClient = HazelcastClient.newHazelcastClient(clientConfig);
         DistributedObjectListener distributedObjectListener = new DistributedObjectListener() {
