@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.hazelcast.map.AbstractEntryProcessor;
+import com.hazelcast.map.impl.ComputeEntryProcessor;
 
 /**
  * This class appends an item to a Set<String> stored in a hazelcast map.
@@ -17,7 +17,7 @@ import com.hazelcast.map.AbstractEntryProcessor;
  * <b>Very important</b>: this class must implement Serializable interface because it is submitted to Hazelcast Cluster
  * @author dtop
  */
-public class AppendStringToSetEntryProcessor extends AbstractEntryProcessor<String, Set<String>> implements Serializable {
+public class AppendStringToSetEntryProcessor extends ComputeEntryProcessor<String, Set<String>> implements Serializable {
     private static final long serialVersionUID = -6960225265547599510L;
     
     private String stringToAppend; 
@@ -31,7 +31,7 @@ public class AppendStringToSetEntryProcessor extends AbstractEntryProcessor<Stri
     }
 
     @Override
-    public Object process(Entry<String, Set<String>> entry) {
+    public Set<String> process(Entry<String, Set<String>> entry) {
         Set<String> value = entry.getValue();
         
         if(value==null){
@@ -43,6 +43,6 @@ public class AppendStringToSetEntryProcessor extends AbstractEntryProcessor<Stri
         
         entry.setValue(value);
 
-        return true;
+        return value;
     }
 }

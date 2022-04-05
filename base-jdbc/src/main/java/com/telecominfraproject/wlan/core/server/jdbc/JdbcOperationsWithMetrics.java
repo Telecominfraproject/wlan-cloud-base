@@ -3,6 +3,7 @@ package com.telecominfraproject.wlan.core.server.jdbc;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -1092,7 +1093,80 @@ class JdbcOperationsWithMetrics implements JdbcOperations{
         }
     }
 
-    
+ 
+    @Override
+    public <T> Stream<T> queryForStream(String sql, RowMapper<T> rowMapper) throws DataAccessException {
+        queriesExecuted.increment();
+        Stopwatch s = queriesTimer.start();
+        boolean success = false;
+
+        try{
+            Stream<T> ret = delegate.queryForStream(sql, rowMapper);
+            success = true;
+            return ret;
+        }finally{
+            s.stop();
+            if(!success){
+                queriesErrors.increment();
+            }
+        }
+
+    }
+
+    @Override
+    public <T> Stream<T> queryForStream(PreparedStatementCreator psc, RowMapper<T> rowMapper) throws DataAccessException {
+        queriesExecuted.increment();
+        Stopwatch s = queriesTimer.start();
+        boolean success = false;
+
+        try{
+            Stream<T> ret = delegate.queryForStream(psc, rowMapper);
+            success = true;
+            return ret;
+        }finally{
+            s.stop();
+            if(!success){
+                queriesErrors.increment();
+            }
+        }
+    }
+
+    @Override
+    public <T> Stream<T> queryForStream(String sql, PreparedStatementSetter pss, RowMapper<T> rowMapper) throws DataAccessException {
+        queriesExecuted.increment();
+        Stopwatch s = queriesTimer.start();
+        boolean success = false;
+
+        try{
+            Stream<T> ret = delegate.queryForStream(sql, pss, rowMapper);
+            success = true;
+            return ret;
+        }finally{
+            s.stop();
+            if(!success){
+                queriesErrors.increment();
+            }
+        }
+    }
+
+    @Override
+    public <T> Stream<T> queryForStream(String sql, RowMapper<T> rowMapper, Object... args) throws DataAccessException {
+        queriesExecuted.increment();
+        Stopwatch s = queriesTimer.start();
+        boolean success = false;
+
+        try{
+            Stream<T> ret = delegate.queryForStream(sql, rowMapper, args);
+            success = true;
+            return ret;
+        }finally{
+            s.stop();
+            if(!success){
+                queriesErrors.increment();
+            }
+        }
+    }
+
     @Override
     public String toString() {
         return "JOWM-"+delegate.toString();

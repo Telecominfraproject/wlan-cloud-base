@@ -26,6 +26,7 @@ import java.util.zip.ZipOutputStream;
 import javax.annotation.PostConstruct;
 
 import org.junit.AfterClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,7 @@ import com.telecominfraproject.wlan.hierarchical.datastore.index.registry.Record
         HazelcastObjectsConfiguration.class,
         })
 @ActiveProfiles({"HazelcastForUnitTest"})
+@Ignore("DT: these compoinents are not used for now, re-enable the tests if and when they are back in the system")
 public class HierarchicalDatastoreTests {
     
     static{

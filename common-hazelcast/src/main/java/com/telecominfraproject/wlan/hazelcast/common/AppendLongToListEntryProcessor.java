@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.function.BiFunction;
 
-import com.hazelcast.map.AbstractEntryProcessor;
+import com.hazelcast.map.impl.ComputeEntryProcessor;
+
 
 /**
  * This class appends an item to a List<Long> stored in a hazelcast map.
@@ -17,11 +19,24 @@ import com.hazelcast.map.AbstractEntryProcessor;
  * <b>Very important</b>: this class must implement Serializable interface because it is submitted to Hazelcast Cluster
  * @author dtop
  */
-public class AppendLongToListEntryProcessor extends AbstractEntryProcessor<String, List<Long>> implements Serializable {
+public class AppendLongToListEntryProcessor extends ComputeEntryProcessor<String, List<Long>> implements Serializable {
     private static final long serialVersionUID = -6960225265547599510L;
-    
+
     private long tsToAppend; 
-    
+
+//    private BiFunction<String, List<Long>, List<Long>> biFunction =  (key, value) -> {
+//        if(value==null){
+//            value = new ArrayList<>();
+//        }
+//        
+//        // process and modify value
+//        if(!value.contains(tsToAppend)){ 
+//            value.add(tsToAppend); 
+//        } 
+//        
+//        return value;
+//    };
+        
     public AppendLongToListEntryProcessor() {
         // for serialization
     }
@@ -31,7 +46,7 @@ public class AppendLongToListEntryProcessor extends AbstractEntryProcessor<Strin
     }
 
     @Override
-    public Object process(Entry<String, List<Long>> entry) {
+    public List<Long> process(Entry<String, List<Long>> entry) {
         List<Long> value = entry.getValue();
         
         if(value==null){
@@ -44,6 +59,6 @@ public class AppendLongToListEntryProcessor extends AbstractEntryProcessor<Strin
         } 
         entry.setValue(value);
 
-        return true;
+        return value;
     }
 }

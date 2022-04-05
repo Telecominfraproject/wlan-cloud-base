@@ -45,11 +45,11 @@ public class BaseJsonTypeResolverBuilder extends StdTypeResolverBuilder {
 
         @Override
         protected Object _deserializeTypedUsingDefaultImpl(final JsonParser jp, DeserializationContext ctxt,
-                TokenBuffer tb) throws IOException {
+                TokenBuffer tb, String priorFailureMsg) throws IOException {
             Object obj = null;
             JsonParser parser = jp;
             try{
-                obj = super._deserializeTypedUsingDefaultImpl(parser, ctxt, tb);
+                obj = super._deserializeTypedUsingDefaultImpl(parser, ctxt, tb, priorFailureMsg);
             }catch(Exception e){
                 JsonDeserializer<Object> deser = ctxt.findContextualValueDeserializer(this._baseType, null);
                 if (deser != null) {
@@ -109,7 +109,7 @@ public class BaseJsonTypeResolverBuilder extends StdTypeResolverBuilder {
         return ret;
     }
     
-    public void setPropertName(String property) {
+    public void setPropertyName(String property) {
         super._typeProperty = property;
     }
 }

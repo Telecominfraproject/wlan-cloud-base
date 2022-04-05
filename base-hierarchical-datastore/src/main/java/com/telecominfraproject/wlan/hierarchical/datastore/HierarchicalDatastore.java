@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
@@ -41,9 +42,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StreamUtils;
 
+import com.hazelcast.collection.IQueue;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IMap;
-import com.hazelcast.core.IQueue;
+import com.hazelcast.map.IMap;
 import com.netflix.servo.monitor.Counter;
 import com.netflix.servo.monitor.Timer;
 import com.telecominfraproject.wlan.cloudmetrics.CloudMetricsUtils;
@@ -495,7 +496,8 @@ public class HierarchicalDatastore{
         try {
             LOG.trace("submitting append request to hazelcast");
             //submit operation and wait for its completion
-            dirListMap.submitToKey(dirKey, new AppendStringToSetEntryProcessor(shortFileName) ).get();
+            CompletionStage<Set<String>> cs = dirListMap.submitToKey(dirKey, new AppendStringToSetEntryProcessor(shortFileName) );
+            cs.toCompletableFuture().get();
             LOG.trace("append request is processed in hazelcast");
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

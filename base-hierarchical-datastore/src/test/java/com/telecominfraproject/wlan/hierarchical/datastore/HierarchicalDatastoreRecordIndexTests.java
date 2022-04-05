@@ -30,7 +30,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IMap;
+import com.hazelcast.map.IMap;
 import com.telecominfraproject.wlan.core.model.filter.EntryFilter;
 import com.telecominfraproject.wlan.core.model.json.BaseJsonModel;
 import com.telecominfraproject.wlan.hazelcast.HazelcastForUnitTest;
@@ -53,6 +53,7 @@ import com.telecominfraproject.wlan.hierarchical.datastore.writer.StreamHolder;
         PropertySourcesPlaceholderConfigurer.class, //must have this to resolve non-string @Value annotations, i.e. int properties, etc.
         })
 @ActiveProfiles({"HazelcastForUnitTest"})
+@Ignore("DT: these compoinents are not used for now, re-enable the tests if and when they are back in the system")
 public class HierarchicalDatastoreRecordIndexTests {
     
     static{

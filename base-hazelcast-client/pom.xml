@@ -11,14 +11,6 @@
 	<description>Common classes for accessing Hazelcast in-memory grid data store.</description>
 	<dependencies>
 		<dependency>
-			<groupId>com.hazelcast</groupId>
-			<artifactId>hazelcast</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.hazelcast</groupId>
-			<artifactId>hazelcast-client</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.telecominfraproject.wlan</groupId>
 			<artifactId>common-hazelcast</artifactId>
 			<version>1.2.0-SNAPSHOT</version>

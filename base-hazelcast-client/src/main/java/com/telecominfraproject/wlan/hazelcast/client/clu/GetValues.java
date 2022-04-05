@@ -5,9 +5,9 @@ import java.util.Set;
 
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
+import com.hazelcast.config.security.UsernamePasswordIdentityConfig;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IMap;
-import com.hazelcast.spi.properties.GroupProperty;
+import com.hazelcast.map.IMap;
 import com.telecominfraproject.wlan.hazelcast.common.HazelcastObjectsConfiguration;
 
 public class GetValues 
@@ -25,10 +25,10 @@ public class GetValues
 //        }
 
         ClientConfig clientConfig = new ClientConfig();
-        clientConfig.setProperty(GroupProperty.LOGGING_TYPE.getName(), "slf4j");
-        clientConfig.setProperty(GroupProperty.PHONE_HOME_ENABLED.getName(), "false");
+//        clientConfig.setProperty(GroupProperty.LOGGING_TYPE.getName(), "slf4j");
+//        clientConfig.setProperty(GroupProperty.PHONE_HOME_ENABLED.getName(), "false");
         
-        clientConfig.getGroupConfig().setName(clusterName).setPassword(password);
+        clientConfig.getSecurityConfig().setUsernamePasswordIdentityConfig(new UsernamePasswordIdentityConfig(clusterName, password));
         clientConfig.getNetworkConfig().addAddress(addr);
 
         HazelcastInstance client = HazelcastClient.newHazelcastClient(clientConfig);
